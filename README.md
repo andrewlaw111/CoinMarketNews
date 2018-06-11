@@ -6,3 +6,54 @@ A React Native application that displays news related to the cryptocurrency mark
 ## For later
 https://reactnavigation.org
 nativebase.io
+
+## Postman API List
+https://identity.getpostman.com/handover/multifactor?user=4016000&handover_token=4ac1dbd2-ec95-4c95-b832-f958c4309bed
+
+## To Do
+
+### Backend
+
+#### Server
+1. Create Docker environment
+2. Backend Server
+  - NodeJS
+  - Express
+  - Postgresql
+  - knex migration
+  - Jwt login
+  - routers (API responses)
+  - services
+  - environment variables
+  - One Signal(notifications)
+  
+3. Scraping
+  - API Calls
+  - RSS feeds
+
+#### Deployment
+1. CircleCI
+2. AWS ECS? CloudFront
+
+### Frontend
+#### Mobile
+1. Navigation
+2. Interfaces
+  - Coin Prices
+    - Info
+    - News
+    - Price
+    - Alert
+  - News
+    - Favourite
+    - Market
+    
+  - Settings
+    - Set email
+    - Currency (Fiat + Coin)
+    - Notifcation switch
+3. Redux Store, Actions, Reducers, Thunk
+4. Axios API calls
+
+#### Deployment
+1. App Store?? Google Play?????!!?
