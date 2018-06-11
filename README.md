@@ -28,8 +28,25 @@ https://identity.getpostman.com/handover/multifactor?user=4016000&handover_token
   - One Signal(notifications)
   
 3. Scraping
-  - API Calls
-  - RSS feeds
+  - CoinMarketCap
+    - Get CoinMarketCap ID
+    - API Calls (get initial information)
+  - CoinCheckup
+    - Links to accounts
+  - Coinlib.io
+    - Coin Information
+    
+  - Setup Regular API Calls
+    - CoinMarketCap
+    - Reddit
+    - Medium
+    - Twitter
+  - RSS feeds (nodejs library)
+    - CoinDesk
+    - Cointelegraph
+    - NewsBTC
+    - CCN.com
+    - Toshitimes.com
 
 #### Deployment
 1. CircleCI
