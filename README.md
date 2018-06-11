@@ -36,11 +36,12 @@ https://identity.getpostman.com/handover/multifactor?user=4016000&handover_token
   - Coinlib.io
     - Coin Information
     
-  - Setup Regular API Calls
-    - CoinMarketCap
+  - Setup Regular API Calls (1hr)
+    - CoinMarketCap (get price info)
     - Reddit
     - Medium
     - Twitter
+    - Official website
   - RSS feeds (nodejs library)
     - CoinDesk
     - Cointelegraph
