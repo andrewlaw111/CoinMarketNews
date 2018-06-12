@@ -23,5 +23,7 @@ services:
     image: nginx
     links:
       - node
+    volumes:
+      - ./nginx/nginx.conf
     ports:
       - "80:80"
