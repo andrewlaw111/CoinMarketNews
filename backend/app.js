@@ -1,30 +1,13 @@
 const express = require('express');
-var knex = require('knex')({
-    client: 'postgresql',
-    connection: {
-        host: 'db',
-        database: "postgres",
-        user: "postgres",
-        password: "password"
-    }
-});
+
+const NODE_ENV = process.env.NODE_ENV;
+const knexfile = require('./knexfile')[NODE_ENV]
+var knex = require('knex')(knexfile);
 
 const app = express();
 
-knex.schema.createTable('user', (table) => {
-    table.increments('id')
-    table.string('name')
-})
-    .then(() => {
-        knex('user')
-            .insert({ name: 'Andrew' })
-            .then(() => {
-                console.log('insert done');
-            })
-    })
-
 app.get('/', function (req, res) {
-    knex.select('*').from('user').then((data) => {
+    knex.select('*').from('users').then((data) => {
         console.log(data);
         res.send(data);
     });
