@@ -19,6 +19,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "8000:8000"
+    # command: "sh start.sh"
   web:
     image: nginx
     links:
