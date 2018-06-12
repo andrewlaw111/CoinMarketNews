@@ -27,7 +27,8 @@ app.get('/', function (req, res) {
     knex.select('*').from('user').then((data) => {
         console.log(data);
         res.send(data);
+        console.log('hey');
     });
 });
 
-app.listen(8080);
+app.listen(8000);
