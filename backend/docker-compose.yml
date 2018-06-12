@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   db:
     image: postgres
@@ -6,24 +6,26 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
     - "5432:5432"
-  node:
-    image: "node:8.11"
-    user: "node"
-    working_dir: /home/node/app
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - ./:/home/node/app
-    ports:
-      - "8080:8080"
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     links:
-    - "db"
-    command: "sh start.sh"
-  nginx:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8000:8000"
+  web:
     image: nginx
     links:
-      - node
+      - app
+    depends_on:
+      - app
     volumes:
-      - ./nginx/nginx.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
