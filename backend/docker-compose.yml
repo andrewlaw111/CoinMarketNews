@@ -1,0 +1,27 @@
+version: "2"
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+    - "5432:5432"
+  node:
+    image: "node:8.11"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
+    ports:
+      - "8080:8080"
+    links:
+    - "db"
+    command: "sh start.sh"
+  nginx:
+    image: nginx
+    links:
+      - node
+    ports:
+      - "80:80"
