@@ -16,10 +16,14 @@ export const knex = Knex(knexfile[NODE_ENV]);
 
 // TEST: remove later
 app.get('/', function (req: any, res: any) {
-    knex.select("*").from("coin").limit(10).then((data: any) => {
-        console.log(data);
-        res.send(data);
-    });
+    knex.select("*")
+        .from("coin")
+        .limit(10)
+        .orderBy('rank', 'asc')
+        .then((data: any) => {
+            console.log(data);
+            res.send(data);
+        });
 });
 
 app.use(bodyParser.urlencoded({
