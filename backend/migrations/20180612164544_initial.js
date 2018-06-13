@@ -5,20 +5,20 @@ exports.up = function (knex, Promise) {
         sources.string("link");
     }).then(() => {
         return knex.schema.createTable("news", (news) => {
-            sources.increments();
-            sources.text('title');
-            sources.text('content');
-            sources.integer('source_id');
-            sources.foreign("source_id").references("source.id");
-            sources.string('link');
-            sources.timestamp('created_at');
-            sources.increments('counter');
+            news.increments();
+            news.text('title');
+            news.text('content');
+            news.integer('source_id');
+            news.foreign("source_id").references("source.id");
+            news.string('link');
+            news.timestamp('created_at');
+            news.integer('counter');
         }).then(() => {
             return knex.schema.createTable("coin", (coins) => {
                 coins.increments();
                 coins.string('name');
                 coins.string('symbol');
-                coins.rank('integer');
+                coins.integer('rank');
                 coins.decimal('circulating_supply');
                 coins.decimal('total_suppy');
                 coins.decimal('max_supply');
@@ -57,8 +57,8 @@ exports.up = function (knex, Promise) {
                             users.increments();
                             users.integer("fiat_currency_id").unsigned();
                             users.foreign("fiat_currency_id").references("currency.id");
-                            users.integer("fiat_currency_id").unsigned();
-                            users.foreign("fiat_currency_id").references("currency.id");
+                            users.integer("coin_currency_id").unsigned();
+                            users.foreign("coin_currency_id").references("currency.id");
                             users.string('email');
                             users.string('password');
                             users.boolean('notification');
