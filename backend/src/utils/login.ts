@@ -3,19 +3,19 @@ import * as express from "express";
 export default class LoginRouter {
     public router() {
         const router = express.Router();
-        router.post("/"), this.login.bind(this);
-        router.put("/"), this.updateLogin.bind(this);
+        router.post("/", this.login);
+        router.put("/", this.updateLogin);
         return router;
     }
 
-    private login(req: any, res: any) {
+    private login = (req: any, res: any) => {
         // if (req.body.email && req.body.password) {
-            // let email = req.body.email;
-            // let password = req.body.password;
+        // let email = req.body.email;
+        // let password = req.body.password;
 
-            // // let user = users.find((u) => {
-            //     return u.email === email && u.password === password;
-            // });
+        // // let user = users.find((u) => {
+        //     return u.email === email && u.password === password;
+        // });
         //     if (user) {
         //         let payload = {
         //             id: user.id
@@ -34,7 +34,7 @@ export default class LoginRouter {
         return;
     }
 
-    private updateLogin() {
+    private updateLogin = () => {
         return;
     }
 }
