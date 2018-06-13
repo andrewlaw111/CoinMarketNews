@@ -5,9 +5,11 @@ import UserRouter from "./routers/UserRouter";
 import CoinService from "./services/CoinService";
 import UserService from "./services/UserService";
 import LoginRouter from "./utils/login";
+import Cron from "./utils/cron";
 
 const coinService = new CoinService();
 const userService = new UserService();
+new Cron();
 
 app.use("/login", new LoginRouter().router());
 app.use("/coin", new CoinRouter(coinService).router());
