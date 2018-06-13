@@ -16,7 +16,7 @@ export default class UserRoutuer {
         return router;
     }
     private getUser = (req: express.Request, res: express.Response) => {
-        return this.userService.getUser()
+        return this.userService.getUser(req.headers.token)
             .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }

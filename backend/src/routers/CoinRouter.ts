@@ -13,12 +13,12 @@ export default class CoinRouter {
         router.get("/:coinID", this.getSpecificCoin);
         return router;
     }
-    public getAllCoins = (req: express.Request, res: express.Response) => {
+    private getAllCoins = (req: express.Request, res: express.Response) => {
         return this.coinService.getAllCoins(req.body.token)
             .then((data: any) => res.json)
             .catch((err: express.Errback) => res.status(500).json(err));
     }
-    public getSpecificCoin = (req: express.Request, res: express.Response) => {
+    private getSpecificCoin = (req: express.Request, res: express.Response) => {
         return this.coinService.getSpecificCoin()
             .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
