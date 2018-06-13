@@ -9,25 +9,26 @@ export default class UserRoutuer {
 
     public router() {
         const router = express.Router();
-        router.get("/", this.getUser);
-        router.post("/", this.createUser);
-        router.put("/", this.updateUser);
+        router.route("/")
+            .get(this.getUser)
+            .post(this.createUser)
+            .put(this.updateUser);
         return router;
     }
-    private getUser = (req: any, res: any) => {
+    private getUser = (req: express.Request, res: express.Response) => {
         return this.userService.getUser()
             .then((data: any) => res.json(data))
-            .catch((err: any) => res.status(500).json(err));
+            .catch((err: express.Errback) => res.status(500).json(err));
     }
 
-    private createUser = (req: any, res: any) => {
+    private createUser = (req: express.Request, res: express.Response) => {
         return this.userService.createUser()
             .then((data: any) => res.json(data))
-            .catch((err: any) => res.status(500).json(err));
+            .catch((err: express.Errback) => res.status(500).json(err));
     }
-    private updateUser = (req: any, res: any) => {
+    private updateUser = (req: express.Request, res: express.Response) => {
         return this.userService.updateUser()
             .then((data: any) => res.json(data))
-            .catch((err: any) => res.status(500).json(err));
+            .catch((err: express.Errback) => res.status(500).json(err));
     }
 }

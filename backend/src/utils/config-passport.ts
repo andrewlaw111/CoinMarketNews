@@ -1,5 +1,5 @@
 export default {
-    jwtSecret: "jsakdlfljadsmview12",
+    jwtSecret: process.env.JWTSECRET,
     jwtSession: {
         session: false,
     },

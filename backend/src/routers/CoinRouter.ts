@@ -9,18 +9,18 @@ export default class CoinRouter {
 
     public router() {
         const router = express.Router();
-        router.get("/", this.getAllCoins.bind(this));
-        router.get("/:coinID", this.getSpecificCoin.bind(this));
+        router.get("/", this.getAllCoins);
+        router.get("/:coinID", this.getSpecificCoin);
         return router;
     }
-    public getAllCoins(req: any, res: any) {
-        return this.coinService.getAllCoins()
-            .then((data: any) => res.json(data))
-            .catch((err: any) => res.status(500).json(err));
+    public getAllCoins = (req: express.Request, res: express.Response) => {
+        return this.coinService.getAllCoins(req.body.token)
+            .then((data: any) => res.json)
+            .catch((err: express.Errback) => res.status(500).json(err));
     }
-    public getSpecificCoin(req: any, res: any) {
+    public getSpecificCoin = (req: express.Request, res: express.Response) => {
         return this.coinService.getSpecificCoin()
             .then((data: any) => res.json(data))
-            .catch((err: any) => res.status(500).json(err));
+            .catch((err: express.Errback) => res.status(500).json(err));
     }
 }
