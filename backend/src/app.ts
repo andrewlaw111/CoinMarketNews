@@ -1,18 +1,16 @@
-import * as express from "express";
+import { app } from "./utils/init-app";
 
-const NODE_ENV = process.env.NODE_ENV || "development";
-// tslint:disable-next-line:no-var-requires
-const knexfile = require("../knexfile")[NODE_ENV];
-// tslint:disable-next-line:no-var-requires
-const knex = require("knex")(knexfile);
-const app = express();
+import CoinRouter from "./routers/CoinRouter";
+import UserRouter from "./routers/UserRouter";
+import CoinService from "./services/CoinService";
+import UserService from "./services/UserService";
+import LoginRouter from "./utils/login";
 
-app.get('/', function (req: any, res: any) {
-    knex.select("*").from("coin").limit(10).then((data: any) => {
-        console.log(data);
-        res.send(data);
-        console.log("ho");
-    });
-});
+const coinService = new CoinService();
+const userService = new UserService();
+
+app.use("/login", new LoginRouter().router());
+app.use("/coin", new CoinRouter(coinService).router());
+app.use("/user", new UserRouter(userService).router());
 
 app.listen(8000);
