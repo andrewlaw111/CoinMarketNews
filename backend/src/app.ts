@@ -8,7 +8,7 @@ const knex = require("knex")(knexfile);
 const app = express();
 
 app.get('/', function (req: any, res: any) {
-    knex.select("*").from("users").then((data: any) => {
+    knex.select("*").from("coin").limit(10).then((data: any) => {
         console.log(data);
         res.send(data);
         console.log("ho");
