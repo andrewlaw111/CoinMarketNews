@@ -9,7 +9,7 @@ import Cron from "./utils/cron";
 
 const coinService = new CoinService();
 const userService = new UserService();
-new Cron();
+Cron.price();
 
 app.use("/login", new LoginRouter().router());
 app.use("/coin", new CoinRouter(coinService).router());
