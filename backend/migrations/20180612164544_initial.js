@@ -20,9 +20,9 @@ exports.up = function (knex, Promise) {
                 coins.string('symbol');
                 coins.integer('rank');
                 coins.decimal('circulating_supply');
-                coins.decimal('total_suppy');
+                coins.decimal('total_supply');
                 coins.decimal('max_supply');
-                coins.timestamp('last_update');
+                coins.timestamp('last_updated');
                 coins.integer('coinmarketcap_id');
                 coins.text('about');
                 coins.string('type');
