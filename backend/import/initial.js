@@ -1,27 +1,24 @@
-const Crawler = require("crawler");
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const knexfile = require('../knexfile')[NODE_ENV]
+const knex = require('knex')(knexfile);
+const axios = require('axios');
 
-var c = new Crawler({
-    maxConnections: 10,
-    // This will be called for each crawled page
-    callback: function (error, res, done) {
-        if (error) {
-            console.log(error);
-        } else {
-            var $ = res.$;
-            console.log('-----');
-            var coinDescription = $('.coin-description').clone().children('strong, a').remove().end().text().trim();
-            console.log(coinDescription);
-            console.log('-----');
-            var rank = $('#info div.col-6').eq(1).text();
-            console.log(rank);
-            console.log('-----');
-            var type = $('#info div.col-6').eq(3).text();
-            console.log(type);
+axios.get('https://api.coinmarketcap.com/v2/listings/')
+    .then(function (response) {
+        console.log(response.data);
+        for (coin of response.data.data) {
+            console.log(coin);
+            const insert_coin = {};
+            insert_coin.coinmarketcap_id = coin.id;
+            insert_coin.name = coin.name;
+            insert_coin.symbol = coin.symbol;
+            knex('coin')
+                .insert(insert_coin)
+                .then(() => {
+                    console.log(coin.name + 'inserted');
+                })
         }
-        done();
-    }
-});
-
-// Queue just one URL, with default callback
-c.queue('https://coinlib.io/coin/ETH/Ethereum');
-c.queue('https://coinlib.io/coin/EOS/EOS');
+    })
+    .catch(function (error) {
+        console.log(error);
+    });

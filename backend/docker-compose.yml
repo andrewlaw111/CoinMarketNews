@@ -7,19 +7,18 @@ services:
     ports:
     - "5432:5432"
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    links:
-      - db
-    depends_on:
-      - db
+    image: "node:8.11"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=development
     volumes:
-      - ./:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/home/node/app
     ports:
       - "8000:8000"
-    # command: "sh start.sh"
+    links:
+    - "db"
+    command: "sh start.sh"
   web:
     image: nginx
     links:
