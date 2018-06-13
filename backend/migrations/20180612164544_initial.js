@@ -1,61 +1,117 @@
 exports.up = function (knex, Promise) {
-    return knex.schema.createTable("users", (users) => {
-        users.increments();
-        users.string("username");
-        users.unique("username");
-        users.string("password");
-        users.string("display_name");
-        users.unique("display_name");
-        users.string("google_id");
-        users.unique("google_id");
-        users.boolean("manager");
+    return knex.schema.createTable("source", (sources) => {
+        sources.increments();
+        sources.string("name");
+        sources.string("link");
     }).then(() => {
-        return knex.schema.createTable("restaurants", (restaurants) => {
-            restaurants.increments();
-            restaurants.string("name");
-            restaurants.string("logo");
-            restaurants.string("location");
+        return knex.schema.createTable("news", (news) => {
+            sources.increments();
+            sources.text('title');
+            sources.text('content');
+            sources.integer('source_id');
+            sources.foreign("source_id").references("source.id");
+            sources.string('link');
+            sources.timestamp('created_at');
+            sources.increments('counter');
         }).then(() => {
-            return knex.schema.createTable("orders", (orders) => {
-                orders.increments();
-                orders.integer("restaurants_id").unsigned();
-                orders.foreign("restaurants_id").references("restaurants.id");
-                orders.integer("table").unsigned();
-                orders.text("comment");
-                orders.timestamp('created_at');
+            return knex.schema.createTable("coin", (coins) => {
+                coins.increments();
+                coins.string('name');
+                coins.string('symbol');
+                coins.rank('integer');
+                coins.decimal('circulating_supply');
+                coins.decimal('total_suppy');
+                coins.decimal('max_supply');
+                coins.timestamp('last_update');
+                coins.integer('coinmarketcap_id');
+                coins.text('about');
+                coins.string('type');
+                coins.string('algorithm');
+                coins.string('proof');
+                coins.boolean('mineable');
+                coins.boolean('premined');
+                coins.integer("official_website").unsigned();
+                coins.foreign("official_website").references("source.id");
+                coins.integer("medium").unsigned();
+                coins.foreign("medium").references("source.id");
+                coins.integer("reddit").unsigned();
+                coins.foreign("reddit").references("source.id");
+                coins.integer("twitter").unsigned();
+                coins.foreign("twitter").references("source.id");
+                coins.integer("telegram").unsigned();
+                coins.foreign("telegram").references("source.id");
             }).then(() => {
-                return knex.schema.createTable("comments", (comments) => {
-                    comments.increments();
-                    comments.integer("orders_id").unsigned();
-                    comments.foreign("orders_id").references("orders.id");
-                    comments.text("comment");
-                    comments.timestamp('created_at');
+                return knex.schema.createTable("coin_news", (coinNews) => {
+                    coinNews.increments();
+                    coinNews.integer("coin_id").unsigned();
+                    coinNews.foreign("coin_id").references("coin.id");
+                    coinNews.integer("news_id").unsigned();
+                    coinNews.foreign("news_id").references("news.id");
                 }).then(() => {
-                    return knex.schema.createTable("items", (items) => {
-                        items.increments();
-                        items.integer("restaurants_id").unsigned();
-                        items.foreign("restaurants_id").references("restaurants.id");
-                        items.string("name");
-                        items.decimal('price')
-                        items.string("image");
-                        items.string("category");
-                        items.text("description");
-                        items.boolean("recommended");
+                    return knex.schema.createTable("currency", (currencies) => {
+                        currencies.increments();
+                        currencies.boolean('fiat');
+                        currencies.string('symbol');
                     }).then(() => {
-                        return knex.schema.createTable("users_restaurants", (usersRestaurants) => {
-                            usersRestaurants.increments();
-                            usersRestaurants.integer("user_id").unsigned();
-                            usersRestaurants.foreign("user_id").references("users.id");
-                            usersRestaurants.integer("restaurants_id").unsigned();
-                            usersRestaurants.foreign("restaurants_id").references("restaurants.id");
+                        return knex.schema.createTable("users", (users) => {
+                            users.increments();
+                            users.integer("fiat_currency_id").unsigned();
+                            users.foreign("fiat_currency_id").references("currency.id");
+                            users.integer("fiat_currency_id").unsigned();
+                            users.foreign("fiat_currency_id").references("currency.id");
+                            users.string('email');
+                            users.string('password');
+                            users.boolean('notification');
                         }).then(() => {
-                            return knex.schema.createTable("orders_items", (orders_items) => {
-                                orders_items.increments();
-                                orders_items.integer("items_id").unsigned();
-                                orders_items.foreign("items_id").references("items.id");
-                                orders_items.integer("orders_id").unsigned();
-                                orders_items.foreign("orders_id").references("orders.id");
-                            })
+                            return knex.schema.createTable("sessions", (sessions) => {
+                                sessions.increments();
+                                sessions.integer("user_id").unsigned();
+                                sessions.foreign("user_id").references("coin.id");
+                                sessions.string("token");
+                            }).then(() => {
+                                return knex.schema.createTable("price", (price) => {
+                                    price.increments();
+                                    price.integer("coin_id").unsigned();
+                                    price.foreign("coin_id").references("coin.id");
+                                    price.integer("currency_id").unsigned();
+                                    price.foreign("currency_id").references("currency.id");
+                                    price.decimal("1h_price");
+                                    price.decimal("24h_price");
+                                    price.decimal("7d_price");
+                                    price.decimal("volume_24h");
+                                    price.decimal("market_cap");
+                                    price.decimal("percent_change_1h");
+                                    price.decimal("percent_change_24h");
+                                    price.decimal("percent_change_7d");
+                                    price.decimal("price_change_1h");
+                                    price.decimal("price_change_24h");
+                                    price.decimal("price_change_7d");
+                                }).then(() => {
+                                    return knex.schema.createTable("price_alert", (priceAlert) => {
+                                        priceAlert.increments();
+                                        priceAlert.integer("user_id").unsigned();
+                                        priceAlert.foreign("user_id").references("users.id");
+                                        priceAlert.integer("price_id").unsigned();
+                                        priceAlert.foreign("price_id").references("price.id");
+                                        priceAlert.boolean('upper');
+                                        priceAlert.decimal('price_point');
+                                        priceAlert.boolean('active');
+                                    }).then(() => {
+                                        return knex.schema.createTable("news_alert", (newsAlert) => {
+                                            newsAlert.increments();
+                                            newsAlert.integer("user_id").unsigned();
+                                            newsAlert.foreign("user_id").references("users.id");
+                                            newsAlert.integer("coin_id").unsigned();
+                                            newsAlert.foreign("coin_id").references("coin.id");
+                                            newsAlert.boolean('favourite');
+                                            newsAlert.boolean('subscribe_website');
+                                            newsAlert.boolean('subscribe_medium');
+                                            newsAlert.boolean('subscribe_reddit');
+                                            newsAlert.boolean('subscribe_twitter');
+                                        })
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -65,23 +121,29 @@ exports.up = function (knex, Promise) {
 };
 
 exports.down = function (knex, Promise) {
-    return knex.schema.dropTable('users_restaurants')
-        .then(() => {
-            return knex.schema.dropTable('orders_items')
-                .then(() => {
-                    return knex.schema.dropTable('users')
-                        .then(() => {
-                            return knex.schema.dropTable('items')
-                                .then(() => {
-                                    return knex.schema.dropTable('comments')
-                                        .then(() => {
-                                            return knex.schema.dropTable('orders')
-                                                .then(() => {
-                                                    return knex.schema.dropTable('restaurants')
-                                                });
-                                        });
-                                });
-                        });
-                })
-        });
+return knex.schema.dropTable('news_alert')
+    .then(() => {
+        return knex.schema.dropTable('price_alert')
+            .then(() => {
+                return knex.schema.dropTable('price')
+                    .then(() => {
+                        return knex.schema.dropTable('users')
+                            .then(() => {
+                                return knex.schema.dropTable('currency')
+                                    .then(() => {
+                                        return knex.schema.dropTable('coin_news')
+                                            .then(() => {
+                                                return knex.schema.dropTable('coin')
+                                                    .then(() => {
+                                                        return knex.schema.dropTable('news')
+                                                            .then(() => {
+                                                                return knex.schema.dropTable('source')
+                                                            });
+                                                    });
+                                            });
+                                    });
+                            })
+                    });
+            });
+    });
 };

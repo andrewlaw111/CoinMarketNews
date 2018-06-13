@@ -1,6 +1,6 @@
 const express = require('express');
 
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 const knexfile = require('./knexfile')[NODE_ENV]
 var knex = require('knex')(knexfile);
 
