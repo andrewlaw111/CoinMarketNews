@@ -53,6 +53,12 @@ var c = new Crawler({
             }
 
             // websites
+            if ($('#info i').eq(0).hasClass('fa-link')) {   // official_website
+                const update_source = {};
+                update_source.name = $('#info a').eq(0).text().trim();
+                update_source.link = $('#info a').eq(0).attr('href').trim();
+                updateSource(res.options.coin.official_website, update_source);
+            }
             $('#info a').each(function () {
                 const link = $(this).attr('href').trim();
                 console.log(link);
@@ -61,6 +67,21 @@ var c = new Crawler({
                     update_source.name = $(this).text().trim();
                     update_source.link = link;
                     updateSource(res.options.coin.reddit, update_source);
+                } else if (link.match(/twitter\.com/)) {
+                    const update_source = {};
+                    update_source.name = $(this).text().trim();
+                    update_source.link = link;
+                    updateSource(res.options.coin.twitter, update_source);
+                } else if (link.match(/t\.me/) || link.match(/telegram/)) {
+                    const update_source = {};
+                    update_source.name = $(this).text().trim();
+                    update_source.link = link;
+                    updateSource(res.options.coin.telegram, update_source);
+                } else if (link.match(/medium\.com/)) {
+                    const update_source = {};
+                    update_source.name = $(this).text().trim();
+                    update_source.link = link;
+                    updateSource(res.options.coin.medium, update_source);
                 }
             });
 
