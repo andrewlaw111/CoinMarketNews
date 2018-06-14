@@ -9,7 +9,7 @@ export default class Cron {
             console.log('cron ex');
             axios.get('https://api.coinmarketcap.com/v2/ticker/?structure=array')
                 .then(function (response) {
-                    console.log(response.data);
+                    // console.log(response.data);
                     for (const coin of response.data.data) {
                         const update_coin: any = {};
                         update_coin.rank = coin.rank;
@@ -38,12 +38,12 @@ export default class Cron {
                         //     }, 
                         //     "last_updated": 1528879767
                         // }
-                        console.log(update_coin);
+                        // console.log(update_coin);
                         knex('coin')
                             .where('coinmarketcap_id', '=', coin.id)
                             .update(update_coin).then((data: any) => {
                                 if(data) {
-                                    console.log(coin.name + ' infos updated');
+                                    // console.log(coin.name + ' infos updated');
                                 }
                             });
                     }

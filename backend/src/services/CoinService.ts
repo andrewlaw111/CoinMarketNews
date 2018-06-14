@@ -1,4 +1,4 @@
-// import { knex } from "../utils/init-app";
+import { knex } from "../utils/init-app";
 interface ICoin {
     id: number;
     name: string;
@@ -6,7 +6,7 @@ interface ICoin {
     rank: number;
     circulating_supply: string;
     total_supply: string;
-    max_supply: string;
+    max_supply: string | null;
     last_updated: number;
     coinmarketcap_id: number;
     about: string;
@@ -23,15 +23,56 @@ interface ICoin {
 }
 
 export default class CoinService {
+    public lastUpdated: number;
     private coinList: ICoin[];
 
     public constructor() {
-        this.coinList = [];
+        this.lastUpdated = Date.now();
+        knex.select("*").from("coin").then((data: ICoin[]) => {
+            this.coinList = data;
+        });
     }
-    public getAllCoins() {
-        return this.coinList;
+    public checkTimer() {
+        return Date.now() - this.lastUpdated;
     }
-    public getSpecificCoin() {
-        return;
+    public getAllCoins(token: string) {
+        return new Promise((resolve, reject) => {
+
+            // Make a query to the database if the list has not been updated for 20 seconds
+            if (Date.now() - this.lastUpdated < 20000) {
+                resolve(this.coinList);
+            } else {
+                this.updateList()
+                    .then(() => {
+                        resolve(this.coinList);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            }
+        });
+    }
+    public getSpecificCoin(token: string, coinID: string) {
+        return new Promise((resolve, reject) => {
+            // Make a query to the database if the list has not been updated for 20 seconds
+            if (Date.now() - this.lastUpdated < 20000) {
+                const findcoin = this.coinList.find((coin) => coin.id === parseInt(coinID, undefined));
+                resolve(findcoin);
+            } else {
+                this.updateList()
+                    .then(() => {
+                        resolve(this.coinList.find((coin) => coin.id === parseInt(coinID, undefined)));
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            }
+        });
+    }
+    private updateList() {
+        this.lastUpdated = Date.now();
+        return knex.select("*").from("coin").then((data: ICoin[]) => {
+            return this.coinList = data;
+        });
     }
 }

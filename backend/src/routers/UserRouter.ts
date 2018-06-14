@@ -27,7 +27,14 @@ export default class UserRoutuer {
             .catch((err: express.Errback) => res.status(500).json(err));
     }
     private updateUser = (req: express.Request, res: express.Response) => {
-        return this.userService.updateUser()
+        return this.userService.updateUser(
+            req.headers.token,
+            req.body.fiat_currency_id,
+            req.body.coin_currency_id,
+            req.body.email,
+            req.body.password,
+            req.body.notifications,
+        )
             .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
