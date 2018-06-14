@@ -2,25 +2,31 @@ import * as passport from "passport";
 import * as passportJWT from "passport-jwt";
 
 import config from "./config-passport";
-// import { knex } from "./init-app";
+import { knex } from "./init-app";
 
 const ExtractJwt = passportJWT.ExtractJwt;
 
 export default () => {
-    const strategy = new passportJWT.Strategy({
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        secretOrKey: config.jwtSecret,
-    }, (payload, done) => {
+    const strategy = new passportJWT.Strategy(
+        {
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: config.jwtSecret,
+        },
+        (payload, done) => {
 
-        // TODO Write the knex query to get user
-        // knex.select("*").from("users").where("token", payload.id).then((user) => {
-        // if (user) {
-        //     return done(null, { id: user.id });
-        // } else {
-        //     return done(new Error("User not found"), null);
-        // }
-        // });
-    });
+            // TODO Write the knex query to get user
+            knex.select("*")
+                .from("users")
+                .innerJoin("sessions", "user_id", "user.id")
+                .where("sessions.token", payload.id)
+                .then((user) => {
+                    if (user) {
+                        return done(null, { id: user[0].id });
+                    } else {
+                        return done(new Error("User not found"), null);
+                    }
+                });
+        });
     passport.use(strategy);
 
     return {

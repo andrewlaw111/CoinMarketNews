@@ -1,6 +1,5 @@
 import { knex } from "../utils/init-app";
 
-
 /* ---------- WIP ----------*/
 export default class UserService {
     public getUser(token: string) {

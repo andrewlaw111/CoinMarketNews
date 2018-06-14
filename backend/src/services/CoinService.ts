@@ -28,9 +28,7 @@ export default class CoinService {
 
     public constructor() {
         this.lastUpdated = Date.now();
-        knex.select("*").from("coin").then((data: ICoin[]) => {
-            this.coinList = data;
-        });
+        this.updateList();
     }
     public checkTimer() {
         return Date.now() - this.lastUpdated;
@@ -44,7 +42,7 @@ export default class CoinService {
             } else {
                 this.updateList()
                     .then(() => {
-                        resolve(this.coinList);
+                        resolve(this.coinList.slice(0, 100));
                     })
                     .catch((err) => {
                         reject(err);
@@ -71,8 +69,11 @@ export default class CoinService {
     }
     private updateList() {
         this.lastUpdated = Date.now();
-        return knex.select("*").from("coin").then((data: ICoin[]) => {
-            return this.coinList = data;
-        });
+        return knex
+            .select("*")
+            .from("coin")
+            .orderBy("rank", "asc").then((data: ICoin[]) => {
+                return this.coinList = data;
+            });
     }
 }
