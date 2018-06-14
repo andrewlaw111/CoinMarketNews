@@ -1,4 +1,5 @@
 import * as express from "express";
+import ICoin from "../services/CoinService";
 
 export default class CoinRouter {
     public coinService: any;
@@ -15,12 +16,12 @@ export default class CoinRouter {
     }
     private getAllCoins = (req: express.Request, res: express.Response) => {
         return this.coinService.getAllCoins(req.body.token)
-            .then((data: any) => res.json(data))
+            .then((data: ICoin[]) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
     private getSpecificCoin = (req: express.Request, res: express.Response) => {
         return this.coinService.getSpecificCoin(req.body.token, req.params.coinID)
-            .then((data: any) => res.json(data))
+            .then((data: ICoin) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
 }
