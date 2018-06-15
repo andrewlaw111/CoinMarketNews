@@ -61,12 +61,12 @@ exports.up = function (knex, Promise) {
                             users.foreign("coin_currency_id").references("currency.id");
                             users.string('email');
                             users.string('password');
-                            users.boolean('notification');
+                            users.boolean('notifications');
                         }).then(() => {
                             return knex.schema.createTable("sessions", (sessions) => {
                                 sessions.increments();
                                 sessions.integer("user_id").unsigned();
-                                sessions.foreign("user_id").references("coin.id");
+                                sessions.foreign("user_id").references("users.id");
                                 sessions.string("token");
                             }).then(() => {
                                 return knex.schema.createTable("price", (price) => {

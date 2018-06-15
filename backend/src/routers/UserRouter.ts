@@ -1,15 +1,5 @@
 import * as express from "express";
-interface IUser {
-    id: number;
-    fiat_currency_id: number;
-    coin_currency_id: number;
-    email: string;
-    notifications: boolean;
-}
-
-interface IUserToken extends IUser {
-    token: string;
-}
+import { IUser, IUserToken } from "../services/UserService";
 
 export default class UserRoutuer {
     public userService: any;

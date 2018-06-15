@@ -1,14 +1,18 @@
 import React from 'react';
 
-import { Container, Button, Text, Footer, FooterTab, Content, Icon, Header, Card, CardItem, Right } from 'native-base';
+import { Button, Card, CardItem, Content, Icon, Right, Text } from 'native-base';
+import { getUser } from '../redux/actions/user';
 
 export default class Settings extends React.Component {
-    render() {
+    public constructor(props: {}) {
+        super(props);
+    }
+    public render() {
         return (
             <Content>
                 <Card>
                     <CardItem>
-                        <Icon active name="logo-googleplus" />
+                        <Icon active={true} name="logo-googleplus" />
                         <Text>Settings</Text>
                         <Right>
                             <Icon name="arrow-forward" />

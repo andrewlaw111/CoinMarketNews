@@ -8,7 +8,7 @@ export default class News extends React.Component {
             <Content>
                 <Card>
                     <CardItem>
-                        <Icon active name="logo-googleplus" />
+                        <Icon active={true} name="logo-googleplus" />
                         <Text>News</Text>
                         <Right>
                             <Icon name="arrow-forward" />
