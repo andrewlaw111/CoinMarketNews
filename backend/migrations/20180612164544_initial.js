@@ -71,21 +71,22 @@ exports.up = function (knex, Promise) {
                             }).then(() => {
                                 return knex.schema.createTable("price", (price) => {
                                     price.increments();
-                                    price.integer("coin_id").unsigned();
-                                    price.foreign("coin_id").references("coin.id");
+                                    price.integer("coinmarketcap_id").unsigned();
+                                    price.foreign("coinmarketcap_id").references("coin.coinmarketcap_id");
                                     price.integer("currency_id").unsigned();
                                     price.foreign("currency_id").references("currency.id");
-                                    price.decimal("1h_price");
-                                    price.decimal("24h_price");
-                                    price.decimal("7d_price");
+                                    price.decimal("price");
+                                    // price.decimal("1h_price");
+                                    // price.decimal("24h_price");
+                                    // price.decimal("7d_price");
                                     price.decimal("volume_24h");
                                     price.decimal("market_cap");
                                     price.decimal("percent_change_1h");
                                     price.decimal("percent_change_24h");
                                     price.decimal("percent_change_7d");
-                                    price.decimal("price_change_1h");
-                                    price.decimal("price_change_24h");
-                                    price.decimal("price_change_7d");
+                                    // price.decimal("price_change_1h");
+                                    // price.decimal("price_change_24h");
+                                    // price.decimal("price_change_7d");
                                 }).then(() => {
                                     return knex.schema.createTable("price_alert", (priceAlert) => {
                                         priceAlert.increments();
