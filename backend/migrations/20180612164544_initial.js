@@ -75,9 +75,9 @@ exports.up = function (knex, Promise) {
                                     price.foreign("coinmarketcap_id").references("coin.coinmarketcap_id");
                                     price.integer("currency_id").unsigned();
                                     price.foreign("currency_id").references("currency.id");
-                                    price.decimal("price");
-                                    price.decimal("volume_24h");
-                                    price.decimal("market_cap");
+                                    price.decimal("price", 16, 8);
+                                    price.decimal("volume_24h", 16, 8);
+                                    price.decimal("market_cap", 16, 8);
                                     price.decimal("percent_change_1h");
                                     price.decimal("percent_change_24h");
                                     price.decimal("percent_change_7d");
