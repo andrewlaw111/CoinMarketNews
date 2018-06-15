@@ -5,7 +5,7 @@ var CronJob = cron.CronJob;
 
 export default class Cron {
     static price() {
-        new CronJob('1 * * * * *', function () {
+        new CronJob('1 1 * * * *', function () {
             console.log('cron price start');
             axios.get('https://api.coinmarketcap.com/v2/ticker/?structure=array')
                 .then(function (response) {
