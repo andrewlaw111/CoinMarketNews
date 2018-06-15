@@ -33,7 +33,7 @@ export default class CoinService {
     public checkTimer() {
         return Date.now() - this.lastUpdated;
     }
-    public getAllCoins(token: string) {
+    public getCoins(token: string) {
         return new Promise((resolve, reject) => {
 
             // Make a query to the database if the list has not been updated for 20 seconds
@@ -42,7 +42,7 @@ export default class CoinService {
             } else {
                 this.updateList()
                     .then(() => {
-                        resolve(this.coinList.slice(0, 100));
+                        resolve(this.coinList);
                     })
                     .catch((err) => {
                         reject(err);

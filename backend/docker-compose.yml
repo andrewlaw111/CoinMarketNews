@@ -16,6 +16,7 @@ services:
       - ./:/home/node/app
     ports:
       - "8000:8000"
+      - "5858:5858"
     links:
     - "db"
     command: "sh start.sh"
