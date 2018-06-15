@@ -99,7 +99,7 @@ var c = new Crawler({
     }
 });
 
-knex.select('*')
+knex.select()
     .from("coin")
     .offset(0)
     .limit(10)
