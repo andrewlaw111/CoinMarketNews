@@ -26,6 +26,9 @@
         "passport": "^0.4.0",
         "passport-jwt": "^4.0.0",
         "pg": "^7.4.3",
+        "rss-feed-emitter": "^2.0.0",
+        "sanitize-html": "^1.18.2",
+        "text2png": "^1.1.1",
         "ts-node": "^6.1.1",
         "typescript": "^2.9.1"
     },
