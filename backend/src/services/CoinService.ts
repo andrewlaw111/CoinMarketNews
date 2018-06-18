@@ -38,10 +38,12 @@ export default class CoinService {
 
             // Make a query to the database if the list has not been updated for 20 seconds
             if (Date.now() - this.lastUpdated < 20000) {
+                console.log(this.coinList);
                 resolve(this.coinList);
             } else {
                 this.updateList()
                     .then(() => {
+                        console.log(this.coinList);
                         resolve(this.coinList);
                     })
                     .catch((err) => {

@@ -10,6 +10,6 @@ export interface IRootState {
 }
 
 export const store = createStore(combineReducers({
-    chats: coinReducer,
+    coins: coinReducer,
     user: userReducer,
 }), applyMiddleware(thunk));

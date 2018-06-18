@@ -1,6 +1,5 @@
 import axios from "axios";
 import { AsyncStorage } from "react-native";
-import { Dispatch } from "redux";
 
 import { IUser } from "../../models";
 import { store } from "../store";
@@ -16,6 +15,8 @@ export interface ILoginSuccessAction {
 export type LoginActions = ILoginSuccessAction;
 
 export function loginSuccess(user: IUser): ILoginSuccessAction {
+    // tslint:disable-next-line:no-console
+    console.log(user);
     return {
         type: LOGIN_SUCCESS,
         user,
@@ -36,6 +37,9 @@ export const getUser = async () => {
                     }
                 ).then((result) => {
                     store.dispatch(loginSuccess(result.data))
+                }).catch((err) => {
+                    // tslint:disable-next-line:no-console
+                    console.error(err);
                 })
         } else {
             axios
@@ -44,6 +48,9 @@ export const getUser = async () => {
                 ).then((result) => {
                     AsyncStorage.setItem('@CoinMarketNews:userToken', result.data.token);
                     store.dispatch(loginSuccess(result.data))
+                }).catch((err) => {
+                    // tslint:disable-next-line:no-console
+                    console.error(err);
                 })
         }
     } catch (error) {

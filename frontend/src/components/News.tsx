@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Container, Button, Text, Footer, FooterTab, Content, Icon, Header, Card, CardItem, Right } from 'native-base';
+import { Card, CardItem, Content, Icon, Right, Text } from 'native-base';
 
 export default class News extends React.Component {
-    render() {
+    public render() {
         return (
             <Content>
                 <Card>

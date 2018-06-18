@@ -13,6 +13,10 @@ const userService = new UserService();
 
 Cron.price();
 
+app.get("/", (req, res) => {
+    res.json("Heeloo");
+});
+
 app.use("/login", new LoginRouter().router());
 app.use("/coin", new CoinRouter(coinService).router());
 app.use("/user", new UserRouter(userService).router());
