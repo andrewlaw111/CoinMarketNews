@@ -1,5 +1,6 @@
-// import axios from "axios";
 import axios from "axios";
+import { AsyncStorage } from "react-native";
+
 import { Action } from "redux";
 import { ICoin } from "../../models";
 import { store } from "../store";
@@ -41,20 +42,27 @@ export const getCoins = async () => {
         const token = store.getState().user.user.token;
         axios
             .get<ICoin[]>(
-                "http://10.0.2.2:8000/coin",
+                "http://10.0.0.22:8000/coin",
                 {
                     headers: {
                         token
                     }
                 }
             ).then((result) => {
-                // tslint:disable-next-line:no-console
-                console.log(result);
-                store.dispatch(loadCoinSuccess(result.data))
+                AsyncStorage.setItem('@CoinMarketNews:coinsStore', JSON.stringify(result.data));
+                store.dispatch(loadCoinSuccess(result.data));
+            }).catch(async () => {
+                try {
+                    const coins = await AsyncStorage.getItem('@CoinMarketNews:coinsStore');
+                    if (coins !== null) {
+                        store.dispatch(loadCoinSuccess(JSON.parse(coins)));
+                    }
+                } catch (error) {
+                    store.dispatch(loadCoinFailure());
+                }
             })
 
     } catch (error) {
-        // tslint:disable-next-line:no-console
-        console.log("error", error);
+        store.dispatch(loadCoinFailure());
     }
 }

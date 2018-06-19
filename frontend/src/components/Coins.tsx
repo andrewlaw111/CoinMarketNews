@@ -16,10 +16,10 @@ interface ICoinsListProps {
 }
 
 class PureCoinsList extends React.Component<ICoinsListProps>{
-    public renderCoinList = (item: any, _SECTIONID: string | number, rowID: string | number) => (
+    public renderCoinList = (item: ICoin, _SECTIONID: string | number, rowID: string | number) => (
         <ListItem key={rowID} avatar={true} onPress={this.handlePress.bind(this, rowID)}>
             <Left>
-                <Thumbnail source={{ uri: 'https://raw.githubusercontent.com/cjdowner/cryptocurrency-icons/master/128/icon/btc.png' }} />
+                <Thumbnail source={{ uri: `http://10.0.0.22:8000/icon/${item.symbol.toLocaleLowerCase()}.png` }} />
             </Left>
             <Body>
                 <Text>{item.name}</Text>
@@ -29,11 +29,13 @@ class PureCoinsList extends React.Component<ICoinsListProps>{
                 <Text note={true}>$3.00</Text>
             </Right>
         </ListItem>
-    )
+    );
+
     public render() {
-        return (
-            <View>
-                {/* <Grid>
+        if (this.props.coins) {
+            return (
+                <View>
+                    {/* <Grid>
                     <Col style={{ flex: 0.4 }}>
                         <Segment>
                             <Button style={styles.smallpadding} first={true} active={true}><Text style={styles.nopadding}>Cap</Text></Button>
@@ -55,12 +57,19 @@ class PureCoinsList extends React.Component<ICoinsListProps>{
                         </Segment>
                     </Col>
                 </Grid> */}
-                <List dataArray={this.props.coins}
-                    // tslint:disable-next-line:jsx-no-lambda
-                    renderRow={this.renderCoinList} />
-            </View>
-        );
-    }
+                    <List dataArray={this.props.coins}
+                        // tslint:disable-next-line:jsx-no-lambda
+                        renderRow={this.renderCoinList} />
+                </View>
+            );
+        } else {
+            return (
+                <View>
+                    <Text>CoinMarketNews was unable to retrieve data.</Text>
+                </View>
+            );
+        };
+    };
 
     public handlePress = (coinID: number) => {
         this.props.navigator.push({

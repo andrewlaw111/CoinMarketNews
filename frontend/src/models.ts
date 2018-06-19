@@ -3,6 +3,7 @@ export interface ICoin {
     name: string;
     symbol: string;
     rank: number;
+    icon: string | null;
     circulating_supply: string;
     total_supply: string;
     max_supply: string | null;
