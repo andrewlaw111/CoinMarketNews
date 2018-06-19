@@ -31,9 +31,12 @@ export interface IUser {
     token: string | null;
 }
 
-// TODO
-// export interface INews {
-//     sender: string;
-//     message: string;
-//     time: string;
-// }
+export interface INews {
+    id: number;
+    title: string;
+    content: string;
+    source_id: string | null;
+    link: string,
+    created_at: string,
+    counter: number
+};

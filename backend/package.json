@@ -1,7 +1,7 @@
 {
     "main": "index.js",
     "scripts": {
-        "start": "node index",
+        "start": "nodemon index",
         "debug": "nodemon --watch . --inspect=0.0.0.0:5858 --nolazy ./index.js",
         "start.dev": "nodemon"
     },

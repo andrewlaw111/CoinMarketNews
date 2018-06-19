@@ -28,7 +28,7 @@ exports.seed = function (knex, Promise) {
             return axios.get('https://api.coinmarketcap.com/v2/listings/')
                 .then(function (response) {
                     const coins = [];
-                    console.log(response.data);
+                    // console.log(response.data);
                     return knex
                         .select('coinmarketcap_id')
                         .from('coin')
@@ -37,9 +37,9 @@ exports.seed = function (knex, Promise) {
                             console.log('coin ids in db:');
                             console.log(coinmarketcap_ids);
                             return Promise.all(response.data.data.map(function (coin) {
-                                if (coinmarketcap_ids.indexOf(coin.id) > -1) {    // coin already in DB
+                                if (coinmarketcap_ids.indexOf(coin.id) > -1) { // coin already in DB
                                     return true;
-                                } else {    // new coin
+                                } else { // new coin
                                     const empty_source = {
                                         name: null,
                                         link: null
@@ -81,14 +81,17 @@ exports.seed = function (knex, Promise) {
                                             console.log('currency');
                                             console.log(currency);
                                             for (const new_coin of coins) {
-                                                insert_price.push({ coinmarketcap_id: new_coin.coinmarketcap_id, currency_id: currency });
+                                                insert_price.push({
+                                                    coinmarketcap_id: new_coin.coinmarketcap_id,
+                                                    currency_id: currency
+                                                });
                                             }
                                         }
                                         console.log(insert_price);
                                         return knex('price')
                                             .insert(insert_price)
                                             .then(function (data) {
-                                                if(data) {
+                                                if (data) {
                                                     console.log('insert price');
                                                 }
                                             })

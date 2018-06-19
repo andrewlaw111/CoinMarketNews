@@ -1,17 +1,22 @@
 
-import CoinRouter from "./routers/CoinRouter";
-import UserRouter from "./routers/UserRouter";
-import CoinService from "./services/CoinService";
-import UserService from "./services/UserService";
+
 import { app, server } from "./utils/init-app";
 import LoginRouter from "./utils/login";
 import * as express from "express";
 const text2png = require('text2png');
 const fs = require('fs');
-
 import Cron from "./utils/cron";
 
+import CoinRouter from "./routers/CoinRouter";
+import UserRouter from "./routers/UserRouter";
+import CoinService from "./services/CoinService";
+import UserService from "./services/UserService";
+import NewsRouter from "./routers/NewsRouter";
+import NewsService from "./services/NewsService";
+
+
 const coinService = new CoinService();
+const newsService = new NewsService();
 const userService = new UserService();
 
 Cron.price();
@@ -27,6 +32,7 @@ app.use('/icon', function (req, res) {
 
 app.use("/login", new LoginRouter().router());
 app.use("/coin", new CoinRouter(coinService).router());
+app.use("/news", new NewsRouter(newsService).router());
 app.use("/user", new UserRouter(userService).router());
 
 server.listen(8000);
