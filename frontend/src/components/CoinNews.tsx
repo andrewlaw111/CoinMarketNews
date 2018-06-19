@@ -2,9 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, List, ListItem, Text } from "native-base";
-import { StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
-import { ICoin } from "../models";
+import { ICoin, INews } from "../models";
 import { IRootState } from "../redux/store";
 
 interface ICoinsPageProps {
@@ -12,32 +12,34 @@ interface ICoinsPageProps {
 }
 
 class PureCoinNews extends React.Component<ICoinsPageProps> {
-    public renderList = (rowData: any, _SECTIONID: string | number, rowID: string | number) => (
-        <ListItem key={rowID}>
+    public renderList = (info: { item: any, index: number }) => (
+        <View>
             <Card>
                 <CardItem header={true} button={true}>
-                    <Text>{rowData.news}</Text>
+                    <Text>{info.item.news}</Text>
                 </CardItem>
                 <CardItem button={true}>
                     <Body>
-                        <Text>{rowData.link}</Text>
+                        <Text>{info.item.link}</Text>
                     </Body>
                 </CardItem>
             </Card>
-        </ListItem>
+        </View>
     )
     public render() {
         return (
             <Container>
-                <List dataArray={[
+                <FlatList data={[
                     { news: "abc", link: "abc" },
                     { news: "abc", link: "abc" },
-                    { news: "abc", link: "abc" }]} // replace with this.props.news
-                    // tslint:disable-next-line:jsx-no-lambda
-                    renderRow={this.renderList} />
+                    { news: "abc", link: "abc" }]}
+                    renderItem={this.renderList}
+                    keyExtractor={this.keyExtractor}
+                />
             </Container>
         );
     }
+    private keyExtractor = (item: any) => item.news;
 }
 
 const mapStateToProps = (state: IRootState) => {

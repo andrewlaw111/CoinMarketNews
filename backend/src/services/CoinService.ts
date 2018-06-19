@@ -44,7 +44,7 @@ export default class CoinService {
                     .then(() => {
                         resolve(this.coinList);
                     })
-                    .catch((err) => {
+                    .catch((err: any) => {
                         reject(err);
                     });
             }
@@ -61,7 +61,7 @@ export default class CoinService {
                     .then(() => {
                         resolve(this.coinList.find((coin) => coin.id === parseInt(coinID, undefined)));
                     })
-                    .catch((err) => {
+                    .catch((err: any) => {
                         reject(err);
                     });
             }
@@ -72,6 +72,7 @@ export default class CoinService {
         return knex
             .select("*")
             .from("coin")
+            .innerJoin("")
             .orderBy("rank", "asc").then((data: ICoin[]) => {
                 return this.coinList = data;
             });

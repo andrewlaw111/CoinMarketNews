@@ -16,8 +16,7 @@ interface INewsListProps {
 
 class PureNewsList extends React.Component<INewsListProps> {
     public renderNewsList = (info: { item: INews, index: number }) => (
-        <ListItem
-            avatar={true}>
+        <View>
             <Card >
                 <CardItem header={true} onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)} >
                     <Text>{this.props.news[info.index].title}</Text>
@@ -36,7 +35,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                     <Text>{info.item.created_at}</Text>
                 </CardItem>
             </Card>
-        </ListItem>
+        </View>
     )
     public render() {
         if (this.props.news) {
