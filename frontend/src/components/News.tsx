@@ -18,8 +18,10 @@ class PureNewsList extends React.Component<INewsListProps> {
     public renderNewsList = (info: { item: INews, index: number }) => (
         <View>
             <Card >
-                <CardItem header={true} onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)} >
-                    <Text>{this.props.news[info.index].title}</Text>
+                <CardItem header={true}>
+                    <Text onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)} style={styles.headingText}>
+                        {this.props.news[info.index].title}
+                    </Text>
                 </CardItem>
                 <CardItem>
                     <Body>
@@ -73,15 +75,7 @@ const NewsList = connect(mapStateToProps)(PureNewsList);
 export default NewsList;
 
 const styles = StyleSheet.create({
-    listStyle: {
-        paddingTop: -100,
-    },
-    nopadding: {
-        paddingLeft: 0,
-        paddingRight: 0,
-    },
-    smallpadding: {
-        paddingLeft: 5,
-        paddingRight: 5,
+    headingText: {
+        textDecorationLine: "underline",
     },
 });

@@ -2,11 +2,10 @@ import React from "react";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
-import { Body, Button, Col, Grid, Left, List, ListItem, Right, Segment, Text, Thumbnail } from "native-base";
+import { Button, Col, Grid, Icon, Segment, Text, Thumbnail } from "native-base";
 import { FlatList, StyleSheet, TouchableHighlight, TouchableNativeFeedback, View } from "react-native";
 
 import { ICoin, IUser } from "../models";
-import { getCoins } from "../redux/actions/coins";
 import { IRootState } from "../redux/store";
 
 interface ICoinsListProps {
@@ -21,16 +20,28 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
             <TouchableNativeFeedback onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
                 <View style={styles.listCoin}>
                     <View style={styles.listCoinLeft}>
+                        <Text>{info.item.rank}. </Text>
                         <Thumbnail source={
                             { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                         } />
                     </View>
                     <View style={styles.listCoinBody}>
-                        <Text>{info.item.name}</Text>
+                        <Text style={styles.coinName}>{info.item.name}</Text>
                         <Text note={true}>$3.00</Text>
                     </View>
                     <View style={styles.listCoinRight}>
-                        <Text note={true} style={styles.lisCoinRightText}>$3.00</Text>
+                        <View>
+                            <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
+                            <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
+                        </View>
+                        <View>
+                            <Icon
+                                type="FontAwesome"
+                                name="heart"
+                                style={{ color: "grey" }}
+                                onPress={this.handlePressHeart.bind(this, info.item.id)}
+                            />
+                        </View>
                     </View>
                 </View>
             </TouchableNativeFeedback>
@@ -95,7 +106,7 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
         }
     }
 
-    public handlePress = (coinID: number) => {
+    private handlePress = (coinID: number) => {
         this.props.navigator.showModal({
             animationType: "slide-up",
             // backButtonHidden: false,
@@ -104,6 +115,7 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
             screen: "CoinMarketNews.CoinsPage",
         });
     }
+    private handlePressHeart = () => alert("Press Heart");
     private keyExtractor = (item: ICoin) => item.id.toString();
 }
 
@@ -126,18 +138,9 @@ const styles = StyleSheet.create({
     coinListFilters: {
         flex: 0,
     },
-    listStyle: {
-        paddingTop: -100,
+    coinName: {
+        fontWeight: "bold",
     },
-    nopadding: {
-        paddingLeft: 0,
-        paddingRight: 0,
-    },
-    smallpadding: {
-        paddingLeft: 5,
-        paddingRight: 5,
-    },
-    // tslint:disable-next-line:object-literal-sort-keys
     listCoin: {
         flex: 1,
         flexDirection: "row",
@@ -148,19 +151,38 @@ const styles = StyleSheet.create({
 
     },
     listCoinBody: {
-        flex: 0.6,
+        flex: 0.53,
+        justifyContent: "space-around",
+        paddingLeft: 10,
     },
     listCoinLeft: {
-        flex: 0.2,
+        alignItems: "center",
+        flex: 0.23,
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     listCoinRight: {
-        flex: 0.2,
+        alignItems: "center",
+        flex: 0.24,
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
-    lisCoinRightText: {
-        textAlign: "right",
+    listCoinRightText: {
+        // textAlign: "right",
     },
     listItem: {
         borderColor: "#d6d7da",
         borderWidth: 0.5,
+    },
+    listStyle: {
+        paddingTop: -100,
+    },
+    nopadding: {
+        paddingLeft: 0,
+        paddingRight: 0,
+    },
+    smallpadding: {
+        paddingLeft: 5,
+        paddingRight: 5,
     },
 });

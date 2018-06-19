@@ -72,7 +72,6 @@ export default class CoinService {
         return knex
             .select("*")
             .from("coin")
-            .innerJoin("")
             .orderBy("rank", "asc").then((data: ICoin[]) => {
                 return this.coinList = data;
             });
