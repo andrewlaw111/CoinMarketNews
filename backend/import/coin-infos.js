@@ -105,7 +105,7 @@ knex.select()
     .limit(10)
     .orderBy('rank', 'asc')
     .then((coins) => {
-        console.log(coins);
+        // console.log(coins);
         for (coin of coins) {
             if (coin.symbol == 'MIOTA') {
                 coin.symbol = 'IOT';

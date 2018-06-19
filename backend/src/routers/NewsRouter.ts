@@ -11,17 +11,17 @@ export default class NewsRouter {
     public router() {
         const router = express.Router();
         router.get("/", this.getNews);
-        router.get("/:coinID", this.getSpecificCoin);
+        router.get("/coin", this.getCoinNews);
         return router;
     }
-    private getCoins = (req: express.Request, res: express.Response) => {
-        return this.coinService.getCoins(req.headers.token)
-            .then((data: ICoin[]) => res.json(data))
+    private getNews = (req: express.Request, res: express.Response) => {
+        return this.newsService.getNews(req.headers.token)
+            .then((data: INews[]) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
-    private getSpecificCoin = (req: express.Request, res: express.Response) => {
-        return this.coinService.getSpecificCoin(req.headers.token, req.params.coinID)
-            .then((data: ICoin) => res.json(data))
+    private getCoinNews = (req: express.Request, res: express.Response) => {
+        return this.newsService.getCoinNews(req.headers.token, req.params.coinID)
+            .then((data: INews) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
 }

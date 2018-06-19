@@ -2,15 +2,13 @@ import { Navigation } from 'react-native-navigation';
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 import { getCoins } from './redux/actions/coins';
+import { getNews } from './redux/actions/news';
 import { getUser } from './redux/actions/user';
 import { registerScreens } from './screens';
 
 
 
 registerScreens(); // this is where you register all of your app's screens
-getUser().then(() => {
-  getCoins();
-});
 
 // start the app
 Promise.all([
