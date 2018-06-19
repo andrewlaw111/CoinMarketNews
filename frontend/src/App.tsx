@@ -27,7 +27,6 @@ Promise.all([
   FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
 ]).then((sources) => {
-  console.log(sources);
   // start the app
   Navigation.startTabBasedApp({
     tabs: [
@@ -42,14 +41,14 @@ Promise.all([
         icon: sources[1],
         label: "News",
         screen: "CoinMarketNews.News",
-        selectedIcon: sources[0], // iOS only
+        selectedIcon: sources[1], // iOS only
         title: "News",
       },
       {
         icon: sources[2],
         label: "Settings",
         screen: "CoinMarketNews.Settings",
-        selectedIcon: sources[1], // iOS only
+        selectedIcon: sources[2], // iOS only
         title: "Settings",
       },
     ],
