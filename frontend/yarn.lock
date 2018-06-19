@@ -444,9 +444,9 @@
   version "23.0.0"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.0.0.tgz#760cac74f00bb9c3075587716d2b3b4435663bc0"
 
-"@types/react-native-navigation@^1.1.11":
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/@types/react-native-navigation/-/react-native-navigation-1.1.11.tgz#58a9457468129ad1ed4484579f8c05dd87d444c6"
+"@types/react-native-navigation@^1.1.12":
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/@types/react-native-navigation/-/react-native-navigation-1.1.12.tgz#1f43bdf88d39bce2a3c0fdded0befda5083df6ff"
   dependencies:
     "@types/react" "*"
 
@@ -4644,9 +4644,9 @@ react-native-keyboard-aware-scroll-view@0.5.0:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
 
-react-native-navigation@^1.1.466:
-  version "1.1.466"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.466.tgz#5cfd701f2a647c20135a1c125e757ece5488957f"
+react-native-navigation@^1.1.471:
+  version "1.1.471"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.471.tgz#8ab400f3047d4a3bccd3af232e44a7a1cd5d3f37"
   dependencies:
     lodash "4.x.x"
 
