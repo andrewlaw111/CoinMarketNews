@@ -1,0 +1,27 @@
+import * as express from "express";
+import INews from "../services/NewsService";
+
+export default class NewsRouter {
+    public newsService: any;
+
+    public constructor(newsService: any) {
+        this.newsService = newsService;
+    }
+
+    public router() {
+        const router = express.Router();
+        router.get("/", this.getNews);
+        router.get("/:coinID", this.getSpecificCoin);
+        return router;
+    }
+    private getCoins = (req: express.Request, res: express.Response) => {
+        return this.coinService.getCoins(req.headers.token)
+            .then((data: ICoin[]) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private getSpecificCoin = (req: express.Request, res: express.Response) => {
+        return this.coinService.getSpecificCoin(req.headers.token, req.params.coinID)
+            .then((data: ICoin) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+}
