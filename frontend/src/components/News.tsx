@@ -3,7 +3,7 @@ import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, List, ListItem, Text } from "native-base";
-import { Linking, StyleSheet, View } from "react-native";
+import { FlatList, Linking, StyleSheet, View } from "react-native";
 
 import { INews, IUser } from "../models";
 import { IRootState } from "../redux/store";
@@ -15,25 +15,25 @@ interface INewsListProps {
 }
 
 class PureNewsList extends React.Component<INewsListProps> {
-    public renderNewsList = (item: INews, _SECTIONID: string | number, rowID: number) => (
-        <ListItem key={rowID} avatar={true} style={styles.listItem}>
-            <Card style={styles.listItem}>
-                <CardItem header={true}>
-                    <Text>{this.props.news[rowID].title}</Text>
+    public renderNewsList = (info: { item: INews, index: number }) => (
+        <ListItem
+            avatar={true}>
+            <Card >
+                <CardItem header={true} onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)} >
+                    <Text>{this.props.news[info.index].title}</Text>
                 </CardItem>
                 <CardItem>
                     <Body>
                         <Text>
-                            {this.props.news[rowID].content}
+                            {this.props.news[info.index].content}
                         </Text>
                     </Body>
                 </CardItem>
                 <CardItem
                     button={true}
                     footer={true}
-                    onPress={this.handleLinkPress.bind(this, this.props.news[rowID].link)}
                 >
-                    <Text>Open in Browser</Text>
+                    <Text>{info.item.created_at}</Text>
                 </CardItem>
             </Card>
         </ListItem>
@@ -41,10 +41,11 @@ class PureNewsList extends React.Component<INewsListProps> {
     public render() {
         if (this.props.news) {
             return (
-                <View style={styles.listItem} >
-                    <List dataArray={this.props.news}
-                        // tslint:disable-next-line:jsx-no-lambda
-                        renderRow={this.renderNewsList} style={styles.listItem} />
+                <View >
+                    <FlatList data={this.props.news}
+                        renderItem={this.renderNewsList}
+                        keyExtractor={this.keyExtractor}
+                    />
                 </View>
             );
         } else {
@@ -56,9 +57,10 @@ class PureNewsList extends React.Component<INewsListProps> {
         }
     }
 
-    public handleLinkPress = (link: string) => {
+    private handleLinkPress = (link: string) => {
         Linking.openURL(link);
     }
+    private keyExtractor = (item: INews) => item.id.toString();
 }
 
 const mapStateToProps = (state: IRootState) => {
@@ -83,9 +85,4 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5,
     },
-    // tslint:disable-next-line:object-literal-sort-keys
-    listItem: {
-        margin: 0,
-    },
-
 });

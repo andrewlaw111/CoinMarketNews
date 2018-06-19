@@ -1,11 +1,11 @@
-import React from 'react';
-import { Navigator } from 'react-native-navigation';
-import { connect } from 'react-redux';
+import React from "react";
+import { Navigator } from "react-native-navigation";
+import { connect } from "react-redux";
 
-import { Body, Button, Col, Grid, Left, List, ListItem, Right, Segment, Text, Thumbnail } from 'native-base';
-import { StyleSheet, View } from 'react-native';
+import { Body, Button, Col, Grid, Left, List, ListItem, Right, Segment, Text, Thumbnail } from "native-base";
+import { FlatList, StyleSheet, TouchableHighlight, TouchableNativeFeedback, View } from "react-native";
 
-import { ICoin, IUser } from '../models';
+import { ICoin, IUser } from "../models";
 import { getCoins } from "../redux/actions/coins";
 import { IRootState } from "../redux/store";
 
@@ -15,27 +15,33 @@ interface ICoinsListProps {
     navigator: Navigator;
 }
 
-class PureCoinsList extends React.Component<ICoinsListProps>{
-    public renderCoinList = (item: ICoin, _SECTIONID: string | number, rowID: string | number) => (
-        <ListItem key={rowID} avatar={true} onPress={this.handlePress.bind(this, rowID)}>
-            <Left>
-                <Thumbnail source={{ uri: `http://10.0.0.22:8000/icon/${item.symbol.toLocaleLowerCase()}.png` }} />
-            </Left>
-            <Body>
-                <Text>{item.name}</Text>
-                <Text note={true}>$3.00</Text>
-            </Body>
-            <Right>
-                <Text note={true}>$3.00</Text>
-            </Right>
-        </ListItem>
-    );
+class PureCoinsList extends React.Component<ICoinsListProps> {
+    public renderCoinList = (info: { item: ICoin, index: number }) => (
+        <View style={styles.listItem}>
+            <TouchableNativeFeedback onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
+                <View style={styles.listCoin}>
+                    <View style={styles.listCoinLeft}>
+                        <Thumbnail source={
+                            { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                        } />
+                    </View>
+                    <View style={styles.listCoinBody}>
+                        <Text>{info.item.name}</Text>
+                        <Text note={true}>$3.00</Text>
+                    </View>
+                    <View style={styles.listCoinRight}>
+                        <Text note={true} style={styles.lisCoinRightText}>$3.00</Text>
+                    </View>
+                </View>
+            </TouchableNativeFeedback>
+        </View>
+    )
 
     public render() {
         if (this.props.coins) {
             return (
-                <View>
-                    {/* <Grid>
+                <View style={styles.coinListComponent}>
+                    <Grid style={styles.coinListFilters}>
                         <Col style={{ flex: 0.4 }}>
                             <Segment>
                                 <Button style={styles.smallpadding} first={true} active={true}>
@@ -72,10 +78,12 @@ class PureCoinsList extends React.Component<ICoinsListProps>{
                                 </Button>
                             </Segment>
                         </Col>
-                    </Grid> */}
-                    <List dataArray={this.props.coins}
-                        // tslint:disable-next-line:jsx-no-lambda
-                        renderRow={this.renderCoinList} />
+                    </Grid>
+                    <FlatList data={this.props.coins.slice().splice(0, 20)}
+                        renderItem={this.renderCoinList}
+                        keyExtractor={this.keyExtractor}
+                        style={styles.coinList}
+                    />
                 </View>
             );
         } else {
@@ -84,18 +92,19 @@ class PureCoinsList extends React.Component<ICoinsListProps>{
                     <Text>CoinMarketNews was unable to retrieve data.</Text>
                 </View>
             );
-        };
-    };
+        }
+    }
 
     public handlePress = (coinID: number) => {
-        this.props.navigator.push({
-            animated: false,
-            backButtonHidden: false,
-            backButtonTitle: undefined,
+        this.props.navigator.showModal({
+            animationType: "slide-up",
+            // backButtonHidden: false,
+            // backButtonTitle: undefined,
             passProps: { coinID },
             screen: "CoinMarketNews.CoinsPage",
         });
     }
+    private keyExtractor = (item: ICoin) => item.id.toString();
 }
 
 const mapStateToProps = (state: IRootState) => {
@@ -109,6 +118,14 @@ const CoinsList = connect(mapStateToProps)(PureCoinsList);
 export default CoinsList;
 
 const styles = StyleSheet.create({
+    coinList: {
+        flex: 0,
+    },
+    coinListComponent: {
+    },
+    coinListFilters: {
+        flex: 0,
+    },
     listStyle: {
         paddingTop: -100,
     },
@@ -119,5 +136,31 @@ const styles = StyleSheet.create({
     smallpadding: {
         paddingLeft: 5,
         paddingRight: 5,
+    },
+    // tslint:disable-next-line:object-literal-sort-keys
+    listCoin: {
+        flex: 1,
+        flexDirection: "row",
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+
+    },
+    listCoinBody: {
+        flex: 0.6,
+    },
+    listCoinLeft: {
+        flex: 0.2,
+    },
+    listCoinRight: {
+        flex: 0.2,
+    },
+    lisCoinRightText: {
+        textAlign: "right",
+    },
+    listItem: {
+        borderColor: "#d6d7da",
+        borderWidth: 0.5,
     },
 });

@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default class Splash extends React.Component {
     public render() {
         return (
-            <View>
+            <View style={styles.splash}>
                 <View>
                     <Text>Coin Market News</Text>
                 </View>
@@ -13,3 +13,10 @@ export default class Splash extends React.Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    splash: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+});
