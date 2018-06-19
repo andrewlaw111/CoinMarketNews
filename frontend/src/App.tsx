@@ -18,35 +18,38 @@ Navigation.startSingleScreenApp({
 
 // start the app
 Promise.all([
-  FontAwesomeIcon.getImageSource("user-circle-o", 20, "#3db9f7"),
-  FontAwesomeIcon.getImageSource("comment", 20, "#3db9f7"),
-  FontAwesomeIcon.getImageSource("wrench", 20, "#3db9f7"),
-  getUser(),
-  getNews(),
-  getCoins(),
+  getUser().then(() => {
+    getCoins();
+    getNews();
+  }),
+
+  // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
+  FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
+  FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
 ]).then((sources) => {
+  console.log(sources);
   // start the app
   Navigation.startTabBasedApp({
     tabs: [
       {
-        icon: sources[0],
+        icon: require("./coin.png"),
         label: "Coins",
         screen: "CoinMarketNews.Coins", // this is a registered name for a screen
-        selectedIcon: sources[0], // iOS only
+        selectedIcon: require("./coin.png"), // iOS only
         title: "Coins",
       },
       {
         icon: sources[1],
         label: "News",
         screen: "CoinMarketNews.News",
-        selectedIcon: sources[1], // iOS only
+        selectedIcon: sources[0], // iOS only
         title: "News",
       },
       {
         icon: sources[2],
         label: "Settings",
         screen: "CoinMarketNews.Settings",
-        selectedIcon: sources[2], // iOS only
+        selectedIcon: sources[1], // iOS only
         title: "Settings",
       },
     ],
