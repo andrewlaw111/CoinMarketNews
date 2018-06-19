@@ -36,7 +36,7 @@ export interface INews {
     title: string;
     content: string;
     source_id: string | null;
-    link: string,
-    created_at: string,
-    counter: number
-};
+    link: string;
+    created_at: string;
+    counter: number;
+}

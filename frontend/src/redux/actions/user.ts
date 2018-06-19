@@ -21,22 +21,22 @@ export function loginSuccess(user: IUser): ILoginSuccessAction {
         type: LOGIN_SUCCESS,
         user,
     };
-};
+}
 
 export const getUser = async () => {
     try {
-        const token = await AsyncStorage.getItem('@CoinMarketNews:userToken');
+        const token = await AsyncStorage.getItem("@CoinMarketNews:userToken");
         if (token !== null) {
             axios
                 .get<IUser>(
                     "http://10.0.0.22:8000/user",
                     {
                         headers: {
-                            token
-                        }
-                    }
+                            token,
+                        },
+                    },
                 ).then((result) => {
-                    store.dispatch(loginSuccess(result.data))
+                    store.dispatch(loginSuccess(result.data));
                 }).catch((err) => {
                     // tslint:disable-next-line:no-console
                     console.error(err);
@@ -44,17 +44,17 @@ export const getUser = async () => {
         } else {
             axios
                 .post<IUser>(
-                    "http://10.0.0.22:8000/user"
+                    "http://10.0.0.22:8000/user",
                 ).then((result) => {
-                    AsyncStorage.setItem('@CoinMarketNews:userToken', result.data.token);
-                    store.dispatch(loginSuccess(result.data))
+                    AsyncStorage.setItem("@CoinMarketNews:userToken", result.data.token);
+                    store.dispatch(loginSuccess(result.data));
                 }).catch((err) => {
                     // tslint:disable-next-line:no-console
                     console.error(err);
                 });
-        };
+        }
     } catch (error) {
         // tslint:disable-next-line:no-console
         console.log("error", error);
-    };
+    }
 };

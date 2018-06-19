@@ -1,9 +1,8 @@
 import { IUser } from "../../models";
 import { LOGIN_SUCCESS, LoginActions } from "../actions/user";
 
-
 export interface IUserState {
-    user: IUser,
+    user: IUser;
 }
 
 const defaultUserState: IUserState = {
@@ -14,8 +13,8 @@ const defaultUserState: IUserState = {
         id: null,
         notifications: false,
         token: null,
-    }
-}
+    },
+};
 
 export function userReducer(state: IUserState = defaultUserState, action: LoginActions) {
     switch (action.type) {

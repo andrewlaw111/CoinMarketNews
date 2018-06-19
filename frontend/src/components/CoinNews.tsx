@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, List, ListItem, Text } from 'native-base';
-import { StyleSheet, View } from 'react-native';
+import { Body, Card, CardItem, Container, List, ListItem, Text } from "native-base";
+import { StyleSheet, View } from "react-native";
 
-import { ICoin } from '../models';
-import { IRootState } from '../redux/store';
+import { ICoin } from "../models";
+import { IRootState } from "../redux/store";
 
 interface ICoinsPageProps {
     coin: ICoin;
 }
 
-class PureCoinNews extends React.Component<ICoinsPageProps>{
+class PureCoinNews extends React.Component<ICoinsPageProps> {
     public renderList = (rowData: any, _SECTIONID: string | number, rowID: string | number) => (
         <ListItem key={rowID}>
             <Card>
@@ -29,7 +29,10 @@ class PureCoinNews extends React.Component<ICoinsPageProps>{
     public render() {
         return (
             <Container>
-                <List dataArray={[{ news: 'abc', link: 'abc' }, { news: 'abc', link: 'abc' }, { news: 'abc', link: 'abc' }]} // replace with this.props.news
+                <List dataArray={[
+                    { news: "abc", link: "abc" },
+                    { news: "abc", link: "abc" },
+                    { news: "abc", link: "abc" }]} // replace with this.props.news
                     // tslint:disable-next-line:jsx-no-lambda
                     renderRow={this.renderList} />
             </Container>

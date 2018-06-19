@@ -1,24 +1,24 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import { Container, Tab, Tabs, Text } from 'native-base';
-import { StyleSheet, View } from 'react-native';
+import { Container, Tab, Tabs, Text } from "native-base";
+import { StyleSheet, View } from "react-native";
 
-import { ICoin, IUser } from '../models';
-import { IRootState } from '../redux/store';
+import { ICoin, IUser } from "../models";
+import { IRootState } from "../redux/store";
 
-import CoinAlerts from './CoinAlerts';
-import CoinInfo from './CoinInfo';
-import CoinNews from './CoinNews';
-import CoinPrice from './CoinPrice';
+import CoinAlerts from "./CoinAlerts";
+import CoinInfo from "./CoinInfo";
+import CoinNews from "./CoinNews";
+import CoinPrice from "./CoinPrice";
 
 interface ICoinsPageProps {
-    coinID: number
+    coinID: number;
     coins: ICoin[];
     user: IUser;
 }
 
-class PureCoinsList extends React.Component<ICoinsPageProps>{
+class PureCoinsList extends React.Component<ICoinsPageProps> {
 
     public render() {
         // tslint:disable-next-line:no-console

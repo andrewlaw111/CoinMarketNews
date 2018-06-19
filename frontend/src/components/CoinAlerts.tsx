@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, Text } from 'native-base';
-import { StyleSheet, View } from 'react-native';
+import { Body, Card, CardItem, Container, Text } from "native-base";
+import { StyleSheet, View } from "react-native";
 
-import { ICoin } from '../models';
-import { IRootState } from '../redux/store';
+import { ICoin } from "../models";
+import { IRootState } from "../redux/store";
 
 interface ICoinsPageProps {
     coin: ICoin;
 }
 
-class PureCoinAlerts extends React.Component<ICoinsPageProps>{
+class PureCoinAlerts extends React.Component<ICoinsPageProps> {
 
     public render() {
         return (

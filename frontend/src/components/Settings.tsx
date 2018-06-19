@@ -1,7 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { Button, Card, CardItem, Content, Icon, Right, Text } from 'native-base';
-import { getUser } from '../redux/actions/user';
+import { Card, CardItem, Content, Icon, Right, Text } from "native-base";
 
 export default class Settings extends React.Component {
     public constructor(props: {}) {

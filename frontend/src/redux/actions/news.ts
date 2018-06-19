@@ -45,24 +45,24 @@ export const getNews = async () => {
                 "http://10.0.0.22:8000/news",
                 {
                     headers: {
-                        token
-                    }
-                }
+                        token,
+                    },
+                },
             ).then((result) => {
-                AsyncStorage.setItem('@CoinMarketNews:newsStore', JSON.stringify(result.data));
+                AsyncStorage.setItem("@CoinMarketNews:newsStore", JSON.stringify(result.data));
                 store.dispatch(loadNewsSuccess(result.data));
             }).catch(async () => {
                 try {
-                    const news = await AsyncStorage.getItem('@CoinMarketNews:newsStore');
+                    const news = await AsyncStorage.getItem("@CoinMarketNews:newsStore");
                     if (news !== null) {
                         store.dispatch(loadNewsSuccess(JSON.parse(news)));
                     }
                 } catch (error) {
                     store.dispatch(loadNewsFailure());
                 }
-            })
+            });
 
     } catch (error) {
         store.dispatch(loadNewsFailure());
     }
-}
+};
