@@ -1,52 +1,66 @@
 import React from "react";
 import { Navigator } from "react-native-navigation";
-import { connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
 import { Button, Col, Grid, Icon, Segment, Text, Thumbnail } from "native-base";
 import { FlatList, StyleSheet, TouchableHighlight, TouchableNativeFeedback, View } from "react-native";
 
 import { ICoin, IUser } from "../models";
+import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
 interface ICoinsListProps {
     coins: ICoin[];
+    favourites: number[];
     user: IUser;
     navigator: Navigator;
+    addCoinFavourite: (coinID: number) => void;
+    removeCoinFavourite: (coinID: number) => void;
 }
 
 class PureCoinsList extends React.Component<ICoinsListProps> {
-    public renderCoinList = (info: { item: ICoin, index: number }) => (
-        <View style={styles.listItem}>
-            <TouchableNativeFeedback onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
-                <View style={styles.listCoin}>
-                    <View style={styles.listCoinLeft}>
-                        <Text>{info.item.rank}. </Text>
-                        <Thumbnail source={
-                            { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
-                        } />
-                    </View>
-                    <View style={styles.listCoinBody}>
-                        <Text style={styles.coinName}>{info.item.name}</Text>
-                        <Text note={true}>$3.00</Text>
-                    </View>
-                    <View style={styles.listCoinRight}>
-                        <View>
-                            <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
-                            <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
+    public renderCoinList = (info: { item: ICoin, index: number }) => {
+        // console.error(this.props.favourites);
+        let heartColor: string;
+        if (this.props.favourites.indexOf(info.item.id) > -1) {
+            heartColor = "red";
+        } else {
+            heartColor = "grey";
+        }
+        return (
+            <View style={styles.listItem}>
+                <TouchableNativeFeedback onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
+                    <View style={styles.listCoin}>
+                        <View style={styles.listCoinLeft}>
+                            <Text>{info.item.rank}. </Text>
+                            <Thumbnail source={
+                                // tslint:disable-next-line:max-line-length
+                                { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                            } />
                         </View>
-                        <View>
-                            <Icon
-                                type="FontAwesome"
-                                name="heart"
-                                style={{ color: "grey" }}
-                                onPress={this.handlePressHeart.bind(this, info.item.id)}
-                            />
+                        <View style={styles.listCoinBody}>
+                            <Text style={styles.coinName}>{info.item.name}</Text>
+                            <Text note={true}>$3.00</Text>
+                        </View>
+                        <View style={styles.listCoinRight}>
+                            <View>
+                                <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
+                                <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
+                            </View>
+                            <View>
+                                <Icon
+                                    type="FontAwesome"
+                                    name="heart"
+                                    style={{ color: heartColor }}
+                                    onPress={this.handlePressHeart.bind(this, info.item.id)}
+                                />
+                            </View>
                         </View>
                     </View>
-                </View>
-            </TouchableNativeFeedback>
-        </View>
-    )
+                </TouchableNativeFeedback>
+            </View>
+        );
+    }
 
     public render() {
         if (this.props.coins) {
@@ -109,24 +123,36 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
     private handlePress = (coinID: number) => {
         this.props.navigator.showModal({
             animationType: "slide-up",
-            // backButtonHidden: false,
-            // backButtonTitle: undefined,
             passProps: { coinID },
             screen: "CoinMarketNews.CoinsPage",
         });
     }
-    private handlePressHeart = () => alert("Press Heart");
+    private handlePressHeart = (coinID: number) => {
+        if (this.props.favourites.indexOf(coinID) === -1) {
+            return this.props.addCoinFavourite(coinID);
+        } else {
+            return this.props.removeCoinFavourite(coinID);
+        }
+    }
     private keyExtractor = (item: ICoin) => item.id.toString();
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        addCoinFavourite: (coinID: number) => dispatch(addCoinFavourite(coinID)),
+        removeCoinFavourite: (coinID: number) => dispatch(removeCoinFavourite(coinID)),
+    };
+};
 
 const mapStateToProps = (state: IRootState) => {
     return {
         coins: state.coins.coins,
+        favourites: state.favourites.favourites,
         user: state.user.user,
     };
 };
 
-const CoinsList = connect(mapStateToProps)(PureCoinsList);
+const CoinsList = connect(mapStateToProps, mapDispatchToProps)(PureCoinsList);
 export default CoinsList;
 
 const styles = StyleSheet.create({

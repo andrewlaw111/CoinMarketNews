@@ -29,7 +29,7 @@ export const getUser = async () => {
         if (token !== null) {
             axios
                 .get<IUser>(
-                    "http://10.0.0.22:8000/user",
+                    "http://api.coinmarketnews.app/user",
                     {
                         headers: {
                             token,
@@ -44,9 +44,8 @@ export const getUser = async () => {
         } else {
             axios
                 .post<IUser>(
-                    "http://10.0.0.22:8000/user",
+                    "http://api.coinmarketnews.app/user",
                 ).then((result) => {
-                    AsyncStorage.setItem("@CoinMarketNews:userToken", result.data.token);
                     store.dispatch(loginSuccess(result.data));
                 }).catch((err) => {
                     // tslint:disable-next-line:no-console

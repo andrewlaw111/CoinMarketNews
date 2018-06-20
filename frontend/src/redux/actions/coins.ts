@@ -24,14 +24,14 @@ export interface ILoadCoinFailureAction extends Action {
 // Collection of both for easier integration
 export type CoinActions = ILoadCoinSuccessAction | ILoadCoinFailureAction;
 
-export let loadCoinSuccess = (coins: ICoin[]) => {
+export const loadCoinSuccess = (coins: ICoin[]) => {
     return {
         coins,
         type: LOAD_COIN_SUCCESS,
     };
 };
 
-export let loadCoinFailure = (): ILoadCoinFailureAction => {
+export const loadCoinFailure = (): ILoadCoinFailureAction => {
     return {
         type: LOAD_COIN_FAILURE,
     };
@@ -42,27 +42,34 @@ export const getCoins = async () => {
         const token = store.getState().user.user.token;
         axios
             .get<ICoin[]>(
-                "http://10.0.0.22:8000/coin",
+                "http://api.coinmarketnews.app/coin",
                 {
                     headers: {
                         token,
                     },
                 },
-            ).then((result) => {
-                AsyncStorage.setItem("@CoinMarketNews:coinsStore", JSON.stringify(result.data));
-                store.dispatch(loadCoinSuccess(result.data));
-            }).catch(async () => {
-                try {
-                    const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
-                    if (coins !== null) {
-                        store.dispatch(loadCoinSuccess(JSON.parse(coins)));
-                    }
-                } catch (error) {
-                    store.dispatch(loadCoinFailure());
+        ).then((result) => {
+            AsyncStorage.setItem("@CoinMarketNews:coinsStore", JSON.stringify(result.data));
+            store.dispatch(loadCoinSuccess(result.data));
+        }).catch(async () => {
+            try {
+                const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
+                if (coins !== null) {
+                    store.dispatch(loadCoinSuccess(JSON.parse(coins)));
                 }
-            });
+            } catch (error) {
+                store.dispatch(loadCoinFailure());
+            }
+        });
 
     } catch (error) {
-        store.dispatch(loadCoinFailure());
+        try {
+            const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
+            if (coins !== null) {
+                store.dispatch(loadCoinSuccess(JSON.parse(coins)));
+            }
+        } catch (error) {
+            store.dispatch(loadCoinFailure());
+        }
     }
 };

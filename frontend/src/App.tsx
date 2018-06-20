@@ -2,6 +2,7 @@ import { Navigation } from "react-native-navigation";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 import { getCoins } from "./redux/actions/coins";
+import { loadFavourites } from "./redux/actions/favourites";
 import { getNews } from "./redux/actions/news";
 import { getUser } from "./redux/actions/user";
 import { registerScreens } from "./screens";
@@ -22,7 +23,7 @@ Promise.all([
     getCoins();
     getNews();
   }),
-
+  loadFavourites(),
   // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
@@ -38,17 +39,17 @@ Promise.all([
         title: "Coins",
       },
       {
-        icon: sources[1],
+        icon: sources[2],
         label: "News",
         screen: "CoinMarketNews.News",
-        selectedIcon: sources[1], // iOS only
+        selectedIcon: sources[2], // iOS only
         title: "News",
       },
       {
-        icon: sources[2],
+        icon: sources[3],
         label: "Settings",
         screen: "CoinMarketNews.Settings",
-        selectedIcon: sources[2], // iOS only
+        selectedIcon: sources[3], // iOS only
         title: "Settings",
       },
     ],

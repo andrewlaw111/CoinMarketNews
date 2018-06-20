@@ -1,3 +1,4 @@
+import { AsyncStorage } from "react-native";
 import { IUser } from "../../models";
 import { LOGIN_SUCCESS, LoginActions } from "../actions/user";
 
@@ -19,6 +20,7 @@ const defaultUserState: IUserState = {
 export function userReducer(state: IUserState = defaultUserState, action: LoginActions) {
     switch (action.type) {
         case LOGIN_SUCCESS:
+            AsyncStorage.setItem("@CoinMarketNews:userToken", action.user.token);
             return {
                 user: action.user,
             };

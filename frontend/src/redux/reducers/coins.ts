@@ -5,7 +5,11 @@ export interface ICoinState {
   coins: ICoin[];
 }
 
-export const coinReducer = (state: ICoinState = { coins: [] }, action: CoinActions) => {
+const defaultCoinState: ICoinState = {
+  coins: [],
+};
+
+export const coinReducer = (state: ICoinState = defaultCoinState, action: CoinActions) => {
   // Use switch to handle different actions
   switch (action.type) {
     case LOAD_COIN_SUCCESS:
