@@ -4,7 +4,8 @@ import { Navigator } from "react-native-navigation";
 import { connect, Dispatch } from "react-redux";
 
 import { Button, Col, Container, Grid, Icon, Segment, Tab, Tabs, Text, Thumbnail } from "native-base";
-import { FlatList, Platform, StyleSheet, TouchableHighlight, TouchableNativeFeedback, View } from "react-native";
+// tslint:disable-next-line:ordered-imports
+import { FlatList, Platform, StyleSheet, TouchableNativeFeedback, View, TouchableOpacity } from "react-native";
 
 import { ICoin, IUser } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -41,14 +42,14 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
                         <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
                         <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
                     </View>
-                    <View>
+                    { /* tslint:disable-next-line:max-line-length*/}
+                    <TouchableOpacity style={{ height: 60, width: 50, justifyContent: "center", alignItems: "center" }} onPress={this.handlePressHeart.bind(this, info.item.id)}>
                         <Icon
                             type="FontAwesome"
                             name="heart"
                             style={{ color: heartColour }}
-                            onPress={this.handlePressHeart.bind(this, info.item.id)}
                         />
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -65,9 +66,9 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
         if (Platform.OS === "ios") {
             return (
                 <View style={styles.listItem}>
-                    <TouchableHighlight onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
+                    <TouchableOpacity onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
                         {this.renderCoins(info, heartColour)}
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
             );
         } else {
@@ -126,7 +127,7 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
         if (this.props.coins) {
             return (
                 <Container style={styles.coinListComponent}>
-                    <Tabs initialPage={(this.props.favourites.length > 0) ? 0 : 1}>
+                    <Tabs initialPage={0}>
                         <Tab heading="Favourites">
                             {this.renderOptions()}
                             {(this.props.favourites.length > 0) ? (
@@ -236,13 +237,13 @@ const styles = StyleSheet.create({
 
     },
     listCoinBody: {
-        flex: 0.53,
+        flex: 0.48,
         justifyContent: "space-around",
         paddingLeft: 10,
     },
     listCoinLeft: {
         alignItems: "center",
-        flex: 0.23,
+        flex: 0.28,
         flexDirection: "row",
         justifyContent: "space-between",
     },
