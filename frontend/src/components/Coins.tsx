@@ -22,7 +22,7 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
                     <View style={styles.listCoinLeft}>
                         <Text>{info.item.rank}. </Text>
                         <Thumbnail source={
-                            { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                            { uri: `http://10.0.0.34/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                         } />
                     </View>
                     <View style={styles.listCoinBody}>
