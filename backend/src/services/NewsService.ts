@@ -16,8 +16,8 @@ export default class NewsService {
         return knex
             .select("*")
             .from("news")
+            .orderBy("created_at", "desc")
             .then((data: INews[]) => {
-                console.log(data);
                 return data;
             })
             .catch((err) => {
@@ -30,7 +30,8 @@ export default class NewsService {
         return knex
             .select("*")
             .from("news")
-            .orderBy("rank", "asc").then((data: INews[]) => {
+            .orderBy("rank", "asc")
+            .then((data: INews[]) => {
                 console.log(data);
                 return data;
             });

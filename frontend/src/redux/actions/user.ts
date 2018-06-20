@@ -29,28 +29,31 @@ export const getUser = async () => {
         if (token !== null) {
             axios
                 .get<IUser>(
-                    "http://api.coinmarketnews.app/user",
+                    "http://10.0.0.22:8000/user",
+                    // "http://api.coinmarketnews.app/user",
                     {
                         headers: {
                             token,
                         },
                     },
-                ).then((result) => {
-                    store.dispatch(loginSuccess(result.data));
-                }).catch((err) => {
-                    // tslint:disable-next-line:no-console
-                    console.error(err);
-                });
+            ).then((result) => {
+                store.dispatch(loginSuccess(result.data));
+            }).catch((err) => {
+                // tslint:disable-next-line:no-console
+                console.error(err);
+            });
         } else {
             axios
                 .post<IUser>(
-                    "http://api.coinmarketnews.app/user",
-                ).then((result) => {
-                    store.dispatch(loginSuccess(result.data));
-                }).catch((err) => {
-                    // tslint:disable-next-line:no-console
-                    console.error(err);
-                });
+                    "http://10.0.0.22:8000/user",
+                // "http://api.coinmarketnews.app/user",
+
+            ).then((result) => {
+                store.dispatch(loginSuccess(result.data));
+            }).catch((err) => {
+                // tslint:disable-next-line:no-console
+                console.error(err);
+            });
         }
     } catch (error) {
         // tslint:disable-next-line:no-console

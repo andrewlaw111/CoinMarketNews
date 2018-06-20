@@ -2,8 +2,8 @@ import React from "react";
 import { Navigator } from "react-native-navigation";
 import { connect, Dispatch } from "react-redux";
 
-import { Button, Col, Grid, Icon, Segment, Text, Thumbnail } from "native-base";
-import { FlatList, StyleSheet, TouchableHighlight, TouchableNativeFeedback, View } from "react-native";
+import { Button, Col, Container, Grid, Icon, Segment, Tab, Tabs, Text, Thumbnail } from "native-base";
+import { FlatList, Platform, StyleSheet, TouchableHighlight, TouchableNativeFeedback, View } from "react-native";
 
 import { ICoin, IUser } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -19,102 +19,151 @@ interface ICoinsListProps {
 }
 
 class PureCoinsList extends React.Component<ICoinsListProps> {
-    public renderCoinList = (info: { item: ICoin, index: number }) => {
-        // console.error(this.props.favourites);
-        let heartColor: string;
-        if (this.props.favourites.indexOf(info.item.id) > -1) {
-            heartColor = "red";
-        } else {
-            heartColor = "grey";
-        }
+    public renderCoins = (info: { item: ICoin, index: number }, heartColour: string) => {
         return (
-            <View style={styles.listItem}>
-                <TouchableNativeFeedback onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
-                    <View style={styles.listCoin}>
-                        <View style={styles.listCoinLeft}>
-                            <Text>{info.item.rank}. </Text>
-                            <Thumbnail source={
-                                // tslint:disable-next-line:max-line-length
-                                { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
-                            } />
-                        </View>
-                        <View style={styles.listCoinBody}>
-                            <Text style={styles.coinName}>{info.item.name}</Text>
-                            <Text note={true}>$3.00</Text>
-                        </View>
-                        <View style={styles.listCoinRight}>
-                            <View>
-                                <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
-                                <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
-                            </View>
-                            <View>
-                                <Icon
-                                    type="FontAwesome"
-                                    name="heart"
-                                    style={{ color: heartColor }}
-                                    onPress={this.handlePressHeart.bind(this, info.item.id)}
-                                />
-                            </View>
-                        </View>
+            <View style={styles.listCoin}>
+                <View style={styles.listCoinLeft}>
+                    <Text>{info.item.rank}. </Text>
+                    <Thumbnail source={
+                        // tslint:disable-next-line:max-line-length
+                        { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                        // { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                    } />
+                </View>
+                <View style={styles.listCoinBody}>
+                    <Text style={styles.coinName}>{info.item.name}</Text>
+                    <Text note={true}>$3.00</Text>
+                </View>
+                <View style={styles.listCoinRight}>
+                    <View>
+                        <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
+                        <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
                     </View>
-                </TouchableNativeFeedback>
+                    <View>
+                        <Icon
+                            type="FontAwesome"
+                            name="heart"
+                            style={{ color: heartColour }}
+                            onPress={this.handlePressHeart.bind(this, info.item.id)}
+                        />
+                    </View>
+                </View>
             </View>
         );
     }
 
-    public render() {
-        if (this.props.coins) {
+    public renderCoinList = (info: { item: ICoin, index: number }) => {
+        // console.error(this.props.favourites);
+        let heartColour: string;
+        if (this.props.favourites.indexOf(info.item.id) > -1) {
+            heartColour = "red";
+        } else {
+            heartColour = "grey";
+        }
+        if (Platform.OS === "ios") {
             return (
-                <View style={styles.coinListComponent}>
-                    <Grid style={styles.coinListFilters}>
-                        <Col style={{ flex: 0.4 }}>
-                            <Segment>
-                                <Button style={styles.smallpadding} first={true} active={true}>
-                                    <Text style={styles.nopadding}>Cap</Text>
-                                </Button>
-                                <Button style={styles.smallpadding}>
-                                    <Text style={styles.nopadding}>Gain</Text>
-                                </Button>
-                                <Button style={styles.smallpadding} last={true}>
-                                    <Text style={styles.nopadding}>Drop</Text>
-                                </Button>
-                            </Segment>
-                        </Col>
-                        <Col style={{ flex: 0.25 }}>
-                            <Segment>
-                                <Button style={styles.smallpadding} first={true} active={true}>
-                                    <Text style={styles.nopadding}>USD</Text>
-                                </Button>
-                                <Button style={styles.smallpadding} last={true}>
-                                    <Text style={styles.nopadding}>BTC</Text>
-                                </Button>
-                            </Segment>
-                        </Col>
-                        <Col style={{ flex: 0.35 }}>
-                            <Segment>
-                                <Button style={styles.smallpadding} first={true} active={true}>
-                                    <Text style={styles.nopadding}>1W</Text>
-                                </Button>
-                                <Button style={styles.smallpadding}>
-                                    <Text style={styles.nopadding}>1D</Text>
-                                </Button>
-                                <Button style={styles.smallpadding} last={true}>
-                                    <Text style={styles.nopadding}>1M</Text>
-                                </Button>
-                            </Segment>
-                        </Col>
-                    </Grid>
-                    <FlatList data={this.props.coins.slice().splice(0, 20)}
-                        renderItem={this.renderCoinList}
-                        keyExtractor={this.keyExtractor}
-                        style={styles.coinList}
-                    />
+                <View style={styles.listItem}>
+                    <TouchableHighlight onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
+                        {this.renderCoins(info, heartColour)}
+                    </TouchableHighlight>
                 </View>
             );
         } else {
             return (
+                <View style={styles.listItem}>
+                    <TouchableNativeFeedback onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
+                        {this.renderCoins(info, heartColour)}
+                    </TouchableNativeFeedback>
+                </View>
+            );
+        }
+    }
+    public renderOptions() {
+        return (
+            <Grid style={styles.coinListFilters}>
+                <Col style={{ flex: 0.4 }}>
+                    <Segment>
+                        <Button style={styles.smallpadding} first={true} active={true}>
+                            <Text style={styles.nopadding}>Cap</Text>
+                        </Button>
+                        <Button style={styles.smallpadding}>
+                            <Text style={styles.nopadding}>Gain</Text>
+                        </Button>
+                        <Button style={styles.smallpadding} last={true}>
+                            <Text style={styles.nopadding}>Drop</Text>
+                        </Button>
+                    </Segment>
+                </Col>
+                <Col style={{ flex: 0.25 }}>
+                    <Segment>
+                        <Button style={styles.smallpadding} first={true} active={true}>
+                            <Text style={styles.nopadding}>USD</Text>
+                        </Button>
+                        <Button style={styles.smallpadding} last={true}>
+                            <Text style={styles.nopadding}>BTC</Text>
+                        </Button>
+                    </Segment>
+                </Col>
+                <Col style={{ flex: 0.35 }}>
+                    <Segment>
+                        <Button style={styles.smallpadding} first={true} active={true}>
+                            <Text style={styles.nopadding}>1W</Text>
+                        </Button>
+                        <Button style={styles.smallpadding}>
+                            <Text style={styles.nopadding}>1D</Text>
+                        </Button>
+                        <Button style={styles.smallpadding} last={true}>
+                            <Text style={styles.nopadding}>1M</Text>
+                        </Button>
+                    </Segment>
+                </Col>
+            </Grid>
+        );
+    }
+    public render() {
+        if (this.props.coins) {
+            return (
+                <Container style={styles.coinListComponent}>
+                    <Tabs initialPage={(this.props.favourites.length > 0) ? 0 : 1}>
+                        <Tab heading="Favourites">
+                            {this.renderOptions()}
+                            {(this.props.favourites.length > 0) ? (
+                                <FlatList
+                                    data={this.props.coins.filter(
+                                        (coin: ICoin) => this.props.favourites.indexOf(coin.id) > -1,
+                                    )}
+                                    renderItem={this.renderCoinList}
+                                    keyExtractor={this.keyExtractor}
+                                    style={styles.coinList}
+                                />
+                            ) : (
+                                    <View>
+                                        <Text>
+                                            You have no favourite coins! Click on the ❤️ to add some favourites!
+                                        </Text>
+                                    </View>
+                                )
+                            }
+
+                        </Tab>
+                        <Tab heading="Market">
+                            {this.renderOptions()}
+                            <FlatList
+                                data={this.props.coins.slice().splice(0, 20)}
+                                renderItem={this.renderCoinList}
+                                keyExtractor={this.keyExtractor}
+                                style={styles.coinList}
+                            />
+                        </Tab>
+                    </Tabs>
+                </Container>
+            );
+        } else {
+            return (
                 <View>
-                    <Text>CoinMarketNews was unable to retrieve data.</Text>
+                    <Text>
+                        CoinMarketNews was unable to retrieve data.
+                    </Text>
                 </View>
             );
         }
@@ -162,6 +211,7 @@ const styles = StyleSheet.create({
     coinListComponent: {
     },
     coinListFilters: {
+        backgroundColor: "#000",
         flex: 0,
     },
     coinName: {
