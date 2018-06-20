@@ -9,13 +9,13 @@ import { registerScreens } from "./screens";
 
 registerScreens(); // this is where you register all of your app's screens
 
-Navigation.startSingleScreenApp({
-  animationType: "slide-down", // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
-  screen: {
-    screen: "CoinMarketNews.Splash", // unique ID registered with Navigation.registerScreen
-    title: "Welcome", // title of the screen as appears in the nav bar (optional)
-  },
-});
+// Navigation.startSingleScreenApp({
+//   animationType: "slide-down", // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
+//   screen: {
+//     screen: "CoinMarketNews.Splash", // unique ID registered with Navigation.registerScreen
+//     title: "Welcome", // title of the screen as appears in the nav bar (optional)
+//   },
+// });
 
 // start the app
 Promise.all([

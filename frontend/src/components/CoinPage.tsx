@@ -13,30 +13,30 @@ import CoinNews from "./CoinNews";
 import CoinPrice from "./CoinPrice";
 
 interface ICoinsPageProps {
-    coinID: number;
-    coins: ICoin[];
+    coin: ICoin;
     user: IUser;
 }
 
 class PureCoinsList extends React.Component<ICoinsPageProps> {
+    public static navigatorStyle = {
+        tabBarHidden: true,
+    };
 
     public render() {
-        // tslint:disable-next-line:no-console
-        console.log(this.props.coinID);
         return (
             <Container>
                 <Tabs initialPage={0}>
                     <Tab heading="Info">
-                        <CoinInfo coin={this.props.coins[this.props.coinID]} />
+                        <CoinInfo coin={this.props.coin} />
                     </Tab>
                     <Tab heading="News">
-                        <CoinNews coin={this.props.coins[this.props.coinID]} />
+                        <CoinNews coin={this.props.coin} />
                     </Tab>
                     <Tab heading="Price">
-                        <CoinPrice coin={this.props.coins[this.props.coinID]} />
+                        <CoinPrice coin={this.props.coin} />
                     </Tab>
                     <Tab heading="Alerts">
-                        <CoinAlerts coin={this.props.coins[this.props.coinID]} />
+                        <CoinAlerts coin={this.props.coin} />
                     </Tab>
                 </Tabs>
             </Container>

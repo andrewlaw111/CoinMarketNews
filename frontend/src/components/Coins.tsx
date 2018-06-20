@@ -27,8 +27,8 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
                     <Text>{info.item.rank}. </Text>
                     <Thumbnail source={
                         // tslint:disable-next-line:max-line-length
-                        { uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
-                        // { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                        // { uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                        { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                         // { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                     } />
                 </View>
@@ -65,7 +65,7 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
         if (Platform.OS === "ios") {
             return (
                 <View style={styles.listItem}>
-                    <TouchableHighlight onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
+                    <TouchableHighlight onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
                         {this.renderCoins(info, heartColour)}
                     </TouchableHighlight>
                 </View>
@@ -73,7 +73,7 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
         } else {
             return (
                 <View style={styles.listItem}>
-                    <TouchableNativeFeedback onPress={this.handlePress.bind(this, info.index)} delayPressIn={0}>
+                    <TouchableNativeFeedback onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
                         {this.renderCoins(info, heartColour)}
                     </TouchableNativeFeedback>
                 </View>
@@ -171,11 +171,18 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
         }
     }
 
-    private handlePress = (coinID: number) => {
-        this.props.navigator.showModal({
-            animationType: "slide-up",
-            passProps: { coinID },
+    private handlePress = (info: { item: ICoin, index: number }) => {
+        this.props.navigator.push({
+            animated: true,
+            animationType: "fade",
+            backButtonHidden: false, // hide the back button altogether (optional)
+            navigatorButtons: {},
+            navigatorStyle: {},
+            passProps: { coin: info.item },
             screen: "CoinMarketNews.CoinsPage",
+            title: info.item.name,
+            // titleImage: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
+            titleImage: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
         });
     }
     private handlePressHeart = (coinID: number) => {

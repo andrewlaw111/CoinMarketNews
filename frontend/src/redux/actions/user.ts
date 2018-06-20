@@ -30,7 +30,8 @@ export const getUser = async () => {
         if (token !== null) {
             axios
                 .get<IUser>(
-                    `${Config.API_SERVER}/user`,
+                    // `${Config.API_SERVER}/user`,
+                    `http://10.0.0.22:8000/user`,
                     {
                         headers: {
                             token,
@@ -45,7 +46,8 @@ export const getUser = async () => {
         } else {
             axios
                 .post<IUser>(
-                    `${Config.API_SERVER}/user`,
+                    `http://10.0.0.22:8000/user`,
+                    // `${Config.API_SERVER}/user`,
                 ).then((result) => {
                     store.dispatch(loginSuccess(result.data));
                 }).catch((err) => {
