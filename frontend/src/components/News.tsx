@@ -19,7 +19,9 @@ class PureNewsList extends React.Component<INewsListProps> {
         <View>
             <Card >
                 <CardItem header={true}>
-                    <Text onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)} style={styles.headingText}>
+                    <Text
+                        onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)}
+                        style={styles.headingText}>
                         {this.props.news[info.index].title}
                     </Text>
                 </CardItem>
@@ -34,7 +36,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                     button={true}
                     footer={true}
                 >
-                    <Text>{info.item.created_at}</Text>
+                    <Text>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text>
                 </CardItem>
             </Card>
         </View>

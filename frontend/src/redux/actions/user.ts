@@ -36,12 +36,12 @@ export const getUser = async () => {
                             token,
                         },
                     },
-                ).then((result) => {
-                    store.dispatch(loginSuccess(result.data));
-                }).catch((err) => {
-                    // tslint:disable-next-line:no-console
-                    console.error(err);
-                });
+            ).then((result) => {
+                store.dispatch(loginSuccess(result.data));
+            }).catch((err) => {
+                // tslint:disable-next-line:no-console
+                console.error(err);
+            });
         } else {
             axios
                 .post<IUser>(
