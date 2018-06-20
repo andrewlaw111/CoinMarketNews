@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AsyncStorage } from "react-native";
+import Config from "react-native-config";
 
 import { Action } from "redux";
 import { INews } from "../../models";
@@ -42,8 +43,7 @@ export const getNews = async () => {
         const token = store.getState().user.user.token;
         axios
             .get<INews[]>(
-                // "http://api.coinmarketnews.app/news",
-                "http://10.0.0.22:8000/news",
+                `${Config.API_SERVER}/news`,
                 {
                     headers: {
                         token,

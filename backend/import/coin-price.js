@@ -18,7 +18,7 @@ knex.select()
         knex('coin').count()
             .then((coins) => {
                 console.log(coins);
-                const num_cryptocurrencies = coins[0].count;
+                const num_cryptocurrencies =  parseInt(coins[0].count);
                 console.log(num_cryptocurrencies);
                 const limit = 100;
                 let start = 1;
