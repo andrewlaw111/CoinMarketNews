@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AsyncStorage } from "react-native";
+import Config from "react-native-config";
 
 import { IUser } from "../../models";
 import { store } from "../store";
@@ -29,7 +30,7 @@ export const getUser = async () => {
         if (token !== null) {
             axios
                 .get<IUser>(
-                    "http://api.coinmarketnews.app/user",
+                    `${Config.API_SERVER}/user`,
                     {
                         headers: {
                             token,
@@ -44,7 +45,7 @@ export const getUser = async () => {
         } else {
             axios
                 .post<IUser>(
-                    "http://api.coinmarketnews.app/user",
+                    `${Config.API_SERVER}/user`,
                 ).then((result) => {
                     store.dispatch(loginSuccess(result.data));
                 }).catch((err) => {

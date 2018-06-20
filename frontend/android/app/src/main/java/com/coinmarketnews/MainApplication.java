@@ -1,5 +1,6 @@
 package com.coinmarketnews;
 
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -21,7 +22,8 @@ import java.util.List;
          // Add additional packages you require here
          // No need to add RnnPackage and MainReactPackage
          return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new ReactNativeConfigPackage(),
+            new MainReactPackage(),
             new VectorIconsPackage()
          );
      }
@@ -40,6 +42,7 @@ public String getJSMainModuleName() {
 // import android.app.Application;
 
 // import com.facebook.react.ReactApplication;
+// import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 // import com.facebook.react.ReactNativeHost;
 // import com.facebook.react.ReactPackage;
 // import com.facebook.soloader.SoLoader;

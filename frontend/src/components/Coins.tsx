@@ -1,4 +1,5 @@
 import React from "react";
+import Config from "react-native-config";
 import { Navigator } from "react-native-navigation";
 import { connect, Dispatch } from "react-redux";
 
@@ -35,7 +36,7 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
                             <Text>{info.item.rank}. </Text>
                             <Thumbnail source={
                                 // tslint:disable-next-line:max-line-length
-                                { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                                { uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                             } />
                         </View>
                         <View style={styles.listCoinBody}>

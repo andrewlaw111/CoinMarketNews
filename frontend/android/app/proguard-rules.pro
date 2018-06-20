@@ -20,6 +20,8 @@
 # (unless you are using a system that supports de-obfuscate the stack traces).
 -dontobfuscate
 
+-keep class com.coinmarketnews.BuildConfig { *; }
+
 # React Native
 
 # Keep our interfaces so they can be used by other ProGuard rules.
