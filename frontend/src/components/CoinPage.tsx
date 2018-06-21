@@ -1,4 +1,6 @@
+import axios from "axios";
 import React from "react";
+import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Container, Tab, Tabs, Text } from "native-base";
@@ -13,34 +15,60 @@ import CoinNews from "./CoinNews";
 import CoinPrice from "./CoinPrice";
 
 interface ICoinsPageProps {
-    coin: ICoin;
+    coinID: number;
     user: IUser;
 }
+interface ICoinsPageState {
+    coin?: ICoin;
+}
 
-class PureCoinsList extends React.Component<ICoinsPageProps> {
+class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
     public static navigatorStyle = {
         tabBarHidden: true,
     };
 
+    constructor(props: ICoinsPageProps) {
+        super(props);
+        this.state = {
+            coin: undefined,
+        };
+        this.getCoin();
+    }
+    public renderNoConnection() {
+        return (
+            <View>
+                <Text>No Connection was found</Text>
+            </View>
+        );
+    }
     public render() {
         return (
             <Container>
                 <Tabs initialPage={0}>
                     <Tab heading="Info">
-                        <CoinInfo coin={this.props.coin} />
+                        {(this.state.coin) ? <CoinInfo coin={this.state.coin} /> : this.renderNoConnection()}
                     </Tab>
                     <Tab heading="News">
-                        <CoinNews coin={this.props.coin} />
+                        {(this.state.coin) ? <CoinNews coin={this.state.coin} /> : this.renderNoConnection()}
                     </Tab>
                     <Tab heading="Price">
-                        <CoinPrice coin={this.props.coin} />
+                        {(this.state.coin) ? <CoinPrice coin={this.state.coin} /> : this.renderNoConnection()}
                     </Tab>
                     <Tab heading="Alerts">
-                        <CoinAlerts coin={this.props.coin} />
+                        {(this.state.coin) ? <CoinAlerts coin={this.state.coin} /> : this.renderNoConnection()}
                     </Tab>
                 </Tabs>
             </Container>
         );
+    }
+    private getCoin = () => {
+        axios
+            .get<ICoin>(`${Config.API_SERVER}/coin/${this.props.coinID}`)
+            .then((response) => {
+                this.setState({
+                    coin: response.data,
+                });
+            });
     }
 }
 

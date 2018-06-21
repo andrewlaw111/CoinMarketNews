@@ -1,6 +1,10 @@
 import { AsyncStorage } from "react-native";
-// tslint:disable-next-line:max-line-length
-import { ADD_COIN_FAVOURITE, FavouriteActions, LOAD_COIN_FAVOURITE, REMOVE_COIN_FAVOURITE } from "../actions/favourites";
+import {
+    ADD_COIN_FAVOURITE,
+    FavouriteActions,
+    LOAD_COIN_FAVOURITE,
+    REMOVE_COIN_FAVOURITE,
+} from "../actions/favourites";
 
 export interface IFavouritesState {
     favourites: number[];

@@ -4,8 +4,7 @@ import { Navigator } from "react-native-navigation";
 import { connect, Dispatch } from "react-redux";
 
 import { Button, Col, Container, Grid, Icon, Segment, Tab, Tabs, Text, Thumbnail } from "native-base";
-// tslint:disable-next-line:ordered-imports
-import { FlatList, Platform, StyleSheet, TouchableNativeFeedback, View, TouchableOpacity } from "react-native";
+import { FlatList, Platform, StyleSheet, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
 
 import { ICoin, IUser } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -25,17 +24,22 @@ interface ICoinsListState {
     sortDrop: boolean;
     sortGain: boolean;
     fiatCurrency: boolean;
-    coinCurrency: boolean;
+    cryptoCurrency: boolean;
     setting1D: boolean;
     setting1M: boolean;
     setting1W: boolean;
 }
 
 class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
+    public static navigatorStyle = {
+        navBarHidden: true,
+        statusBarBlur: true,
+        statusBarColor: "blue",
+    };
     public constructor(props: ICoinsListProps) {
         super(props);
         this.state = {
-            coinCurrency: false,
+            cryptoCurrency: false,
             fiatCurrency: true,
             setting1D: true,
             setting1M: false,
@@ -51,9 +55,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                 <View style={styles.listCoinLeft}>
                     <Text>{info.item.rank}. </Text>
                     <Thumbnail source={
-                        // tslint:disable-next-line:max-line-length
                         { uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
-                        // { uri: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                         // { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                     } />
                 </View>
@@ -66,8 +68,10 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                         <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
                         <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
                     </View>
-                    { /* tslint:disable-next-line:max-line-length*/}
-                    <TouchableOpacity style={{ height: 60, width: 50, justifyContent: "center", alignItems: "center" }} onPress={this.handlePressHeart.bind(this, info.item.id)}>
+                    <TouchableOpacity
+                        style={{ height: 60, width: 50, justifyContent: "center", alignItems: "center" }}
+                        onPress={this.handlePressHeart.bind(this, info.item.id)}
+                    >
                         <Icon
                             type="FontAwesome"
                             name="heart"
@@ -139,7 +143,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                     <Segment>
                         <Button style={styles.smallpadding}
                             first={true}
-                            active={this.state.coinCurrency}
+                            active={this.state.cryptoCurrency}
                             onPress={this.handleCurrencyPress.bind(this, "Fiat")}
                         >
                             <Text style={styles.nopadding}>USD</Text>
@@ -156,35 +160,38 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                 <Col style={{ flex: 0.35 }}>
                     <Segment>
                         <Button
-                            style={styles.smallpadding}
                             first={true}
                             active={this.state.setting1W}
                             onPress={this.handleTimeframePress.bind(this, "1W")}
+                            style={(this.state.sortCap) ? { display: "none" } : styles.smallpadding}
                         >
                             <Text style={styles.nopadding}>1W</Text>
                         </Button>
                         <Button
-                            style={styles.smallpadding}
                             active={this.state.setting1D}
                             onPress={this.handleTimeframePress.bind(this, "1D")}
+                            style={(this.state.sortCap) ? { display: "none" } : styles.smallpadding}
+
                         >
                             <Text style={styles.nopadding}>1D</Text>
                         </Button>
                         <Button
-                            style={styles.smallpadding}
                             last={true}
                             active={this.state.setting1M}
                             onPress={this.handleTimeframePress.bind(this, "1M")}
+                            style={(this.state.sortCap) ? { display: "none" } : styles.smallpadding}
+
                         >
                             <Text style={styles.nopadding}>1M</Text>
                         </Button>
                     </Segment>
                 </Col>
-            </Grid>
+            </Grid >
         );
     }
     public render() {
-        if (this.props.coins) {
+
+        if (this.props.coins.length > 0) {
             return (
                 <Container style={styles.coinListComponent}>
                     <Tabs initialPage={0}>
@@ -239,7 +246,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             backButtonHidden: false, // hide the back button altogether (optional)
             navigatorButtons: {},
             navigatorStyle: {},
-            passProps: { coin: info.item },
+            passProps: { coinID: info.item.id },
             screen: "CoinMarketNews.CoinsPage",
             title: info.item.name,
             // titleImage: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
@@ -249,13 +256,13 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
     private handleCurrencyPress = (currency: string) => {
         if (currency === "Fiat") {
             this.setState({
-                coinCurrency: false,
-                fiatCurrency: true,
+                cryptoCurrency: true,
+                fiatCurrency: false,
             });
         } else {
             this.setState({
-                coinCurrency: true,
-                fiatCurrency: false,
+                cryptoCurrency: false,
+                fiatCurrency: true,
             });
         }
     }

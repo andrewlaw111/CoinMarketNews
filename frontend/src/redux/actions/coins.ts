@@ -43,7 +43,7 @@ export const getCoins = async () => {
         const token = store.getState().user.user.token;
         axios
             .get<ICoin[]>(
-                `${Config.API_SERVER}/coin`,
+                `${Config.API_SERVER}/price`,
                 // `http://10.0.0.22:8000/coin`,
                 {
                     headers: {

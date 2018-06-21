@@ -1,45 +1,73 @@
+import axios from "axios";
 import React from "react";
+import Config from "react-native-config";
 import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, List, ListItem, Text } from "native-base";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Body, Card, CardItem, Container, Text } from "native-base";
+import { FlatList, Linking, StyleSheet, TouchableOpacity } from "react-native";
 
 import { ICoin, INews } from "../models";
 import { IRootState } from "../redux/store";
 
-interface ICoinsPageProps {
+interface ICoinsNewsProps {
     coin: ICoin;
 }
+interface ICoinsNewsState {
+    news: INews[];
+}
 
-class PureCoinNews extends React.Component<ICoinsPageProps> {
-    public renderList = (info: { item: any, index: number }) => (
-        <View>
-            <Card>
-                <CardItem header={true} button={true}>
-                    <Text>{info.item.news}</Text>
+export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNewsState> {
+    constructor(props: ICoinsNewsProps) {
+        super(props);
+        this.state = {
+            news: [],
+        };
+    }
+    public componentDidMount() {
+        this.getNews();
+    }
+    public renderList = (info: { item: INews, index: number }) => (
+        <Card>
+            <TouchableOpacity
+                onPress={this.handleLinkPress.bind(this, info.item.link)}>
+                <CardItem header={true} bordered={true}>
+                    <Text>{info.item.title}</Text>
                 </CardItem>
                 <CardItem button={true}>
                     <Body>
-                        <Text>{info.item.link}</Text>
+                        <Text>{info.item.content}</Text>
                     </Body>
                 </CardItem>
-            </Card>
-        </View>
+                <CardItem footer={true}>
+                    <Text>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text>
+                </CardItem>
+            </TouchableOpacity>
+        </Card>
     )
     public render() {
         return (
             <Container>
-                <FlatList data={[
-                    { news: "abc", link: "abc" },
-                    { news: "abc", link: "abc" },
-                    { news: "abc", link: "abc" }]}
+                <FlatList
+                    data={this.state.news}
                     renderItem={this.renderList}
                     keyExtractor={this.keyExtractor}
                 />
             </Container>
         );
     }
-    private keyExtractor = (item: any) => item.news;
+    private getNews = () => {
+        axios
+            .get<INews[]>(`${Config.API_SERVER}/news/${this.props.coin.id}`)
+            .then((response) => {
+                this.setState({
+                    news: response.data,
+                });
+            });
+    }
+    private handleLinkPress = (link: string) => {
+        Linking.openURL(link);
+    }
+    private keyExtractor = (item: INews) => item.id.toString();
 }
 
 const mapStateToProps = (state: IRootState) => {
@@ -48,9 +76,6 @@ const mapStateToProps = (state: IRootState) => {
         user: state.user.user,
     };
 };
-
-const CoinNews = connect(mapStateToProps)(PureCoinNews);
-export default CoinNews;
 
 const styles = StyleSheet.create({
 });

@@ -36,14 +36,13 @@ Promise.all([
         label: "Coins",
         screen: "CoinMarketNews.Coins", // this is a registered name for a screen
         selectedIcon: require("./coin.png"), // iOS only
-        title: "Coins",
       },
       {
         icon: sources[2],
         label: "News",
         screen: "CoinMarketNews.News",
         selectedIcon: sources[2], // iOS only
-        title: "News",
+        title: "Coin Market News",
       },
       {
         icon: sources[3],

@@ -15,11 +15,11 @@ export interface ICoin {
     proof: string;
     mineable: string;
     premined: string;
-    official_website: string;
-    medium: string;
-    reddit: string;
-    twitter: string;
-    telegram: string;
+    official_website?: { id: number, link: string, name: string };
+    medium?: { id: number, link: string, name: string };
+    reddit?: { id: number, link: string, name: string };
+    twitter?: { id: number, link: string, name: string };
+    telegram?: { id: number, link: string, name: string };
 }
 
 export interface IUser {

@@ -81,14 +81,14 @@ export default class CoinService {
             .orderBy('id', 'asc')
             .then((sources: ISource[]) => {
                 const source_array: any = [];
-                sources.map(function (source:ISource) {
-                    source_array[source.id]=source;
+                sources.map(function (source: ISource) {
+                    source_array[source.id] = source;
                 })
                 return knex.select('*')
                     .from('coin')
                     .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
-                        coins.map(function (coin:ICoin) {
+                        coins.map(function (coin: ICoin) {
                             coin.official_website = source_array[coin.official_website];
                             coin.medium = source_array[coin.medium];
                             coin.reddit = source_array[coin.reddit];
