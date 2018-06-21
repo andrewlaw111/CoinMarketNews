@@ -20,7 +20,31 @@ interface ICoinsListProps {
     removeCoinFavourite: (coinID: number) => void;
 }
 
-class PureCoinsList extends React.Component<ICoinsListProps> {
+interface ICoinsListState {
+    sortCap: boolean;
+    sortDrop: boolean;
+    sortGain: boolean;
+    fiatCurrency: boolean;
+    coinCurrency: boolean;
+    setting1D: boolean;
+    setting1M: boolean;
+    setting1W: boolean;
+}
+
+class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
+    public constructor(props: ICoinsListProps) {
+        super(props);
+        this.state = {
+            coinCurrency: false,
+            fiatCurrency: true,
+            setting1D: true,
+            setting1M: false,
+            setting1W: false,
+            sortCap: true,
+            sortDrop: false,
+            sortGain: false,
+        };
+    }
     public renderCoins = (info: { item: ICoin, index: number }, heartColour: string) => {
         return (
             <View style={styles.listCoin}>
@@ -86,36 +110,72 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
             <Grid style={styles.coinListFilters}>
                 <Col style={{ flex: 0.4 }}>
                     <Segment>
-                        <Button style={styles.smallpadding} first={true} active={true}>
+                        <Button
+                            style={styles.smallpadding}
+                            first={true}
+                            active={this.state.sortCap}
+                            onPress={this.handleSortPress.bind(this, "Cap")}
+                        >
                             <Text style={styles.nopadding}>Cap</Text>
                         </Button>
-                        <Button style={styles.smallpadding}>
+                        <Button
+                            style={styles.smallpadding}
+                            active={this.state.sortGain}
+                            onPress={this.handleSortPress.bind(this, "Gain")}
+                        >
                             <Text style={styles.nopadding}>Gain</Text>
                         </Button>
-                        <Button style={styles.smallpadding} last={true}>
+                        <Button
+                            style={styles.smallpadding}
+                            last={true}
+                            active={this.state.sortDrop}
+                            onPress={this.handleSortPress.bind(this, "Drop")}
+                        >
                             <Text style={styles.nopadding}>Drop</Text>
                         </Button>
                     </Segment>
                 </Col>
                 <Col style={{ flex: 0.25 }}>
                     <Segment>
-                        <Button style={styles.smallpadding} first={true} active={true}>
+                        <Button style={styles.smallpadding}
+                            first={true}
+                            active={this.state.coinCurrency}
+                            onPress={this.handleCurrencyPress.bind(this, "Fiat")}
+                        >
                             <Text style={styles.nopadding}>USD</Text>
                         </Button>
-                        <Button style={styles.smallpadding} last={true}>
+                        <Button style={styles.smallpadding}
+                            last={true}
+                            active={this.state.fiatCurrency}
+                            onPress={this.handleCurrencyPress.bind(this, "Coin")}
+                        >
                             <Text style={styles.nopadding}>BTC</Text>
                         </Button>
                     </Segment>
                 </Col>
                 <Col style={{ flex: 0.35 }}>
                     <Segment>
-                        <Button style={styles.smallpadding} first={true} active={true}>
+                        <Button
+                            style={styles.smallpadding}
+                            first={true}
+                            active={this.state.setting1W}
+                            onPress={this.handleTimeframePress.bind(this, "1W")}
+                        >
                             <Text style={styles.nopadding}>1W</Text>
                         </Button>
-                        <Button style={styles.smallpadding}>
+                        <Button
+                            style={styles.smallpadding}
+                            active={this.state.setting1D}
+                            onPress={this.handleTimeframePress.bind(this, "1D")}
+                        >
                             <Text style={styles.nopadding}>1D</Text>
                         </Button>
-                        <Button style={styles.smallpadding} last={true}>
+                        <Button
+                            style={styles.smallpadding}
+                            last={true}
+                            active={this.state.setting1M}
+                            onPress={this.handleTimeframePress.bind(this, "1M")}
+                        >
                             <Text style={styles.nopadding}>1M</Text>
                         </Button>
                     </Segment>
@@ -186,11 +246,67 @@ class PureCoinsList extends React.Component<ICoinsListProps> {
             titleImage: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
         });
     }
+    private handleCurrencyPress = (currency: string) => {
+        if (currency === "Fiat") {
+            this.setState({
+                coinCurrency: false,
+                fiatCurrency: true,
+            });
+        } else {
+            this.setState({
+                coinCurrency: true,
+                fiatCurrency: false,
+            });
+        }
+    }
     private handlePressHeart = (coinID: number) => {
         if (this.props.favourites.indexOf(coinID) === -1) {
             return this.props.addCoinFavourite(coinID);
         } else {
             return this.props.removeCoinFavourite(coinID);
+        }
+    }
+    private handleSortPress = (options: string) => {
+        if (options === "Cap") {
+            this.setState({
+                sortCap: true,
+                sortDrop: false,
+                sortGain: false,
+            });
+        } else if (options === "Drop") {
+            this.setState({
+                sortCap: false,
+                sortDrop: true,
+                sortGain: false,
+            });
+        } else {
+            this.setState({
+                sortCap: false,
+                sortDrop: false,
+                sortGain: true,
+            });
+        }
+    }
+
+    private handleTimeframePress = (options: string) => {
+        if (options === "1W") {
+            this.setState({
+                setting1D: false,
+                setting1M: false,
+                setting1W: true,
+            });
+        } else if (options === "1D") {
+            this.setState({
+                setting1D: true,
+                setting1M: false,
+                setting1W: false,
+            });
+        } else {
+            this.setState({
+                setting1D: false,
+                setting1M: true,
+                setting1W: false,
+            });
         }
     }
     private keyExtractor = (item: ICoin) => item.id.toString();
