@@ -11,7 +11,7 @@ export default class NewsRouter {
     public router() {
         const router = express.Router();
         router.get("/", this.getNews);
-        router.get("/coin", this.getCoinNews);
+        router.get("/:coinID", this.getCoinNews);
         return router;
     }
     private getNews = (req: express.Request, res: express.Response) => {

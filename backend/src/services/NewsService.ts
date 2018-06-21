@@ -12,12 +12,17 @@ interface INews {
 export default class NewsService {
 
     public getNews(token: string) {
-        console.log(token);
+        console.log('token');
         return knex
             .select("*")
             .from("news")
+            .limit(20)
             .orderBy("created_at", "desc")
             .then((data: INews[]) => {
+                data.map(function (news: INews) {
+                    news.content = news.content.substr(0, 200) + '...';
+                    return news;
+                });
                 return data;
             })
             .catch((err) => {
@@ -25,14 +30,18 @@ export default class NewsService {
             });
     };
 
-    // No CoinID yet DO NOT USE
     public getCoinNews(token: string, coinID: string) {
-        return knex
-            .select("*")
-            .from("news")
-            .orderBy("rank", "asc")
+        return knex('coin_news')
+            .join('news', 'coin_news.news_id', '=', 'news.id')
+            .select('news.*')
+            .where('coin_news.coin_id', '=', coinID)
+            .limit(20)
+            .orderBy("created_at", "desc")
             .then((data: INews[]) => {
-                console.log(data);
+                data.map(function (news: INews) {
+                    news.content = news.content.substr(0, 200) + '...';
+                    return news;
+                });
                 return data;
             });
     }
