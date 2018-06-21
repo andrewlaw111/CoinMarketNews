@@ -12,12 +12,17 @@ interface INews {
 export default class NewsService {
 
     public getNews(token: string) {
-        console.log(token);
+        console.log('token');
         return knex
             .select("*")
             .from("news")
+            .limit(20)
             .orderBy("created_at", "desc")
             .then((data: INews[]) => {
+                data.map(function (news: INews) {
+                    news.content = news.content.substr(0, 200) + '...';
+                    return news;
+                });
                 return data;
             })
             .catch((err) => {
