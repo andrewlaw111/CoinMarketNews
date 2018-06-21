@@ -45,7 +45,6 @@ export const getCoins = async () => {
             .get<ICoin[]>(
                 // `${Config.API_SERVER}/coin`,
                 `http://10.0.0.22:8000/coin`,
-               
                 {
                     headers: {
                         token,
