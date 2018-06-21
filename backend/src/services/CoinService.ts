@@ -23,13 +23,6 @@ interface ICoin {
     telegram: string;
 }
 
-interface IPrice {
-    id: number;
-    name: string;
-    symbol: string;
-    rank: number;
-}
-
 interface ISource {
     id: number;
     name: string;
@@ -39,12 +32,10 @@ interface ISource {
 export default class CoinService {
     public lastUpdated: number;
     private coinList: ICoin[];
-    private priceList: IPrice[];
 
     public constructor() {
         this.lastUpdated = Date.now();
         this.updateCoinList();
-        this.updatePriceList();
     }
     public checkTimer() {
         return Date.now() - this.lastUpdated;
@@ -53,12 +44,11 @@ export default class CoinService {
         return new Promise((resolve, reject) => {
             // Make a query to the database if the list has not been updated for 20 seconds
             if (Date.now() - this.lastUpdated < 20000) {
-                resolve(this.priceList);
+                resolve(this.coinList);
             } else {
-                this.updatePriceList()
+                this.updateCoinList()
                     .then(() => {
-                        console.log(this.priceList)
-                        resolve(this.priceList);
+                        resolve(this.coinList);
                     })
                     .catch((err: any) => {
                         reject(err);
@@ -105,30 +95,6 @@ export default class CoinService {
                             coin.telegram = source_array[coin.telegram];
                         })
                         return this.coinList = coins;
-                    });
-            });
-    }
-    private updatePriceList() {
-        this.lastUpdated = Date.now();
-        return knex('price')
-            .then((prices: IPrice[]) => {
-                const price_array: any = [];
-                prices.map(function (price: any) {
-                    if (price.coinmarketcap_id in price_array) {
-                        price_array[price.coinmarketcap_id].push(price);
-                    } else {
-                        price_array[price.coinmarketcap_id] = [price];
-                    }
-                });
-                console.log(price_array);
-                return knex.select('id', 'name', 'symbol', 'rank')
-                    .from('coin')
-                    .orderBy("rank", "asc")
-                    .then((coins: ICoin[]) => {
-                        coins.map(function (coin: ICoin) {
-                            // coin.price = price_array[coin.coinmarketcap_id];
-                        })
-                        return this.priceList = coins;
                     });
             });
     }
