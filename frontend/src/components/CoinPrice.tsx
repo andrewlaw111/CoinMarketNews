@@ -3,7 +3,7 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, StyleProvider, Text } from "native-base";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, WebView } from "react-native";
 import getTheme from "../../native-base-theme/components"
 
 import { ICoin, ICoinPrice } from "../models";
@@ -39,6 +39,12 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                             </Body>
                         </CardItem>
                     </Card>
+                    <View style={{ height: 300 }}>
+                        <WebView
+                            source={{ uri: `${Config.API_SERVER}/chart/${this.props.coin.symbol}` }}
+                            style={{ height: 300 }}
+                        />
+                    </View>
                     <Card>
                         <CardItem header={true}>
                             <Text>Market Data</Text>
