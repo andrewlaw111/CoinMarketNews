@@ -3,12 +3,13 @@ import React from "react";
 import Config from "react-native-config";
 import { connect } from "react-redux";
 
-import { Container, Content, Spinner, Tab, Tabs } from "native-base";
+import { Container, Content, Spinner, Tab, Tabs, ScrollableTab } from "native-base";
 import { StyleSheet, View } from "react-native";
 
 import { ICoin, ICoinPrice, IUser } from "../models";
 import { IRootState } from "../redux/store";
 
+import { Navigator } from "react-native-navigation";
 import CoinAlerts from "./CoinAlerts";
 import CoinInfo from "./CoinInfo";
 import CoinNews from "./CoinNews";
@@ -18,6 +19,7 @@ interface ICoinsPageProps {
     coinID: number;
     coinPrice: ICoinPrice;
     user: IUser;
+    navigator: Navigator;
 }
 interface ICoinsPageState {
     coin?: ICoin;
@@ -45,9 +47,13 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
         );
     }
     public render() {
+        // this.props.navigator.toggleNavBar({
+        //     animated: true,
+        //     to: "shown", // required, 'hidden' = hide navigation bar, 'shown' = show navigation bar
+        //   });
         return (
             <Container>
-                <Tabs initialPage={0}>
+                <Tabs springTension={2} initialPage={0} >
                     <Tab heading="Info">
                         {(this.state.coin) ? <CoinInfo coin={this.state.coin} /> : this.renderNoConnection()}
                     </Tab>
