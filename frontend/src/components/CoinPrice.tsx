@@ -1,8 +1,9 @@
 import React from "react";
+import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, Text } from "native-base";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, WebView } from "react-native";
 
 import { ICoin } from "../models";
 import { IRootState } from "../redux/store";
@@ -26,6 +27,12 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                         </Body>
                     </CardItem>
                 </Card>
+                <View style={{ height: 300 }}>
+                    <WebView
+                        source={{ uri: `${Config.API_SERVER}/chart/${this.props.coin.symbol}` }}
+                        style={{ height: 300 }}
+                    />
+                </View>
                 <Card>
                     <CardItem header={true}>
                         <Text>NativeBase</Text>

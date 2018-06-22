@@ -5,6 +5,7 @@ import LoginRouter from "./utils/login";
 import * as express from "express";
 const text2png = require('text2png');
 const fs = require('fs');
+const path = require('path');
 
 import CoinRouter from "./routers/CoinRouter";
 import NewsRouter from "./routers/NewsRouter";
@@ -33,13 +34,26 @@ const userService = new UserService();
 // new CronJob('40 */5 * * * *', function () { new PriceUpdate(); }, function () {}, true, 'America/Los_Angeles');
 // new NewsUpdate();   // detects new news automatically
 
+const chart = fs.readFileSync('./public/chart.html', "utf8");
+
+app.use('/chart/*', function (req, res) {
+    const symbol = req.params[0].toUpperCase();
+    if (symbol != '') {
+        // console.log(symbol);
+        res.send(chart.replace(/BTC/, symbol));
+    }
+    res.send('');
+});
+
 app.use('/icon', express.static('public/cryptocurrency-icons'));
 app.use('/icon', function (req, res) {
     // TODO: check if coin exists?
+    // TODO: move to front !!!
     const coinName = req.path.replace(/\//, '').replace(/\.png/, '').toUpperCase();
     const icon = text2png(coinName, { textColor: 'grey', font: '70px Futura' });
     fs.writeFileSync('./public/cryptocurrency-icons/' + coinName + '.png', icon);
-    res.send(icon);
+    // res.send(icon);
+    res.sendFile(path.join(__dirname + '/../public/cryptocurrency-icons/' + coinName + '.png'));
 });
 
 app.use("/login", new LoginRouter().router());
