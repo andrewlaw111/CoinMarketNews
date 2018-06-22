@@ -98,7 +98,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
 
             }
         }
-
+        const priceColour = (parseFloat(percentageChange) > 0) ? "green" : "red";
         return (
             <View style={styles.listCoin} >
                 <View style={styles.listCoinLeft}>
@@ -110,15 +110,22 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                 </View>
                 <View style={styles.listCoinBody}>
                     <Text style={styles.coinName}>{info.item.name} ({info.item.symbol})</Text>
-                    <Text note={true} style={{ fontWeight: "bold" }}>{coinPrice}</Text>
+                    <Text note={true} style={{ fontWeight: "bold", color: priceColour }}>{coinPrice}</Text>
                 </View>
                 <View style={styles.listCoinRight}>
-                    <View>
-                        <Text note={true} style={styles.listCoinRightText}>{amountCapChange}</Text>
-                        <Text note={true} style={styles.listCoinRightText}>{percentageChange}%</Text>
+                    <View style={{ alignItems: "flex-end" }}>
+                        <Text note={true} style={{color: priceColour}}>{amountCapChange}</Text>
+                        <Text note={true} style={{color: priceColour}}>{percentageChange}%</Text>
                     </View>
                     <TouchableOpacity
-                        style={{ height: 70, width: 70, justifyContent: "center", alignItems: "center" }}
+                        style={{
+                            alignItems: "flex-end",
+                            height: 70,
+                            justifyContent: "center",
+                            paddingRight: 10,
+                            right: -10,
+                            width: 50,
+                        }}
                         onPress={this.handlePressHeart.bind(this, info.item.id)}
                     >
                         <Icon
@@ -305,7 +312,17 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             animated: true,
             animationType: "fade",
             backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorButtons: {},
+            navigatorButtons: {
+                rightButtons: [{
+                    buttonColor: "blue",
+                    buttonFontSize: 14,
+                    buttonFontWeight: "600",
+                    id: "edit",
+                    showAsAction: "ifRoom",
+                    testID: "e2e_rules", // optional, used to locate this view in end-to-end tests
+                    title: "Edit", // for a textual button, provide the button title (label)
+                }],
+            },
             navigatorStyle: {},
             passProps: { coinID: info.item.id, coinPrice: info.item },
             screen: "CoinMarketNews.CoinsPage",
@@ -489,30 +506,27 @@ const styles = StyleSheet.create({
     listCoin: {
         flex: 1,
         flexDirection: "row",
-        paddingBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 10,
-
     },
     listCoinBody: {
-        flex: 0.45,
+        flex: 0.44,
         justifyContent: "center",
         paddingLeft: 10,
         paddingRight: 10,
     },
     listCoinLeft: {
         alignItems: "center",
-        flex: 0.25,
+        flex: 0.26,
         flexDirection: "row",
-        justifyContent: "flex-start",
+        justifyContent: "space-between",
+        paddingLeft: 10,
     },
     listCoinRight: {
         alignItems: "center",
         flex: 0.30,
         flexDirection: "row",
         justifyContent: "flex-end",
-        right: -20,
+        paddingRight: 10,
+        // right: -,
     },
     listCoinRightText: {
         // textAlign: "right",
