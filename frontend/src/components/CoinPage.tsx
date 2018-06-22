@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { Container, Content, Spinner, Tab, Tabs } from "native-base";
 import { StyleSheet, View } from "react-native";
 
-import { ICoin, IUser } from "../models";
+import { ICoin, ICoinPrice, IUser } from "../models";
 import { IRootState } from "../redux/store";
 
 import CoinAlerts from "./CoinAlerts";
@@ -16,6 +16,7 @@ import CoinPrice from "./CoinPrice";
 
 interface ICoinsPageProps {
     coinID: number;
+    coinPrice: ICoinPrice;
     user: IUser;
 }
 interface ICoinsPageState {
@@ -54,7 +55,11 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                         {(this.state.coin) ? <CoinNews coin={this.state.coin} /> : this.renderNoConnection()}
                     </Tab>
                     <Tab heading="Price">
-                        {(this.state.coin) ? <CoinPrice coin={this.state.coin} /> : this.renderNoConnection()}
+                        {(this.state.coin) ? (
+                            <CoinPrice coin={this.state.coin} coinPrice={this.props.coinPrice} />
+                        ) : (
+                                this.renderNoConnection()
+                            )}
                     </Tab>
                     <Tab heading="Alerts">
                         {(this.state.coin) ? <CoinAlerts coin={this.state.coin} /> : this.renderNoConnection()}
