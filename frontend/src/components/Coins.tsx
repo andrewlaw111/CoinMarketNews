@@ -103,10 +103,16 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             <View style={styles.listCoin} >
                 <View style={styles.listCoinLeft}>
                     <Text>{info.item.rank}. </Text>
-                    <Thumbnail style={styles.coinThumnail} source={
-                        { uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
-                        // { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
-                    } />
+                    <View style={{
+                        backgroundColor: "#fff",
+                        borderRadius: 50,
+                        overflow: "hidden",
+                    }}>
+                        <Thumbnail circular={true} style={styles.coinThumnail} source={
+                            { uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                            // { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
+                        } />
+                    </View>
                 </View>
                 <View style={styles.listCoinBody}>
                     <Text style={styles.coinName}>{info.item.name} ({info.item.symbol})</Text>
@@ -484,7 +490,8 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     coinThumnail: {
-        margin: 5,
+        backgroundColor: "grey",
+        margin: 0,
     },
     listCoin: {
         flex: 1,
