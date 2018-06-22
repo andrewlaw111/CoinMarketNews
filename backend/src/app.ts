@@ -23,13 +23,13 @@ const userService = new UserService();
 
 import cron = require('cron');
 const CoinPriceUpdate = require("./cron/coin-price-update");
-const CoinInfosUpdate = require("./cron/coin-infos-update");
+// const CoinInfosUpdate = require("./cron/coin-infos-update");
 const PriceUpdate = require("./cron/price-update");
 const NewsUpdate = require("./cron/news-update");
 
 var CronJob = cron.CronJob;
 new CronJob('0 */5 * * * *', function () { new CoinPriceUpdate(); }, function () {}, true, 'America/Los_Angeles');
-new CronJob('20 */5 * * * *', function () { new CoinInfosUpdate(); }, function () {}, true, 'America/Los_Angeles');
+//new CronJob('0 */5 * * * *', function () { new CoinInfosUpdate(); }, function () {}, true, 'America/Los_Angeles');
 new CronJob('40 */5 * * * *', function () { new PriceUpdate(); }, function () {}, true, 'America/Los_Angeles');
 new NewsUpdate();   // detects new news automatically
 

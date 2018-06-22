@@ -4,79 +4,95 @@ import { knex } from '../utils/init-app';
 module.exports = () => {
     console.log('CoinInfosUpdate CRON start -------');
     var c = new Crawler({
-        maxConnections: 2,
+        maxConnections: 1,
+        rateLimit: 6000, // 1 query every 6 seconds
+        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
+        referer: 'https://coinlib.io/',
+        retries: 0,
         // This will be called for each crawled page
         callback: function (error, res, done) {
             if (error) {
                 console.log(error);
             } else {
                 var $ = res.$;
-                const update_coin = {};
 
-                console.log('-----');
+                if ($.html().includes('captcha-bypass') || $.html().includes('This IP has been blocked')) {
+                    // console.log($.html());
+                    console.log('captcha or IP blocked !!!');
+                    process.exit();
 
-                update_coin.about = $('.coin-description').clone().children('strong, a').remove().end().text().trim();
+                } else {
+                    const update_coin = {};
+                    // console.log($.html());
+                    console.log('-----');
 
-                // infos
-                for (let i = 0; i < $('#info div.col-6').length;) {
-                    const k = $('#info div.col-6').eq(i).text().trim();
-                    const v = $('#info div.col-6').eq(i + 1).text().trim();
-                    if (k == 'Type') {
-                        update_coin.type = v;
-                    } else if (k == 'Algorithm') {
-                        update_coin.algorithm = v;
-                    } else if (k == 'Proof') {
-                        update_coin.proof = v;
-                    } else if (k == 'Mineable') {
-                        update_coin.mineable = (v == 'Yes') ? true : false;
-                    } else if (k == 'Premined') {
-                        update_coin.premined = (v == 'Yes') ? true : false;
+
+                    const about = $('.coin-description').clone().children('strong, a').remove().end().text().trim();
+                    if (about != '') {
+                        update_coin.about = about;
                     }
-                    i = i + 2;
-                }
 
-                // websites
-                if ($('#info i').eq(0).hasClass('fa-link')) {   // official_website
-                    const update_source = {};
-                    update_source.name = $('#info a').eq(0).text().trim();
-                    update_source.link = $('#info a').eq(0).attr('href').trim();
-                    updateSource(res.options.coin.official_website, update_source);
-                }
-                $('#info a').each(function () {
-                    const link = $(this).attr('href').trim();
-                    console.log(link);
-                    if (link.match(/reddit\.com/)) {
-                        const update_source = {};
-                        update_source.name = $(this).text().trim();
-                        update_source.link = link;
-                        updateSource(res.options.coin.reddit, update_source);
-                    } else if (link.match(/twitter\.com/)) {
-                        const update_source = {};
-                        update_source.name = $(this).text().trim();
-                        update_source.link = link;
-                        updateSource(res.options.coin.twitter, update_source);
-                    } else if (link.match(/t\.me/) || link.match(/telegram/)) {
-                        const update_source = {};
-                        update_source.name = $(this).text().trim();
-                        update_source.link = link;
-                        updateSource(res.options.coin.telegram, update_source);
-                    } else if (link.match(/medium\.com/)) {
-                        const update_source = {};
-                        update_source.name = $(this).text().trim();
-                        update_source.link = link;
-                        updateSource(res.options.coin.medium, update_source);
+                    // infos
+                    for (let i = 0; i < $('#info div.col-6').length;) {
+                        const k = $('#info div.col-6').eq(i).text().trim();
+                        const v = $('#info div.col-6').eq(i + 1).text().trim();
+                        if (k == 'Type') {
+                            update_coin.type = v;
+                        } else if (k == 'Algorithm') {
+                            update_coin.algorithm = v;
+                        } else if (k == 'Proof') {
+                            update_coin.proof = v;
+                        } else if (k == 'Mineable') {
+                            update_coin.mineable = (v == 'Yes') ? true : false;
+                        } else if (k == 'Premined') {
+                            update_coin.premined = (v == 'Yes') ? true : false;
+                        }
+                        i = i + 2;
                     }
-                });
 
-                console.log(update_coin);
-
-                knex('coin')
-                    .where('id', '=', res.options.coin.id)
-                    .update(update_coin).then((data) => {
-                        if (data) {
-                            console.log(res.options.coin.name + ' infos updated');
+                    // websites
+                    if ($('#info i').eq(0).hasClass('fa-link')) {   // official_website
+                        const update_source = {};
+                        update_source.name = $('#info a').eq(0).text().trim();
+                        update_source.link = $('#info a').eq(0).attr('href').trim();
+                        updateSource(res.options.coin.official_website, update_source);
+                    }
+                    $('#info a').each(function () {
+                        const link = $(this).attr('href').trim();
+                        console.log(link);
+                        if (link.match(/reddit\.com/)) {
+                            const update_source = {};
+                            update_source.name = $(this).text().trim();
+                            update_source.link = link;
+                            updateSource(res.options.coin.reddit, update_source);
+                        } else if (link.match(/twitter\.com/)) {
+                            const update_source = {};
+                            update_source.name = $(this).text().trim();
+                            update_source.link = link;
+                            updateSource(res.options.coin.twitter, update_source);
+                        } else if (link.match(/t\.me/) || link.match(/telegram/)) {
+                            const update_source = {};
+                            update_source.name = $(this).text().trim();
+                            update_source.link = link;
+                            updateSource(res.options.coin.telegram, update_source);
+                        } else if (link.match(/medium\.com/)) {
+                            const update_source = {};
+                            update_source.name = $(this).text().trim();
+                            update_source.link = link;
+                            updateSource(res.options.coin.medium, update_source);
                         }
                     });
+
+                    console.log(update_coin);
+
+                    knex('coin')
+                        .where('id', '=', res.options.coin.id)
+                        .update(update_coin).then((data) => {
+                            if (data) {
+                                console.log(res.options.coin.name + ' infos updated');
+                            }
+                        });
+                }
             }
             done();
         }
@@ -85,10 +101,10 @@ module.exports = () => {
     knex.select()
         .from("coin")
         .offset(0)
-        .limit(3)
+        .limit(20)
         .orderBy('rank', 'asc')
         .then((coins) => {
-            console.log(coins);
+            // console.log(coins);
             for (let coin of coins) {
                 if (coin.symbol == 'MIOTA') {
                     coin.symbol = 'IOT';
