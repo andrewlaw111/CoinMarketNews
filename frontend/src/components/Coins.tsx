@@ -1,8 +1,8 @@
 import React from "react";
 import Config from "react-native-config";
+import { isIphoneX } from "react-native-iphone-x-helper";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
-import { ifIphoneX, isIphoneX } from 'react-native-iphone-x-helper';
 
 import { Button, Col, Container, Content, Grid, Icon, Segment, Spinner, Tab, Tabs, Text, Thumbnail } from "native-base";
 import { FlatList, Platform, StyleSheet, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
@@ -266,11 +266,20 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         //     return coinA.price_fiat.percent_change_1h - coinB.price_fiat.percent_change_1h;
         // });
         // console.log(coins);
+        let iOSStyle = {};
+        if (Platform.OS === "ios") {
+            if (isIphoneX()) {
+                iOSStyle = { paddingTop: 38, backgroundColor: "#F8F8F8" };
+            } else {
+                iOSStyle = { paddingTop: 14, backgroundColor: "#F8F8F8" };
+            }
+        }
+
         coins = this.sortCoins(coins);
         if (this.props.coins.length > 0) {
             return (
                 <Container style={styles.coinListComponent}>
-                    <Tabs style={(isIphoneX()) ? { height: 44 } : null} initialPage={0}>
+                    <Tabs style={iOSStyle} initialPage={0}>
                         <Tab heading="Favourites">
                             {this.renderOptions()}
                             {(this.props.favourites.length > 0) ? (
