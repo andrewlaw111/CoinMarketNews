@@ -1,8 +1,8 @@
-import { ICoin } from "../../models";
+import {  ICoinPrice } from "../../models";
 import { CoinActions, LOAD_COIN_FAILURE, LOAD_COIN_SUCCESS } from "../actions/coins";
 
 export interface ICoinState {
-  coins: ICoin[];
+  coins: ICoinPrice[];
 }
 
 const defaultCoinState: ICoinState = {

@@ -1,4 +1,5 @@
 import { knex } from "../utils/init-app";
+
 interface ICoin {
     id: number;
     name: string;
@@ -34,21 +35,19 @@ export default class CoinService {
 
     public constructor() {
         this.lastUpdated = Date.now();
-        this.updateList();
+        this.updateCoinList();
     }
     public checkTimer() {
         return Date.now() - this.lastUpdated;
     }
     public getCoins(token: string) {
         return new Promise((resolve, reject) => {
-
             // Make a query to the database if the list has not been updated for 20 seconds
             if (Date.now() - this.lastUpdated < 20000) {
                 resolve(this.coinList);
             } else {
-                this.updateList()
+                this.updateCoinList()
                     .then(() => {
-                        console.log(this.coinList)
                         resolve(this.coinList);
                     })
                     .catch((err: any) => {
@@ -64,7 +63,7 @@ export default class CoinService {
                 const findcoin = this.coinList.find((coin) => coin.id === parseInt(coinID, undefined));
                 resolve(findcoin);
             } else {
-                this.updateList()
+                this.updateCoinList()
                     .then(() => {
                         resolve(this.coinList.find((coin) => coin.id === parseInt(coinID, undefined)));
                     })
@@ -74,7 +73,7 @@ export default class CoinService {
             }
         });
     }
-    private updateList() {
+    private updateCoinList() {
         this.lastUpdated = Date.now();
         return knex('source')
             .where('name', '!=', '')

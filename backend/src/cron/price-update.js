@@ -5,12 +5,12 @@ module.exports = () => {
     console.log('PriceUpdate CRON start -------');
     knex.select()
         .from("currency")
-        .limit(1)      // !!! TO REMOVE !!!
+        .limit(3)
         .then((currencies) => {
             console.log(currencies);
             knex('coin').count()
                 .then((coins) => {
-                    console.log(coins);
+                    //console.log(coins);
                     const num_cryptocurrencies = parseInt(coins[0].count);
                     console.log(num_cryptocurrencies);
                     const limit = 100;
@@ -21,13 +21,11 @@ module.exports = () => {
                             console.log(url);
                             axios.get(url)
                                 .then(function (response) {
-                                    console.log(response.data.data);
+                                    //console.log(response.data.data);
                                     for (const price of response.data.data) {
-                                        console.log(price);
+                                        // console.log(price);
                                         const price_update = price.quotes[currency.symbol];
                                         console.log(price_update);
-                                        // price_update.volume_24h = parseInt(price_update.volume_24h);
-                                        // price_update.market_cap = parseInt(price_update.market_cap);
                                         knex('price')
                                             .where({ coinmarketcap_id: price.id, currency_id: currency.id })
                                             .update(price_update).then((data) => {

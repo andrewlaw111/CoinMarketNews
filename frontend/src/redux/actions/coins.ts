@@ -3,7 +3,7 @@ import { AsyncStorage } from "react-native";
 import Config from "react-native-config";
 
 import { Action } from "redux";
-import { ICoin } from "../../models";
+import { ICoinPrice } from "../../models";
 import { store } from "../store";
 
 // Define Actions const and type
@@ -15,7 +15,7 @@ export type LOAD_COIN_FAILURE = typeof LOAD_COIN_FAILURE;
 
 export interface ILoadCoinSuccessAction extends Action {
     type: LOAD_COIN_SUCCESS;
-    coins: ICoin[];
+    coins: ICoinPrice[];
 }
 
 export interface ILoadCoinFailureAction extends Action {
@@ -25,7 +25,7 @@ export interface ILoadCoinFailureAction extends Action {
 // Collection of both for easier integration
 export type CoinActions = ILoadCoinSuccessAction | ILoadCoinFailureAction;
 
-export const loadCoinSuccess = (coins: ICoin[]) => {
+export const loadCoinSuccess = (coins: ICoinPrice[]) => {
     return {
         coins,
         type: LOAD_COIN_SUCCESS,
@@ -42,7 +42,7 @@ export const getCoins = async () => {
     try {
         const token = store.getState().user.user.token;
         axios
-            .get<ICoin[]>(
+            .get<ICoinPrice[]>(
                 `${Config.API_SERVER}/price`,
                 // `http://10.0.0.22:8000/coin`,
                 {

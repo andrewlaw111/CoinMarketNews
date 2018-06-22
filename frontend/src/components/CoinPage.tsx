@@ -3,7 +3,7 @@ import React from "react";
 import Config from "react-native-config";
 import { connect } from "react-redux";
 
-import { Container, Tab, Tabs, Text } from "native-base";
+import { Container, Content, Spinner, Tab, Tabs } from "native-base";
 import { StyleSheet, View } from "react-native";
 
 import { ICoin, IUser } from "../models";
@@ -37,7 +37,9 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
     public renderNoConnection() {
         return (
             <View>
-                <Text>No Connection was found</Text>
+                <Content>
+                    <Spinner />
+                </Content>
             </View>
         );
     }

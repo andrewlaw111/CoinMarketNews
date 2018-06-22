@@ -7,14 +7,18 @@ const text2png = require('text2png');
 const fs = require('fs');
 
 import CoinRouter from "./routers/CoinRouter";
-import UserRouter from "./routers/UserRouter";
-import CoinService from "./services/CoinService";
-import UserService from "./services/UserService";
 import NewsRouter from "./routers/NewsRouter";
+import PriceRouter from "./routers/PriceRouter";
+import UserRouter from "./routers/UserRouter";
+
+import CoinService from "./services/CoinService";
 import NewsService from "./services/NewsService";
+import PriceService from "./services/PriceService";
+import UserService from "./services/UserService";
 
 const coinService = new CoinService();
 const newsService = new NewsService();
+const priceService = new PriceService();
 const userService = new UserService();
 
 import cron = require('cron');
@@ -41,6 +45,7 @@ app.use('/icon', function (req, res) {
 app.use("/login", new LoginRouter().router());
 app.use("/coin", new CoinRouter(coinService).router());
 app.use("/news", new NewsRouter(newsService).router());
+app.use("/price", new PriceRouter(priceService).router());
 app.use("/user", new UserRouter(userService).router());
 
 server.listen(8000);

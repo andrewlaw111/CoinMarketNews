@@ -1,17 +1,17 @@
 import React from "react";
 import Config from "react-native-config";
 import { Navigator } from "react-native-navigation";
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 
-import { Button, Col, Container, Grid, Icon, Segment, Tab, Tabs, Text, Thumbnail } from "native-base";
+import { Button, Col, Container, Content, Grid, Icon, Segment, Spinner, Tab, Tabs, Text, Thumbnail } from "native-base";
 import { FlatList, Platform, StyleSheet, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
 
-import { ICoin, IUser } from "../models";
+import { ICoinPrice, IUser } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
 interface ICoinsListProps {
-    coins: ICoin[];
+    coins: ICoinPrice[];
     favourites: number[];
     user: IUser;
     navigator: Navigator;
@@ -26,7 +26,7 @@ interface ICoinsListState {
     fiatCurrency: boolean;
     cryptoCurrency: boolean;
     setting1D: boolean;
-    setting1M: boolean;
+    setting1H: boolean;
     setting1W: boolean;
 }
 
@@ -42,16 +42,65 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             cryptoCurrency: false,
             fiatCurrency: true,
             setting1D: true,
-            setting1M: false,
+            setting1H: false,
             setting1W: false,
             sortCap: true,
             sortDrop: false,
             sortGain: false,
         };
     }
-    public renderCoins = (info: { item: ICoin, index: number }, heartColour: string) => {
+    public renderCoins = (info: { item: ICoinPrice, index: number }, heartColour: string) => {
+        let coinPrice: string;
+        let amountCapChange: string;
+        let percentageChange: string;
+
+        if (this.state.cryptoCurrency) {
+            coinPrice = `BTC ${info.item.price_crypto.price}`;
+            if (this.state.setting1D) {
+                amountCapChange =
+                    `BTC ${
+                    (info.item.price_crypto.price / (100 + info.item.price_crypto.percent_change_24h))
+                        .toFixed(8)}`;
+                percentageChange = `${(info.item.price_crypto.percent_change_24h)
+                    .toFixed(2)}`;
+            } else if (this.state.setting1H) {
+                amountCapChange =
+                    `BTC ${
+                    (info.item.price_crypto.price / (100 + info.item.price_crypto.percent_change_1h))
+                        .toFixed(8)}`;
+                percentageChange = `${(info.item.price_crypto.percent_change_1h)
+                    .toFixed(2)}`;
+            } else {
+                amountCapChange =
+                    `BTC ${(info.item.price_crypto.price / (100 + info.item.price_crypto.percent_change_7d))
+                        .toFixed(8)}`;
+                percentageChange = `${(info.item.price_crypto.percent_change_7d)
+                    .toFixed(2)}`;
+            }
+        } else {
+            coinPrice = `USD ${info.item.price_fiat.price}`;
+            if (this.state.setting1D) {
+                amountCapChange = `USD ${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_24h))
+                    .toFixed(8)}`;
+                percentageChange = `${(info.item.price_fiat.percent_change_24h)
+                    .toFixed(2)}`;
+            } else if (this.state.setting1H) {
+                amountCapChange = `USD ${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_1h))
+                    .toFixed(8)}`;
+
+                percentageChange = `${(info.item.price_fiat.percent_change_1h)
+                    .toFixed(2)}`;
+            } else {
+                amountCapChange = `USD ${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_7d))
+                    .toFixed(8)}`;
+                percentageChange = `${(info.item.price_fiat.percent_change_7d)
+                    .toFixed(2)}`;
+
+            }
+        }
+
         return (
-            <View style={styles.listCoin}>
+            <View style={styles.listCoin} >
                 <View style={styles.listCoinLeft}>
                     <Text>{info.item.rank}. </Text>
                     <Thumbnail source={
@@ -60,13 +109,13 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                     } />
                 </View>
                 <View style={styles.listCoinBody}>
-                    <Text style={styles.coinName}>{info.item.name}</Text>
-                    <Text note={true}>$3.00</Text>
+                    <Text style={styles.coinName}>{info.item.name} ({info.item.symbol})</Text>
+                    <Text note={true} style={{ fontWeight: "bold" }}>{coinPrice}</Text>
                 </View>
                 <View style={styles.listCoinRight}>
                     <View>
-                        <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
-                        <Text note={true} style={styles.listCoinRightText}>$3.00</Text>
+                        <Text note={true} style={styles.listCoinRightText}>{amountCapChange}</Text>
+                        <Text note={true} style={styles.listCoinRightText}>{percentageChange}%</Text>
                     </View>
                     <TouchableOpacity
                         style={{ height: 60, width: 50, justifyContent: "center", alignItems: "center" }}
@@ -83,7 +132,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         );
     }
 
-    public renderCoinList = (info: { item: ICoin, index: number }) => {
+    public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
         // console.error(this.props.favourites);
         let heartColour: string;
         if (this.props.favourites.indexOf(info.item.id) > -1) {
@@ -143,15 +192,15 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                     <Segment>
                         <Button style={styles.smallpadding}
                             first={true}
-                            active={this.state.cryptoCurrency}
-                            onPress={this.handleCurrencyPress.bind(this, "Fiat")}
+                            active={this.state.fiatCurrency}
+                            onPress={this.handleCurrencyPress.bind(this, "Coin")}
                         >
                             <Text style={styles.nopadding}>USD</Text>
                         </Button>
                         <Button style={styles.smallpadding}
                             last={true}
-                            active={this.state.fiatCurrency}
-                            onPress={this.handleCurrencyPress.bind(this, "Coin")}
+                            active={this.state.cryptoCurrency}
+                            onPress={this.handleCurrencyPress.bind(this, "Fiat")}
                         >
                             <Text style={styles.nopadding}>BTC</Text>
                         </Button>
@@ -163,26 +212,26 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                             first={true}
                             active={this.state.setting1W}
                             onPress={this.handleTimeframePress.bind(this, "1W")}
-                            style={(this.state.sortCap) ? { display: "none" } : styles.smallpadding}
+                            style={styles.smallpadding}
                         >
                             <Text style={styles.nopadding}>1W</Text>
                         </Button>
                         <Button
                             active={this.state.setting1D}
                             onPress={this.handleTimeframePress.bind(this, "1D")}
-                            style={(this.state.sortCap) ? { display: "none" } : styles.smallpadding}
+                            style={styles.smallpadding}
 
                         >
                             <Text style={styles.nopadding}>1D</Text>
                         </Button>
                         <Button
                             last={true}
-                            active={this.state.setting1M}
-                            onPress={this.handleTimeframePress.bind(this, "1M")}
-                            style={(this.state.sortCap) ? { display: "none" } : styles.smallpadding}
+                            active={this.state.setting1H}
+                            onPress={this.handleTimeframePress.bind(this, "1H")}
+                            style={styles.smallpadding}
 
                         >
-                            <Text style={styles.nopadding}>1M</Text>
+                            <Text style={styles.nopadding}>1H</Text>
                         </Button>
                     </Segment>
                 </Col>
@@ -190,7 +239,18 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         );
     }
     public render() {
+        let coins = this.props.coins.slice();
 
+        if (this.state.fiatCurrency) {
+            coins = coins.filter((coin) => coin.price_fiat.market_cap !== null && coin.rank !== null);
+        } else {
+            coins = coins.filter((coin) => coin.price_crypto.market_cap !== null && coin.rank !== null);
+        }
+        // coins = coins.sort((coinA, coinB) => {
+        //     return coinA.price_fiat.percent_change_1h - coinB.price_fiat.percent_change_1h;
+        // });
+        // console.log(coins);
+        coins = this.sortCoins(coins);
         if (this.props.coins.length > 0) {
             return (
                 <Container style={styles.coinListComponent}>
@@ -199,8 +259,8 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                             {this.renderOptions()}
                             {(this.props.favourites.length > 0) ? (
                                 <FlatList
-                                    data={this.props.coins.filter(
-                                        (coin: ICoin) => this.props.favourites.indexOf(coin.id) > -1,
+                                    data={coins.filter(
+                                        (coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1,
                                     )}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
@@ -219,7 +279,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                         <Tab heading="Market">
                             {this.renderOptions()}
                             <FlatList
-                                data={this.props.coins.slice().splice(0, 20)}
+                                data={coins}
                                 renderItem={this.renderCoinList}
                                 keyExtractor={this.keyExtractor}
                                 style={styles.coinList}
@@ -231,15 +291,18 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         } else {
             return (
                 <View>
-                    <Text>
-                        CoinMarketNews was unable to retrieve data.
-                    </Text>
+                    {
+                        <Content>
+                            <Spinner />
+                            <Text>CoinMarketNews is fetching prices.</Text>
+                        </Content>
+                    }
                 </View>
             );
         }
     }
 
-    private handlePress = (info: { item: ICoin, index: number }) => {
+    private handlePress = (info: { item: ICoinPrice, index: number }) => {
         this.props.navigator.push({
             animated: true,
             animationType: "fade",
@@ -299,24 +362,97 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         if (options === "1W") {
             this.setState({
                 setting1D: false,
-                setting1M: false,
+                setting1H: false,
                 setting1W: true,
             });
         } else if (options === "1D") {
             this.setState({
                 setting1D: true,
-                setting1M: false,
+                setting1H: false,
                 setting1W: false,
             });
         } else {
             this.setState({
                 setting1D: false,
-                setting1M: true,
+                setting1H: true,
                 setting1W: false,
             });
         }
     }
-    private keyExtractor = (item: ICoin) => item.id.toString();
+    private keyExtractor = (item: ICoinPrice) => item.id.toString();
+    private sortCoins = (coins: ICoinPrice[]) => {
+
+        switch (true) {
+            case this.state.sortCap:
+                coins.sort((coinA, coinB) => {
+                    return coinA.rank - coinB.rank;
+                });
+                break;
+            case this.state.sortGain && this.state.fiatCurrency:
+                if (this.state.setting1H) {
+                    coins.sort((coinA, coinB) => {
+                        return coinB.price_fiat.percent_change_1h - coinA.price_fiat.percent_change_1h;
+                    });
+                } else if (this.state.setting1D) {
+                    coins.sort((coinA, coinB) => {
+                        return coinB.price_fiat.percent_change_24h - coinA.price_fiat.percent_change_24h;
+                    });
+                } else {
+                    coins.sort((coinA, coinB) => {
+                        return coinB.price_fiat.percent_change_7d - coinA.price_fiat.percent_change_7d;
+                    });
+                }
+                break;
+            case this.state.sortGain && this.state.cryptoCurrency:
+                if (this.state.setting1H) {
+                    coins.sort((coinA, coinB) => {
+                        return coinB.price_crypto.percent_change_1h - coinA.price_crypto.percent_change_1h;
+                    });
+                } else if (this.state.setting1D) {
+                    coins.sort((coinA, coinB) => {
+                        return coinB.price_crypto.percent_change_24h - coinA.price_crypto.percent_change_24h;
+                    });
+                } else {
+                    coins.sort((coinA, coinB) => {
+                        return coinB.price_crypto.percent_change_7d - coinA.price_crypto.percent_change_7d;
+                    });
+                }
+                break;
+            case this.state.sortDrop && this.state.fiatCurrency:
+                if (this.state.setting1H) {
+                    coins.sort((coinA, coinB) => {
+                        return coinA.price_fiat.percent_change_1h - coinB.price_fiat.percent_change_1h;
+                    });
+                } else if (this.state.setting1D) {
+                    coins.sort((coinA, coinB) => {
+                        return coinA.price_fiat.percent_change_24h - coinB.price_fiat.percent_change_24h;
+                    });
+                } else {
+                    coins.sort((coinA, coinB) => {
+                        return coinA.price_fiat.percent_change_7d - coinB.price_fiat.percent_change_7d;
+                    });
+                }
+                break;
+            case this.state.sortDrop && this.state.cryptoCurrency:
+                if (this.state.setting1H) {
+                    coins.sort((coinA, coinB) => {
+                        return coinA.price_crypto.percent_change_1h - coinB.price_crypto.percent_change_1h;
+                    });
+                } else if (this.state.setting1D) {
+                    coins.sort((coinA, coinB) => {
+                        return coinA.price_crypto.percent_change_24h - coinB.price_crypto.percent_change_24h;
+                    });
+                } else {
+                    coins.sort((coinA, coinB) => {
+                        return coinA.price_crypto.percent_change_7d - coinB.price_crypto.percent_change_7d;
+                    });
+                }
+                break;
+            default:
+                return;
+        }
+        return coins;
+    }
 }
 
 const mapDispatchToProps = (dispatch: any) => {

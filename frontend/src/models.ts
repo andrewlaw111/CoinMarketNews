@@ -1,5 +1,6 @@
 export interface ICoin {
     id: number;
+    coinmarketcap_id: number;
     name: string;
     symbol: string;
     rank: number;
@@ -8,7 +9,6 @@ export interface ICoin {
     total_supply: string;
     max_supply: string | null;
     last_updated: number;
-    coinmarketcap_id: number;
     about: string;
     type: string;
     algorithm: string;
@@ -20,6 +20,35 @@ export interface ICoin {
     reddit?: { id: number, link: string, name: string };
     twitter?: { id: number, link: string, name: string };
     telegram?: { id: number, link: string, name: string };
+}
+export interface ICoinPrice {
+    id: number;
+    coinmarketcap_id: number;
+    name: string;
+    symbol: string;
+    rank: number;
+    price_fiat: {
+        id: number;
+        coinmarketcap_id: number;
+        currency_id: number;
+        price: number;
+        volume_24h: number;
+        market_cap: number;
+        percent_change_1h: number;
+        percent_change_24h: number;
+        percent_change_7d: number;
+    };
+    price_crypto: {
+        id: number;
+        coinmarketcap_id: number;
+        currency_id: number;
+        price: number;
+        volume_24h: number;
+        market_cap: number;
+        percent_change_1h: number;
+        percent_change_24h: number;
+        percent_change_7d: number;
+    };
 }
 
 export interface IUser {

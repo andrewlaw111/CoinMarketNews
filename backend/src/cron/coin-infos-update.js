@@ -85,7 +85,7 @@ module.exports = () => {
     knex.select()
         .from("coin")
         .offset(0)
-        .limit(10)
+        .limit(3)
         .orderBy('rank', 'asc')
         .then((coins) => {
             console.log(coins);
