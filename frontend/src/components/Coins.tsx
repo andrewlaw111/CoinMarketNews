@@ -55,44 +55,44 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         let percentageChange: string;
 
         if (this.state.cryptoCurrency) {
-            coinPrice = `BTC ${info.item.price_crypto.price}`;
+            coinPrice = `${info.item.price_crypto.price}`;
             if (this.state.setting1D) {
                 amountCapChange =
-                    `BTC ${
+                    `${
                     (info.item.price_crypto.price / (100 + info.item.price_crypto.percent_change_24h))
-                        .toFixed(8)}`;
+                        .toFixed(6)}`;
                 percentageChange = `${(info.item.price_crypto.percent_change_24h)
                     .toFixed(2)}`;
             } else if (this.state.setting1H) {
                 amountCapChange =
-                    `BTC ${
+                    `${
                     (info.item.price_crypto.price / (100 + info.item.price_crypto.percent_change_1h))
-                        .toFixed(8)}`;
+                        .toFixed(6)}`;
                 percentageChange = `${(info.item.price_crypto.percent_change_1h)
                     .toFixed(2)}`;
             } else {
                 amountCapChange =
-                    `BTC ${(info.item.price_crypto.price / (100 + info.item.price_crypto.percent_change_7d))
-                        .toFixed(8)}`;
+                    `${(info.item.price_crypto.price / (100 + info.item.price_crypto.percent_change_7d))
+                        .toFixed(6)}`;
                 percentageChange = `${(info.item.price_crypto.percent_change_7d)
                     .toFixed(2)}`;
             }
         } else {
-            coinPrice = `USD ${info.item.price_fiat.price}`;
+            coinPrice = `${info.item.price_fiat.price}`;
             if (this.state.setting1D) {
-                amountCapChange = `USD ${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_24h))
-                    .toFixed(8)}`;
+                amountCapChange = `${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_24h))
+                    .toFixed(6)}`;
                 percentageChange = `${(info.item.price_fiat.percent_change_24h)
                     .toFixed(2)}`;
             } else if (this.state.setting1H) {
-                amountCapChange = `USD ${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_1h))
-                    .toFixed(8)}`;
+                amountCapChange = `${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_1h))
+                    .toFixed(6)}`;
 
                 percentageChange = `${(info.item.price_fiat.percent_change_1h)
                     .toFixed(2)}`;
             } else {
-                amountCapChange = `USD ${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_7d))
-                    .toFixed(8)}`;
+                amountCapChange = `${(info.item.price_fiat.price / (100 + info.item.price_fiat.percent_change_7d))
+                    .toFixed(6)}`;
                 percentageChange = `${(info.item.price_fiat.percent_change_7d)
                     .toFixed(2)}`;
 
@@ -103,7 +103,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             <View style={styles.listCoin} >
                 <View style={styles.listCoinLeft}>
                     <Text>{info.item.rank}. </Text>
-                    <Thumbnail source={
+                    <Thumbnail style={styles.coinThumnail} source={
                         { uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                         // { uri: `http://api.coinmarketnews.app/icon/${info.item.symbol.toLocaleLowerCase()}.png` }
                     } />
@@ -118,7 +118,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                         <Text note={true} style={styles.listCoinRightText}>{percentageChange}%</Text>
                     </View>
                     <TouchableOpacity
-                        style={{ height: 60, width: 50, justifyContent: "center", alignItems: "center" }}
+                        style={{ height: 70, width: 70, justifyContent: "center", alignItems: "center" }}
                         onPress={this.handlePressHeart.bind(this, info.item.id)}
                     >
                         <Icon
@@ -291,12 +291,10 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         } else {
             return (
                 <View>
-                    {
-                        <Content>
-                            <Spinner />
-                            <Text>CoinMarketNews is fetching prices.</Text>
-                        </Content>
-                    }
+                    <Content>
+                        <Spinner />
+                        <Text>CoinMarketNews is fetching prices.</Text>
+                    </Content>
                 </View>
             );
         }
@@ -309,10 +307,9 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             backButtonHidden: false, // hide the back button altogether (optional)
             navigatorButtons: {},
             navigatorStyle: {},
-            passProps: { coinID: info.item.id },
+            passProps: { coinID: info.item.id, coinPrice: info.item },
             screen: "CoinMarketNews.CoinsPage",
             title: info.item.name,
-            // titleImage: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
             titleImage: `http://10.0.0.22:8000/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
         });
     }
@@ -486,6 +483,9 @@ const styles = StyleSheet.create({
     coinName: {
         fontWeight: "bold",
     },
+    coinThumnail: {
+        margin: 5,
+    },
     listCoin: {
         flex: 1,
         flexDirection: "row",
@@ -496,21 +496,23 @@ const styles = StyleSheet.create({
 
     },
     listCoinBody: {
-        flex: 0.48,
-        justifyContent: "space-around",
+        flex: 0.45,
+        justifyContent: "center",
         paddingLeft: 10,
+        paddingRight: 10,
     },
     listCoinLeft: {
         alignItems: "center",
-        flex: 0.28,
+        flex: 0.25,
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
     },
     listCoinRight: {
         alignItems: "center",
-        flex: 0.24,
+        flex: 0.30,
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
+        right: -20,
     },
     listCoinRightText: {
         // textAlign: "right",

@@ -2,8 +2,9 @@ import React from "react";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Text } from "native-base";
-import { FlatList, Linking, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Body, Card, CardItem, StyleProvider, Text, Content, Spinner } from "native-base";
+import { FlatList, Linking, StyleSheet, TouchableOpacity, View } from "react-native";
+import getTheme from "../../native-base-theme/components"
 
 import { INews, IUser } from "../models";
 import { IRootState } from "../redux/store";
@@ -22,30 +23,32 @@ class PureNewsList extends React.Component<INewsListProps> {
     };
     public renderNewsList = (info: { item: INews, index: number }) => (
         <View>
-            <Card >
-                <TouchableOpacity
-                    onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)}>
-                    <CardItem header={true}>
-                        <Text
-                            style={styles.headingText}>
-                            {this.props.news[info.index].title}
-                        </Text>
-                    </CardItem>
-                    <CardItem>
-                        <Body>
-                            <Text >
-                                {this.props.news[info.index].content}
+            <StyleProvider style={getTheme()} >
+                <Card>
+                    <TouchableOpacity
+                        onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)}>
+                        <CardItem header={true}>
+                            <Text
+                                style={styles.headingText}>
+                                {this.props.news[info.index].title}
                             </Text>
-                        </Body>
-                    </CardItem>
-                    <CardItem
-                        button={true}
-                        footer={true}
-                    >
-                        <Text>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text>
-                    </CardItem>
-                </TouchableOpacity>
-            </Card>
+                        </CardItem>
+                        <CardItem>
+                            <Body>
+                                <Text >
+                                    {this.props.news[info.index].content}
+                                </Text>
+                            </Body>
+                        </CardItem>
+                        <CardItem
+                            button={true}
+                            footer={true}
+                        >
+                            <Text>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text>
+                        </CardItem>
+                    </TouchableOpacity>
+                </Card>
+            </StyleProvider>
         </View>
     )
     public render() {
@@ -61,7 +64,10 @@ class PureNewsList extends React.Component<INewsListProps> {
         } else {
             return (
                 <View>
-                    <Text>CoinMarketNews was unable to retrieve data.</Text>
+                    <Content>
+                        <Spinner />
+                        <Text>CoinMarketNews is fetching news.</Text>
+                    </Content>
                 </View>
             );
         }

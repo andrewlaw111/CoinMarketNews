@@ -1,10 +1,10 @@
 import axios from "axios";
 import React from "react";
 import Config from "react-native-config";
-import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, Text } from "native-base";
-import { FlatList, Linking, StyleSheet, TouchableOpacity } from "react-native";
+import { Body, Card, CardItem, Container, Text, StyleProvider, Content, Spinner } from "native-base";
+import { FlatList, Linking, StyleSheet, TouchableOpacity, View } from "react-native";
+import getTheme from "../../native-base-theme/components"
 
 import { ICoin, INews } from "../models";
 import { IRootState } from "../redux/store";
@@ -47,11 +47,22 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
     public render() {
         return (
             <Container>
-                <FlatList
-                    data={this.state.news}
-                    renderItem={this.renderList}
-                    keyExtractor={this.keyExtractor}
-                />
+                <StyleProvider style={getTheme()} >
+                    {(this.state.news.length > 0) ? (
+                        <FlatList
+                            data={this.state.news}
+                            renderItem={this.renderList}
+                            keyExtractor={this.keyExtractor}
+                        />
+                    ) : (
+                            <View>
+                                <Content>
+                                    <Spinner />
+                                    <Text>CoinMarketNews is fetching news.</Text>
+                                </Content>
+                            </View>
+                        )}
+                </StyleProvider>
             </Container>
         );
     }
