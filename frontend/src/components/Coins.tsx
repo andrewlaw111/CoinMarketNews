@@ -2,6 +2,7 @@ import React from "react";
 import Config from "react-native-config";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
+import { ifIphoneX, isIphoneX } from 'react-native-iphone-x-helper';
 
 import { Button, Col, Container, Content, Grid, Icon, Segment, Spinner, Tab, Tabs, Text, Thumbnail } from "native-base";
 import { FlatList, Platform, StyleSheet, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
@@ -98,7 +99,9 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
 
             }
         }
-        const priceColour = (parseFloat(percentageChange) > 0) ? "green" : "red";
+        const priceColour = (parseFloat(percentageChange) > 0) ?
+            "green" : (parseFloat(percentageChange) === 0) ?
+                "grey" : "red";
         return (
             <View style={styles.listCoin} >
                 <View style={styles.listCoinLeft}>
@@ -114,8 +117,8 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                 </View>
                 <View style={styles.listCoinRight}>
                     <View style={{ alignItems: "flex-end" }}>
-                        <Text note={true} style={{color: priceColour}}>{amountCapChange}</Text>
-                        <Text note={true} style={{color: priceColour}}>{percentageChange}%</Text>
+                        <Text note={true} style={{ color: priceColour }}>{amountCapChange}</Text>
+                        <Text note={true} style={{ color: priceColour }}>{percentageChange}%</Text>
                     </View>
                     <TouchableOpacity
                         style={{
@@ -261,7 +264,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         if (this.props.coins.length > 0) {
             return (
                 <Container style={styles.coinListComponent}>
-                    <Tabs initialPage={0}>
+                    <Tabs style={(isIphoneX()) ? { height: 44 } : null} initialPage={0}>
                         <Tab heading="Favourites">
                             {this.renderOptions()}
                             {(this.props.favourites.length > 0) ? (
@@ -293,7 +296,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                             />
                         </Tab>
                     </Tabs>
-                </Container>
+                </Container >
             );
         } else {
             return (
