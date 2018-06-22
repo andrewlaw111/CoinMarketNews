@@ -17,6 +17,8 @@ interface ICoinsPageProps {
 class PureCoinPrice extends React.Component<ICoinsPageProps> {
 
     public render() {
+        // tslint:disable-next-line:max-line-length
+        const priceWidget = "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_fd207&symbol=BTCUSD&interval=D&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=%5B%5D&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_medium=widget&utm_campaign=chart&utm_term=BTCUSD";
         return (
             <StyleProvider style={getTheme()} >
                 <Container>
@@ -41,7 +43,7 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                     </Card>
                     <View style={{ height: 300 }}>
                         <WebView
-                            source={{ uri: `${Config.API_SERVER}/chart/${this.props.coin.symbol}` }}
+                            source={{ uri: priceWidget.replace(/BTC/, this.props.coin.symbol) }}
                             style={{ height: 300 }}
                         />
                     </View>
