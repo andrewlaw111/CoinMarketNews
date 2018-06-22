@@ -50,7 +50,7 @@ app.use('/icon', function (req, res) {
     // TODO: check if coin exists?
     // TODO: move to front !!!
     const coinName = req.path.replace(/\//, '').replace(/\.png/, '').toUpperCase();
-    const icon = text2png(coinName, { textColor: 'grey', font: '70px Futura' });
+    const icon = text2png(' \n'+coinName+' \n', { textColor: 'white', font: '70px Futura', padding: 60 });
     fs.writeFileSync('./public/cryptocurrency-icons/' + coinName + '.png', icon);
     // res.send(icon);
     res.sendFile(path.join(__dirname + '/../public/cryptocurrency-icons/' + coinName + '.png'));
