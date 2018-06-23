@@ -26,11 +26,8 @@ import java.util.List;
          return Arrays.<ReactPackage>asList(
             new ReactNativeConfigPackage(),
             new MainReactPackage(),
-<<<<<<< HEAD
             new FastImageViewPackage(),
-=======
             new ReactNativeOneSignalPackage(),
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
             new VectorIconsPackage()
          );
      }

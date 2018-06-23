@@ -446,11 +446,8 @@
 				E2A3F35E518B4162B0D65B9F /* libRNVectorIcons.a in Frameworks */,
 				42640D1652284E6E8C178D2E /* libReactNativeNavigation.a in Frameworks */,
 				FA02D67D99EB41CD9DF936BD /* libReactNativeConfig.a in Frameworks */,
-<<<<<<< HEAD
 				8F14EDE6C6354364A0658F88 /* libFastImage.a in Frameworks */,
-=======
 				0E503264E18F4FFE859D715D /* libRCTOneSignal.a in Frameworks */,
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -684,11 +681,8 @@
 				A2A768B8DBEC448F8A02DE3A /* RNVectorIcons.xcodeproj */,
 				63D2BD42DA24494984E8EBDC /* ReactNativeNavigation.xcodeproj */,
 				672D0534212444479F714D70 /* ReactNativeConfig.xcodeproj */,
-<<<<<<< HEAD
 				A4C70618471D4285A726778B /* FastImage.xcodeproj */,
-=======
 				F632D59E83AB405C8FFA33A8 /* RCTOneSignal.xcodeproj */,
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1379,11 +1373,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-<<<<<<< HEAD
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
-=======
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 				);
 				INFOPLIST_FILE = CoinMarketNews/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1421,11 +1412,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-<<<<<<< HEAD
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
-=======
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 				);
 				INFOPLIST_FILE = CoinMarketNews/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1466,11 +1454,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-<<<<<<< HEAD
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
-=======
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 				);
 				INFOPLIST_FILE = "CoinMarketNews-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1508,11 +1493,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-<<<<<<< HEAD
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
-=======
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 				);
 				INFOPLIST_FILE = "CoinMarketNews-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1549,11 +1531,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-<<<<<<< HEAD
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
-=======
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 				);
 				INFOPLIST_FILE = "CoinMarketNews-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1590,11 +1569,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-<<<<<<< HEAD
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
-=======
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 				);
 				INFOPLIST_FILE = "CoinMarketNews-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

@@ -5,7 +5,7 @@ import Config from "react-native-config";
 import { Action } from "redux";
 import { ICoinPrice } from "../../models";
 import { store } from "../store";
-import { cacheSorts } from "../../components/CoinsSort";
+import { cacheSorts } from "../../components/functions/CoinsSort";
 
 // Define Actions const and type
 export const LOAD_COIN_SUCCESS = "LOAD_COIN_SUCCESS";

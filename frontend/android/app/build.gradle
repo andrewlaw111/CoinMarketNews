@@ -163,11 +163,8 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
     compile project(':react-native-fast-image')
-=======
     compile project(':react-native-onesignal')
->>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
     compile project(':react-native-config')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])
