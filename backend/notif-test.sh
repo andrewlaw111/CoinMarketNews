@@ -1,0 +1,1 @@
+node notif-test.js $1

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "3402924753",
+    "firebase_url": "https://coinmarketnews-a5105.firebaseio.com",
+    "project_id": "coinmarketnews-a5105",
+    "storage_bucket": "coinmarketnews-a5105.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3402924753:android:1dfe8cd4e79d2c74",
+        "android_client_info": {
+          "package_name": "com.coinmarketnews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3402924753-85rns1qlvmu91em7f12tisppo9p787ti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVNw_qmwkib7MPsoJ5GR-rWgYvl2jSRiQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

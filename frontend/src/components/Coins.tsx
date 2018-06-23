@@ -1,6 +1,9 @@
 import React from "react";
 import Config from "react-native-config";
+<<<<<<< HEAD
 import FastImage from "react-native-fast-image";
+=======
+>>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 import { isIphoneX } from "react-native-iphone-x-helper";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
@@ -16,6 +19,9 @@ import sortCoins from "./CoinsSort";
 import coinStyles from "./styles/CoinsStyles"
 import getSettingID from "./CoinsSettings";
 import displayCoinOptions from "./CoinsRenderSettings";
+
+// tslint:disable-next-line:no-var-requires
+const OneSignal =  require("react-native-onesignal").default;
 
 interface ICoinsListProps {
     coins: ICoinPrice[];
@@ -49,11 +55,17 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             setting: "000",
         };
     }
+<<<<<<< HEAD
     // public componentDidMount() {
     //     this.setState({
     //         coinsToRender: this.props.coins
     //     })
     // }
+=======
+    public componentWillMount() {
+        OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
+    }
+>>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
     public renderCoins = (info: { item: ICoinPrice, index: number }, heartColour: string) => {
         const percentageChange = displayCoinOptions[this.state.setting[1]][this.state.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.state.setting[1]][this.state.setting[2]].coinPrice(info.item);
@@ -224,6 +236,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
     public render() {
         let coins = this.props.coins.slice();
 
+<<<<<<< HEAD
         coins = coins.filter((coin) => coin.price_crypto.market_cap !== null && coin.price_fiat.market_cap !== null && coin.rank !== null);
 
         coins = sortCoins(this.state.setting, coins);
@@ -232,6 +245,31 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             return (
                 <Container style={coinStyles.coinListComponent}>
                     <Tabs style={(isIphoneX()) ? { height: 44 } : null} initialPage={0}>
+=======
+        if (this.state.fiatCurrency) {
+            coins = coins.filter((coin) => coin.price_fiat.market_cap !== null && coin.rank !== null);
+        } else {
+            coins = coins.filter((coin) => coin.price_crypto.market_cap !== null && coin.rank !== null);
+        }
+        // coins = coins.sort((coinA, coinB) => {
+        //     return coinA.price_fiat.percent_change_1h - coinB.price_fiat.percent_change_1h;
+        // });
+        // console.log(coins);
+        let iOSStyle = {};
+        if (Platform.OS === "ios") {
+            if (isIphoneX()) {
+                iOSStyle = { paddingTop: 38, backgroundColor: "#F8F8F8" };
+            } else {
+                iOSStyle = { paddingTop: 14, backgroundColor: "#F8F8F8" };
+            }
+        }
+
+        coins = this.sortCoins(coins);
+        if (this.props.coins.length > 0) {
+            return (
+                <Container style={styles.coinListComponent}>
+                    <Tabs style={iOSStyle} initialPage={0}>
+>>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
                         <Tab heading="Favourites">
                             {this.renderOptions()}
                             {/* tslint:disable-next-line:jsx-no-multiline-js */}

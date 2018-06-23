@@ -38,7 +38,7 @@ export default class CoinService {
             } else {
                 this.updatePriceList()
                     .then(() => {
-                        console.log(this.priceList)
+                        // console.log(this.priceList)
                         resolve(this.priceList);
                     })
                     .catch((err: any) => {

@@ -1,6 +1,11 @@
 rootProject.name = 'CoinMarketNews'
+<<<<<<< HEAD
 include ':react-native-fast-image'
 project(':react-native-fast-image').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fast-image/android')
+=======
+include ':react-native-onesignal'
+project(':react-native-onesignal').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-onesignal/android')
+>>>>>>> 8ea8b9ba969a55e0c82998ae8e41df7e65de2c34
 include ':react-native-config'
 project(':react-native-config').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-config/android')
 include ':react-native-vector-icons'
