@@ -133,37 +133,23 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
             <ScrollView>
                 <StyleProvider style={getTheme()} >
                     <View>
-                        {(this.props.coin.about) ?
-                            this.renderAboutCoin() : null}
-                        {(
-                            this.props.coin.rank ||
-                            this.props.coin.type ||
-                            this.props.coin.algorithm ||
-                            this.props.coin.proof ||
-                            this.props.coin.mineable ||
-                            this.props.coin.premined
-                        ) ? (
-                                < Card >
-                                    <CardItem>
-                                        <Body style={styles.coinInfoStats}>
-                                            {this.renderCoinStats()}
-                                        </Body>
-                                    </CardItem>
-                                </Card>
-                            ) : (
+                        {(this.props.coin.about) ? this.renderAboutCoin() : null}
+                        {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
+                            < Card >
+                                <CardItem>
+                                    <Body style={styles.coinInfoStats}>
+                                        {this.renderCoinStats()}
+                                    </Body>
+                                </CardItem>
+                            </Card>
+                        ) : (
                                 null
                             )}
-                        {(
-                            this.props.coin.official_website ||
-                            this.props.coin.medium ||
-                            this.props.coin.telegram ||
-                            this.props.coin.twitter ||
-                            this.props.coin.reddit
-                        ) ? (
-                                < Card >
-                                    {this.renderCoinLinks()}
-                                </Card>
-                            ) : (
+                        {(this.props.coin.official_website || this.props.coin.medium || this.props.coin.telegram || this.props.coin.twitter || this.props.coin.reddit) ? (
+                            < Card >
+                                {this.renderCoinLinks()}
+                            </Card>
+                        ) : (
                                 null
                             )}
                     </View>

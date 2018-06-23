@@ -3,8 +3,8 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, StyleProvider, Text } from "native-base";
-import { StyleSheet, View, WebView, ScrollView } from "react-native";
-import getTheme from "../../native-base-theme/components"
+import { ScrollView, StyleSheet, View, WebView } from "react-native";
+import getTheme from "../../native-base-theme/components";
 
 import { ICoin, ICoinPrice } from "../models";
 import { IRootState } from "../redux/store";
@@ -77,7 +77,7 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                         </Card>
                     </Container>
                 </StyleProvider>
-            </ScrollView>
+            </  ScrollView>
         );
     }
 }

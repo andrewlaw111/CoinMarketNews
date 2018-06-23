@@ -18,7 +18,7 @@ export default (variables = variable) => {
     marginVertical: 10,
     marginHorizontal: 5,
     flex: 1,
-    borderRadius: 15,
+    borderRadius: 10,
     borderWidth: variables.borderWidth,
     borderColor: variables.cardBorderColor,
     flexWrap: "nowrap",

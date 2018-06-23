@@ -1,6 +1,6 @@
 {
-  "extends": "tslint:recommended",
-  // "extends":  "tslint-react",
+  // "extends": "tslint:recommended",
+  "extends":  "tslint-react",
   // "tslint-config-prettier"
 
   "linterOptions": {

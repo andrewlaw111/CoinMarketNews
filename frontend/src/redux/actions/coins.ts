@@ -5,6 +5,7 @@ import Config from "react-native-config";
 import { Action } from "redux";
 import { ICoinPrice } from "../../models";
 import { store } from "../store";
+import { cacheSorts } from "../../components/CoinsSort";
 
 // Define Actions const and type
 export const LOAD_COIN_SUCCESS = "LOAD_COIN_SUCCESS";
@@ -51,8 +52,12 @@ export const getCoins = async () => {
                     },
                 },
         ).then((result) => {
+
             AsyncStorage.setItem("@CoinMarketNews:coinsStore", JSON.stringify(result.data));
-            store.dispatch(loadCoinSuccess(result.data));
+            const coins = result.data.filter((coin) => coin.price_crypto.market_cap !== null && coin.price_fiat.market_cap !== null && coin.rank !== null);
+
+            store.dispatch(loadCoinSuccess(coins));
+            cacheSorts(coins);
         }).catch(async () => {
             try {
                 const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
