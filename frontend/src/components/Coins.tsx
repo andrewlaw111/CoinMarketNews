@@ -11,6 +11,9 @@ import { ICoinPrice, IUser } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
+// tslint:disable-next-line:no-var-requires
+const OneSignal =  require("react-native-onesignal").default;
+
 interface ICoinsListProps {
     coins: ICoinPrice[];
     favourites: number[];
@@ -49,6 +52,9 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             sortDrop: false,
             sortGain: false,
         };
+    }
+    public componentWillMount() {
+        OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
     }
     public renderCoins = (info: { item: ICoinPrice, index: number }, heartColour: string) => {
         let coinPrice: string;

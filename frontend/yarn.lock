@@ -4654,6 +4654,12 @@ react-native-navigation@^1.1.471:
   dependencies:
     lodash "4.x.x"
 
+react-native-onesignal@^3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-3.2.5.tgz#8b20a63877ee8fe3a77c76db40b0d8d9e192ec42"
+  dependencies:
+    invariant "^2.2.2"
+
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.7.0.tgz#38f5ab9368d6ef9e5d18ab64212938af3ec39421"
