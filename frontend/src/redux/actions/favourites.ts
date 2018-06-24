@@ -3,6 +3,8 @@ import { AsyncStorage } from "react-native";
 
 import { Action } from "redux";
 import { store } from "../store";
+import Config from "react-native-config";
+import { getUser } from "./user";
 
 // Define Actions const and type
 export const ADD_COIN_FAVOURITE = "ADD_COIN_FAVOURITE";
@@ -30,12 +32,6 @@ export interface IRemoveFavouriteAction extends Action {
 // Collection of both for easier integration
 export type FavouriteActions = IAddFavouriteAction | ILoadFavouriteAction | IRemoveFavouriteAction;
 
-export const addCoinFavourite = (coinID: number) => {
-    return {
-        coinID,
-        type: ADD_COIN_FAVOURITE,
-    };
-};
 export const loadCoinFavouritesToStore = (favourites: number[]) => {
     return {
         favourites,
@@ -43,7 +39,20 @@ export const loadCoinFavouritesToStore = (favourites: number[]) => {
     };
 };
 
-export const removeCoinFavourite = (coinID: number) => {
+export const removeCoinFavourite = (coinID: number, token: string) => {
+    axios
+        .delete(
+            `${Config.API_SERVER}/user/favourites`,
+            {
+                headers: {
+                    token,
+                },
+                data: {
+                    coinID,
+                }
+            },
+
+    )
     return {
         coinID,
         type: REMOVE_COIN_FAVOURITE,
@@ -57,4 +66,35 @@ export const loadFavourites = async () => {
     } else {
         return;
     }
+};
+
+export const addCoinFavourite = (coinID: number, token: string) => {
+    if (token) {
+        axios
+            .post(
+                `${Config.API_SERVER}/user/favourites`,
+                {
+                    data: {
+                        coinID,
+                    }
+                },
+                {
+                    headers: {
+                        token,
+                    },
+                }
+
+            )
+        return {
+            coinID,
+            type: ADD_COIN_FAVOURITE,
+        };
+    }
+    else {
+        AsyncStorage.getItem("@CoinMarketNews:userToken").then((token) => {
+            addCoinFavourite(coinID, token);
+            return;
+        });
+    };
+
 };

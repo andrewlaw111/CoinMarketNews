@@ -21,7 +21,7 @@ export const favouritesReducer = (state: IFavouritesState = defaultFavouriteStat
             const addFavourites = state.favourites.slice();
             addFavourites.push(action.coinID);
             AsyncStorage.setItem("@CoinMarketNews:favouriteStore", JSON.stringify(addFavourites));
-
+            
             return {
                 favourites: addFavourites, // Use concat to add a new link
             };

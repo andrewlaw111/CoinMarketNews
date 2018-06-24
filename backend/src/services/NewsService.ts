@@ -12,7 +12,6 @@ interface INews {
 export default class NewsService {
 
     public getNews(token: string) {
-        console.log('token');
         return knex
             .select("*")
             .from("news")

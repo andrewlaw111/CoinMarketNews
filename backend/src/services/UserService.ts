@@ -17,6 +17,7 @@ export interface IUserToken extends IUser {
 /* ---------- WIP ----------*/
 export default class UserService {
     public getUser(token: string) {
+        console.log(token)
         return knex
             .select("*")
             .from("users")
@@ -34,9 +35,14 @@ export default class UserService {
                 };
                 return userWithToken;
 
-            });
+            })
+            .catch((err) => {
+                console.log(err);
+                this.createUser();
+            })
     }
     public createUser() {
+        console.log("new user")
         return knex
             .insert({ fiat_currency_id: null, coin_currency_id: null, notifications: false })
             .into("users")
@@ -63,8 +69,65 @@ export default class UserService {
                         };
                         return userWithToken;
                     });
+            })
+    }
+
+    public deleteFavourite(token: string, coinID: number) {
+        return knex
+            .select("user_id")
+            .from("sessions")
+            .where("token", token)
+            .then((users) => {
+                return knex
+                    .delete()
+                    .where({
+                        user_id: users[0].user_id,
+                        coin_id: coinID,
+                    })
+                    .from("news_alert")
+                    .then((data) => {
+                        return data;
+                    })
+                    .catch((err) => {
+                        return err;
+                    })
+            })
+            .catch((err) => {
+                console.log(console.error())
+                
             });
     }
+    public saveFavourite(token: string, coinID: number) {
+        return knex
+            .select("user_id")
+            .from("sessions")
+            .where("token", token)
+            .then((users) => {
+                return knex
+                    .insert({
+                        user_id: users[0].user_id,
+                        coin_id: coinID,
+                        favourite: true,
+                        subscribe_website: false,
+                        subscribe_medium: false,
+                        subscribe_reddit: false,
+                        subscribe_twitter: false,
+                    })
+                    .into("news_alert")
+                    .then((data) => {
+                        console.log('added favourite');
+                        return data;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        return err;
+                    })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     public updateUser(
         coinCurrencyId: number,
         email: string,

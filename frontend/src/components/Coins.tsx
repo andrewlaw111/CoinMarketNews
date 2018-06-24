@@ -18,15 +18,15 @@ import sortCoins from "./functions/CoinsSort";
 import displayCoinOptions from "./functions/CoinsRenderSettings";
 
 // tslint:disable-next-line:no-var-requires
-const OneSignal =  require("react-native-onesignal").default;
+// const OneSignal =  require("react-native-onesignal").default;
 
 interface ICoinsListProps {
     coins: ICoinPrice[];
     favourites: number[];
     user: IUser;
     navigator: Navigator;
-    addCoinFavourite: (coinID: number) => void;
-    removeCoinFavourite: (coinID: number) => void;
+    addCoinFavourite: (coinID: number, token: string) => void;
+    removeCoinFavourite: (coinID: number, token: string) => void;
 }
 
 export interface ICoinsListState {
@@ -57,9 +57,9 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
     //         coinsToRender: this.props.coins
     //     })
     // }
-    public componentWillMount() {
-        OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
-    }
+    // public componentWillMount() {
+    //     OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
+    // }
     public renderCoins = (info: { item: ICoinPrice, index: number }, heartColour: string) => {
         const percentageChange = displayCoinOptions[this.state.setting[1]][this.state.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.state.setting[1]][this.state.setting[2]].coinPrice(info.item);
@@ -93,7 +93,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                     </View>
                     <TouchableOpacity
                         style={{ alignItems: "flex-end", height: 70, justifyContent: "center", paddingRight: 10, right: -10, width: 50 }}
-                        onPress={this.handlePressHeart.bind(this, info.item.id)}
+                        onPress={this.handlePressHeart.bind(this, info.item.id, this.props.user.token)}
                     >
                         <Icon
                             type="FontAwesome"
@@ -313,11 +313,11 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         });
     }
 
-    private handlePressHeart = (coinID: number) => {
+    private handlePressHeart = (coinID: number, token: string) => {
         if (this.props.favourites.indexOf(coinID) === -1) {
-            return this.props.addCoinFavourite(coinID);
+            return this.props.addCoinFavourite(coinID, token);
         } else {
-            return this.props.removeCoinFavourite(coinID);
+            return this.props.removeCoinFavourite(coinID, token);
         }
     }
 
@@ -333,8 +333,8 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        addCoinFavourite: (coinID: number) => dispatch(addCoinFavourite(coinID)),
-        removeCoinFavourite: (coinID: number) => dispatch(removeCoinFavourite(coinID)),
+        addCoinFavourite: (coinID: number, token: string) => dispatch(addCoinFavourite(coinID, token)),
+        removeCoinFavourite: (coinID: number, token: string) => dispatch(removeCoinFavourite(coinID, token)),
     };
 };
 

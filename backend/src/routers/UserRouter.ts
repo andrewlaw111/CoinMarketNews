@@ -14,9 +14,13 @@ export default class UserRoutuer {
             .get(this.getUser)
             .post(this.createUser)
             .put(this.updateUser);
+        router.route("/favourites/")
+            .post(this.saveFavourite)
+            .delete(this.deleteFavourite);
         return router;
     }
     private getUser = (req: express.Request, res: express.Response) => {
+        console.log('Get user')
         return this.userService.getUser(req.headers.token)
             .then((data: IUser) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
@@ -37,6 +41,17 @@ export default class UserRoutuer {
             req.body.notifications,
         )
             .then((data: IUser) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private deleteFavourite = (req: express.Request, res: express.Response) => {
+        console.log(req.headers);
+        return this.userService.deleteFavourite(req.headers.token, req.body.coinID)
+            .then((data: any) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private saveFavourite = (req: express.Request, res: express.Response) => {
+        return this.userService.saveFavourite(req.headers.token, req.body.data.coinID)
+            .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
 }

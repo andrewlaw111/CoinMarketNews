@@ -16,8 +16,6 @@ export interface ILoginSuccessAction {
 export type LoginActions = ILoginSuccessAction;
 
 export function loginSuccess(user: IUser): ILoginSuccessAction {
-    // tslint:disable-next-line:no-console
-    console.log(user);
     return {
         type: LOGIN_SUCCESS,
         user,
@@ -60,3 +58,7 @@ export const getUser = async () => {
         console.log("error", error);
     }
 };
+
+const syncCoins = () => {
+    
+}
