@@ -6,6 +6,11 @@
     "start": "node node_modules/react-native/local-cli/cli.js start --config ../../../../rn-cli.config.js",
     "test": "jest"
   },
+  "rnpm": {
+    "assets": [
+	"./src/assets/fonts/"
+    ]
+  },
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/react": "16.3.16",

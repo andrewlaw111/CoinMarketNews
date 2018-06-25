@@ -90,6 +90,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
                     <View style={this.styles.listCoinName}>
                         <Text style={this.styles.coinName}>{info.item.name}</Text>
                         <Text style={this.styles.coinSymbol}>{info.item.symbol}</Text>
+                        <Text style={{ fontFamily: "Font Awesome 5 Brands" }}> </Text>
                     </View>
                     <Text note={true} style={this.styles.coinPrice}>{coinPrice}</Text>
                 </View>
