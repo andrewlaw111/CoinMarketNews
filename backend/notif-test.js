@@ -25,9 +25,11 @@ const config = {
 
 var message = {
     app_id: ONESIGNAL_APP_ID,
-    // headings: { "en": 'CoinMarketNews - News alert' },
+    headings: { "en": 'CoinMarketNews - News alert' },
     contents: { "en": notification_message },
-    // url: 'https://www.google.com.hk/search?q=onesignal',
+    ios_badgeType: 'Increase',
+    ios_badgeCount: 1,
+    url: 'https://www.google.com.hk/search?q=onesignal',
     included_segments: ["All"]
 };
 
