@@ -44,7 +44,6 @@ export default class UserRoutuer {
             .catch((err: express.Errback) => res.status(500).json(err));
     }
     private deleteFavourite = (req: express.Request, res: express.Response) => {
-        console.log(req.headers);
         return this.userService.deleteFavourite(req.headers.token, req.body.coinID)
             .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));

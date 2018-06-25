@@ -1,4 +1,4 @@
-import { ICoinPrice, ICoin } from "../../models";
+import { ICoinPrice } from "../../models";
 
 interface IDisplayCoinOptions {
     0: (coins: ICoinPrice[]) => ICoinPrice[];
@@ -31,6 +31,7 @@ export const cacheSorts = (coins: ICoinPrice[]) => {
 }
 
 const sortCoins = (setting: string, coins: ICoinPrice[]) => {
+    console.log('sort');
     if (coinCache[setting]) {
         return coinCache[setting];
     } else {

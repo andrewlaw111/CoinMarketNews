@@ -85,6 +85,7 @@ export const addCoinFavourite = (coinID: number, token: string) => {
                 }
 
             )
+            
         return {
             coinID,
             type: ADD_COIN_FAVOURITE,
