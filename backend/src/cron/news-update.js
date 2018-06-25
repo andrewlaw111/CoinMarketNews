@@ -3,6 +3,19 @@ const sanitizeHtml = require('sanitize-html');
 const axios = require('axios');
 import { knex } from '../utils/init-app';
 
+const ONESIGNAL_URI = "https://onesignal.com/api/v1/notifications";
+const ONESIGNAL_APP_ID = "155944be-3bde-4703-82f1-2545b31dc1ed";
+const ONESIGNAL_API_KEY = process.env.ONESIGNAL_API_KEY;
+
+const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Basic ${ONESIGNAL_API_KEY}`
+};
+
+const config = {
+    headers
+};
+
 module.exports = () => {
     console.log('NewsUpdate CRON start -------');
 
@@ -40,7 +53,7 @@ module.exports = () => {
             // feeder.list();
 
             feeder.on('new-item', function (item) {
-                // TODO: test date of news
+                // TODO: test date of news (only insert recent news)
                 knex('news')
                     .where('link', '=', item.link.trim())  // TOTO: add index to link IN DB
                     .then((data) => {
@@ -75,6 +88,8 @@ module.exports = () => {
                                                 coins.map(function (coin) {
                                                     if (news.title.includes(coin.name) || news.title.includes(coin.symbol)) {
                                                         coin_news.push({ coin_id: coin.id, news_id: insert_news_ok[0] });
+                                                        // send push notif
+                                                        news_alert(news, coin_id);
                                                     }
                                                     // TODO: same for content ?
                                                 });
@@ -90,13 +105,41 @@ module.exports = () => {
                                                             }
                                                         });
                                                 }
-                                                // TODO: push notif
                                             }
                                         });
-
                                 });
                         }
                     });
             });
         });
+
+    function news_alert(news, coin_id); {
+        knex
+            .select('user_id')
+            .from('news_alert')
+            .where('coin_id', '=', coin_id)
+            .andWhere('favorite', '=', true)
+            .then(function (ids) {
+                console.log(ids);
+                const notification_title = 'CoinMarketNews - ' + alert.symbol + ' news alert';
+                const notification_message = news.title;
+
+                console.log(notification_message);
+
+                var message = {
+                    app_id: ONESIGNAL_APP_ID,
+                    headings: { "en": notification_title },
+                    contents: { "en": notification_message },
+                    url: news.link,
+                    included_segments: ["All"]  // TODO: add all ids
+                };
+                axios.post(ONESIGNAL_URI, message, config)
+                    .then(function (response) {
+                        console.log('notification sent: ' + notification_message);
+                    })
+                    .catch(function (error) {
+                        console.log('error: ' + error);
+                    });
+            })
+    }
 }
