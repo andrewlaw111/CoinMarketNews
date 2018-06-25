@@ -18,6 +18,10 @@ registerScreens(); // this is where you register all of your app's screens
 //   },
 // });
 
+// tslint:disable-next-line:no-var-requires
+const OneSignal = require("react-native-onesignal").default;
+OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
+
 // start the app
 Promise.all([
   getUser().then(() => {

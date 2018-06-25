@@ -3,12 +3,9 @@ import { StyleSheet } from "react-native";
 export const coinsStyles = StyleSheet.create({
     coinList: {
         flex: 0,
+        marginBottom: 35,
     },
     coinListComponent: {
-    },
-    coinListFilters: {
-        backgroundColor: "#000",
-        flex: 0,
     },
     coinName: {
         fontWeight: "bold",
@@ -67,14 +64,6 @@ export const coinsStyles = StyleSheet.create({
     listStyle: {
         paddingTop: -100,
     },
-    nopadding: {
-        paddingLeft: 0,
-        paddingRight: 0,
-    },
-    smallpadding: {
-        paddingLeft: 5,
-        paddingRight: 5,
-    },
 });
 
 export const darkCoinsStyles = StyleSheet.create({
@@ -85,10 +74,6 @@ export const darkCoinsStyles = StyleSheet.create({
     coinListComponent: {
         backgroundColor: "#454951",
         flex: 1,
-    },
-    coinListFilters: {
-        backgroundColor: "#000",
-        flex: 0,
     },
     coinName: {
         color: "#F8F8F8",
@@ -150,13 +135,5 @@ export const darkCoinsStyles = StyleSheet.create({
     },
     listStyle: {
         paddingTop: -100,
-    },
-    nopadding: {
-        paddingLeft: 0,
-        paddingRight: 0,
-    },
-    smallpadding: {
-        paddingLeft: 5,
-        paddingRight: 5,
     },
 });
