@@ -15,7 +15,7 @@ export default (variables = variable) => {
       shadowOpacity: null,
       elevation: null
     },
-    marginVertical: 10,
+    marginVertical: 7,
     marginHorizontal: 5,
     flex: 1,
     borderRadius: 10,

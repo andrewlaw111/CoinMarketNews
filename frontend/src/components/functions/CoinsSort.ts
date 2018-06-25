@@ -1,4 +1,4 @@
-import { ICoinPrice, ICoin } from "../models";
+import { ICoinPrice, ICoin } from "../../models";
 
 interface IDisplayCoinOptions {
     0: (coins: ICoinPrice[]) => ICoinPrice[];

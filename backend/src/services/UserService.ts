@@ -93,7 +93,7 @@ export default class UserService {
                     })
             })
             .catch((err) => {
-                console.log(console.error())
+                console.log(err)
                 
             });
     }

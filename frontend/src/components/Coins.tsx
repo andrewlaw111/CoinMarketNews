@@ -5,24 +5,29 @@ import { isIphoneX } from "react-native-iphone-x-helper";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
-import { Button, Col, Container, Content, Grid, Icon, Segment, Spinner, Tab, Tabs, Text, Thumbnail } from "native-base";
+import { Button, Col, Container, Content, Grid, Icon, Segment, Spinner, Tab, Tabs, Text, Thumbnail, StyleProvider } from "native-base";
 import { FlatList, Platform, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
 
-import { ICoinPrice, IUser } from "../models";
+import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
-import coinStyles from "./styles/CoinsStyles"
+import { coinsStyles, darkCoinsStyles } from "./styles/CoinsStyles"
 import getSettingID from "./functions/CoinsSettings";
 import sortCoins from "./functions/CoinsSort";
 import displayCoinOptions from "./functions/CoinsRenderSettings";
 
+import getTheme from '../../native-base-theme/components';
+import commonColour from '../../native-base-theme/variables/commonColor';
+import { loadSettings } from "../redux/actions/settings";
+
 // tslint:disable-next-line:no-var-requires
-// const OneSignal =  require("react-native-onesignal").default;
+const OneSignal = require("react-native-onesignal").default;
 
 interface ICoinsListProps {
     coins: ICoinPrice[];
     favourites: number[];
+    appSettings: ISettings;
     user: IUser;
     navigator: Navigator;
     addCoinFavourite: (coinID: number, token: string) => void;
@@ -30,7 +35,6 @@ interface ICoinsListProps {
 }
 
 export interface ICoinsListState {
-    // coinsToRender: ICoinPrice[];
     setting: string,
     cryptoCurrencyName: string;
     fiatCurrencyName: string;
@@ -42,6 +46,8 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         statusBarBlur: true,
         statusBarColor: "blue",
     };
+    public darkMode: boolean;
+    public styles: typeof coinsStyles;
 
     public constructor(props: ICoinsListProps) {
         super(props);
@@ -57,39 +63,40 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
     //         coinsToRender: this.props.coins
     //     })
     // }
-    // public componentWillMount() {
-    //     OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
-    // }
+    public componentWillMount() {
+        OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
+    }
     public renderCoins = (info: { item: ICoinPrice, index: number }, heartColour: string) => {
         const percentageChange = displayCoinOptions[this.state.setting[1]][this.state.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.state.setting[1]][this.state.setting[2]].coinPrice(info.item);
-        const amountCapChange = displayCoinOptions[this.state.setting[1]][this.state.setting[2]].amountCapChange(info.item);
 
         const priceColour = (parseFloat(percentageChange) > 0) ?
             "green" : (parseFloat(percentageChange) === 0) ?
                 "grey" : "red";
         return (
-            <View style={coinStyles.listCoin} >
+            <View style={this.styles.listCoin} >
 
-                <View style={coinStyles.listCoinLeft}>
-                    <Text>{info.item.rank}. </Text>
+                <View style={this.styles.listCoinLeft}>
+                    <Text style={this.styles.coinText}>{info.item.rank}. </Text>
                     <View style={{ backgroundColor: "#fff", borderRadius: 50, overflow: "hidden", }}>
                         <Thumbnail
-                            style={coinStyles.coinThumbnail}
+                            style={this.styles.coinThumbnail}
                             source={{ uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }}
                         />
                     </View>
                 </View>
 
-                <View style={coinStyles.listCoinBody}>
-                    <Text style={coinStyles.coinName}>{info.item.name} ({info.item.symbol})</Text>
-                    <Text note={true} style={{ fontWeight: "bold", color: priceColour }}>{coinPrice}</Text>
+                <View style={this.styles.listCoinBody}>
+                    <View style={this.styles.listCoinName}>
+                        <Text style={this.styles.coinName}>{info.item.name}</Text>
+                        <Text style={this.styles.coinSymbol}>{info.item.symbol}</Text>
+                    </View>
+                    <Text note={true} style={this.styles.coinPrice}>{coinPrice}</Text>
                 </View>
 
-                <View style={coinStyles.listCoinRight}>
+                <View style={this.styles.listCoinRight}>
                     <View style={{ alignItems: "flex-end" }}>
-                        <Text note={true} style={{ color: priceColour }}>{amountCapChange}</Text>
-                        <Text note={true} style={{ color: priceColour }}>{percentageChange}%</Text>
+                        <Text note={true} style={{ color: priceColour, fontSize: 18 }}>{percentageChange}%</Text>
                     </View>
                     <TouchableOpacity
                         style={{ alignItems: "flex-end", height: 70, justifyContent: "center", paddingRight: 10, right: -10, width: 50 }}
@@ -108,7 +115,6 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
     }
 
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
-        // console.error(this.props.favourites);
         let heartColour: string;
         if (this.props.favourites.indexOf(info.item.id) > -1) {
             heartColour = "red";
@@ -117,7 +123,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
         }
         if (Platform.OS === "ios") {
             return (
-                <View style={coinStyles.listItem}>
+                <View style={this.styles.listItem}>
                     <TouchableOpacity onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
                         {this.renderCoins(info, heartColour)}
                     </TouchableOpacity>
@@ -125,7 +131,7 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
             );
         } else {
             return (
-                <View style={coinStyles.listItem}>
+                <View style={this.styles.listItem}>
                     <TouchableNativeFeedback onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
                         {this.renderCoins(info, heartColour)}
                     </TouchableNativeFeedback>
@@ -197,17 +203,17 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
 
         const buttonTemplate = (button: IOptionsButton, index: number) => (
             <Button
-                style={coinStyles.smallpadding}
+                style={this.styles.smallpadding}
                 first={button.first}
                 active={button.active}
                 onPress={this.handleOptionsPress.bind(this, button.handler)}
                 key={index}
             >
-                <Text style={coinStyles.nopadding}>{button.text}</Text>
+                <Text style={this.styles.nopadding}>{button.text}</Text>
             </Button>
         );
         return (
-            <Grid style={coinStyles.coinListFilters} >
+            <Grid style={this.styles.coinListFilters} >
                 <Col style={{ flex: 0.4 }}>
                     <Segment>
                         {leftButtons.map((button, index) => buttonTemplate(button, index))}
@@ -228,9 +234,8 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
     }
 
     public render() {
+        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
         let coins = this.props.coins.slice();
-
-        coins = coins.filter((coin) => coin.price_crypto.market_cap !== null && coin.price_fiat.market_cap !== null && coin.rank !== null);
 
         let iOSStyle = {};
         if (Platform.OS === "ios") {
@@ -244,47 +249,51 @@ class PureCoinsList extends React.Component<ICoinsListProps, ICoinsListState> {
 
         if (coins.length > 0) {
             return (
-                <Container style={coinStyles.coinListComponent}>
-                    <Tabs style={(isIphoneX()) ? { height: 44 } : null} initialPage={0}>
-                        <Tab heading="Favourites">
-                            {this.renderOptions()}
-                            {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                            {(this.props.favourites.length > 0) ? (
+                <StyleProvider style={getTheme(commonColour)}>
+                    <Container style={this.styles.coinListComponent}>
+                        <Tabs style={iOSStyle} initialPage={0}>
+                            <Tab heading="Favourites">
+                                {this.renderOptions()}
+                                {/* tslint:disable-next-line:jsx-no-multiline-js */}
+                                {(this.props.favourites.length > 0) ? (
+                                    <FlatList
+                                        data={coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1, )}
+                                        renderItem={this.renderCoinList}
+                                        keyExtractor={this.keyExtractor}
+                                        style={this.styles.coinList}
+                                    />
+                                ) : (
+                                        <View style={this.styles.coinListComponent}>
+                                            <Text style={this.styles.coinText}>
+                                                You have no favourite coins! Click on the ❤️ to add some favourites!
+                                            </Text>
+                                        </View>
+                                    )
+                                }
+                            </Tab>
+                            <Tab heading="Market">
+                                {this.renderOptions()}
                                 <FlatList
-                                    data={coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1, )}
+                                    data={coins}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
-                                    style={coinStyles.coinList}
+                                    style={this.styles.coinList}
                                 />
-                            ) : (
-                                    <View>
-                                        <Text>
-                                            You have no favourite coins! Click on the ❤️ to add some favourites!
-                                        </Text>
-                                    </View>
-                                )
-                            }
-                        </Tab>
-                        <Tab heading="Market">
-                            {this.renderOptions()}
-                            <FlatList
-                                data={coins}
-                                renderItem={this.renderCoinList}
-                                keyExtractor={this.keyExtractor}
-                                style={coinStyles.coinList}
-                            />
-                        </Tab>
-                    </Tabs>
-                </Container >
+                            </Tab>
+                        </Tabs>
+                    </Container >
+                </StyleProvider>
             );
         } else {
             return (
-                <View>
-                    <Content>
-                        <Spinner />
-                        <Text>CoinMarketNews is fetching prices.</Text>
-                    </Content>
-                </View>
+                <StyleProvider style={getTheme(commonColour)}>
+                    <View style={iOSStyle}>
+                        <Content>
+                            <Spinner />
+                            <Text style={this.styles.coinText}>CoinMarketNews is fetching prices.</Text>
+                        </Content>
+                    </View>
+                </StyleProvider>
             );
         }
     }
@@ -342,6 +351,7 @@ const mapStateToProps = (state: IRootState) => {
     return {
         coins: state.coins.coins,
         favourites: state.favourites.favourites,
+        appSettings: state.settings.settings,
         user: state.user.user,
     };
 };

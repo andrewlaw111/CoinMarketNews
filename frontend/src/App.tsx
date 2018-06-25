@@ -6,6 +6,7 @@ import { loadFavourites } from "./redux/actions/favourites";
 import { getNews } from "./redux/actions/news";
 import { getUser } from "./redux/actions/user";
 import { registerScreens } from "./screens";
+import { loadSettings } from "./redux/actions/settings";
 
 registerScreens(); // this is where you register all of your app's screens
 
@@ -22,6 +23,7 @@ Promise.all([
   getUser().then(() => {
     getCoins();
     getNews();
+    loadSettings();
   }),
   loadFavourites(),
   // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),

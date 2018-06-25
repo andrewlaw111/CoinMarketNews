@@ -69,3 +69,10 @@ export interface INews {
     created_at: string;
     counter: number;
 }
+
+export interface ISettings {
+    fiatCurrency: number;
+    cryptoCurrency: number;
+    pushNotifications: boolean;
+    darkMode: boolean;
+}

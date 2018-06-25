@@ -36,11 +36,16 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                                         {this.props.coinPrice.price_fiat.percent_change_24h}
                                     </Text>
                                     <Text>
-                                        {this.props.coinPrice.price_fiat.price
-                                            / (100 + this.props.coinPrice.price_fiat.percent_change_24h)}
+                                        {this.props.coinPrice.price_fiat.price / (100 + this.props.coinPrice.price_fiat.percent_change_24h)}
                                     </Text>
                                 </Body>
                             </CardItem>
+                        </Card>
+                        <Card style={{ height: 300 }}>
+                            <WebView
+                                source={{ uri: priceWidget.replace(/BTC/, this.props.coin.symbol) }}
+                                style={{ height: 300 }}
+                            />
                         </Card>
                         <Card>
                             <CardItem header={true}>
@@ -60,20 +65,8 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                                     <Text>
                                         {this.props.coinPrice.price_fiat.volume_24h}
                                     </Text>
-                                    {/* <Text>
-                                Circulating Supply
-                            </Text>
-                            <Text>
-                                {this.props.coinPrice.price_fiat.}
-                            </Text> */}
                                 </Body>
                             </CardItem>
-                        </Card>
-                        <Card style={{ height: 300 }}>
-                            <WebView
-                                source={{ uri: priceWidget.replace(/BTC/, this.props.coin.symbol) }}
-                                style={{ height: 300 }}
-                            />
                         </Card>
                     </Container>
                 </StyleProvider>

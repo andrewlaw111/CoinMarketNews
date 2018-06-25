@@ -58,7 +58,3 @@ export const getUser = async () => {
         console.log("error", error);
     }
 };
-
-const syncCoins = () => {
-    
-}

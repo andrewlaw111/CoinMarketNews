@@ -1,6 +1,10 @@
 import color from "color";
 
-import { Platform, Dimensions, PixelRatio } from "react-native";
+import {
+  Platform,
+  Dimensions,
+  PixelRatio
+} from "react-native";
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
@@ -78,8 +82,8 @@ export default {
   },
 
   // Card
-  cardDefaultBg: "#FFF",
-  cardBorderColor: "#ccc",
+  cardDefaultBg: "#454951",
+  cardBorderColor: "#454951",
 
   // CheckBox
   CheckboxRadius: platform === "ios" ? 13 : 0,
@@ -89,12 +93,12 @@ export default {
   CheckboxIconSize: platform === "ios" ? 21 : 16,
   CheckboxIconMarginTop: platform === "ios" ? undefined : 1,
   CheckboxFontSize: platform === "ios" ? 23 / 0.9 : 17,
-  checkboxBgColor: "#039BE5",
+  checkboxBgColor: "#2f343f",
   checkboxSize: 20,
   checkboxTickColor: "#F8F8F8",
 
   // Color
-  brandPrimary: platform === "ios" ? "#007aff" : "#2f343f",
+  brandPrimary: "#2f343f",
   brandInfo: "#62B1F6",
   brandSuccess: "#5cb85c",
   brandDanger: "#d9534f",
@@ -118,28 +122,28 @@ export default {
 
   // Footer
   footerHeight: isIphoneX ? 89 : 55,
-  footerDefaultBg: platform === "ios" ? "#F8F8F8" : "#2f343f",
+  footerDefaultBg: "#2f343f",
   footerPaddingBottom: isIphoneX ? 34 : 0,
 
   // FooterTab
-  tabBarTextColor: platform === "ios" ? "#737373" : "#bfc6ea",
+  tabBarTextColor: "#E8E8E8",
   tabBarTextSize: platform === "ios" ? 14 : 11,
-  activeTab: platform === "ios" ? "#007aff" : "#F8F8F8",
-  sTabBarActiveTextColor: "#007aff",
-  tabBarActiveTextColor: platform === "ios" ? "#2874F0" : "#F8F8F8",
-  tabActiveBgColor: platform === "ios" ? "#cde1f9" : "#2f343f",
+  activeTab: "#2f343f",
+  sTabBarActiveTextColor: "#F8F8F8",
+  tabBarActiveTextColor:  "#F8F8F8",
+  tabActiveBgColor: "#2f343f",
 
   // Header
-  toolbarBtnColor: platform === "ios" ? "#007aff" : "#F8F8F8",
-  toolbarDefaultBg: platform === "ios" ? "#F8F8F8" : "#2f343f",
+  toolbarBtnColor: "#F8F8F8",
+  toolbarDefaultBg: "#2f343f",
   toolbarHeight: platform === "ios" ? (isIphoneX ? 88 : 64) : 56,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
-  toolbarInputColor: platform === "ios" ? "#CECDD2" : "#F8F8F8",
+  toolbarInputColor: "#F8F8F8",
   searchBarHeight: platform === "ios" ? 30 : 40,
   searchBarInputHeight: platform === "ios" ? 30 : 50,
-  toolbarBtnTextColor: platform === "ios" ? "#007aff" : "#F8F8F8",
+  toolbarBtnTextColor: "#F8F8F8",
   iosStatusbar: "dark-content",
-  toolbarDefaultBorder: platform === "ios" ? "#a7a6ab" : "#2f343f",
+  toolbarDefaultBorder: "#F8F8F8",
   get statusBarColor() {
     return color(this.toolbarDefaultBg)
       .darken(0.2)
@@ -177,14 +181,14 @@ export default {
   lineHeight: platform === "ios" ? 20 : 24,
 
   // List
-  listBg: "transparent",
-  listBorderColor: "#c9c9c9",
-  listDividerBg: "#f4f4f4",
+  listBg: "#2f343f",
+  listBorderColor: "#454951",
+  listDividerBg: "#454951",
   listBtnUnderlayColor: "#DDD",
   listItemPadding: platform === "ios" ? 10 : 12,
   listNoteColor: "#808080",
   listNoteSize: 13,
-  listItemSelected: platform === "ios" ? "#007aff" : "#2f343f",
+  listItemSelected: "#007aff" ,
 
   // Progress Bar
   defaultProgressColor: "#E4202D",
@@ -192,7 +196,7 @@ export default {
 
   // Radio Button
   radioBtnSize: platform === "ios" ? 25 : 23,
-  radioSelectedColorAndroid: "#2f343f",
+  radioSelectedColorAndroid: "#F8F8F8",
   radioBtnLineHeight: platform === "ios" ? 29 : 24,
   get radioColor() {
     return this.brandPrimary;
@@ -201,29 +205,29 @@ export default {
   // Segment
   segmentBackgroundColor: platform === "ios" ? "#F8F8F8" : "#2f343f",
   segmentActiveBackgroundColor: platform === "ios" ? "#007aff" : "#F8F8F8",
-  segmentTextColor: platform === "ios" ? "#007aff" : "#F8F8F8",
-  segmentActiveTextColor: platform === "ios" ? "#F8F8F8" : "#2f343f",
-  segmentBorderColor: platform === "ios" ? "#007aff" : "#F8F8F8",
-  segmentBorderColorMain: platform === "ios" ? "#a7a6ab" : "#2f343f",
+  segmentTextColor: platform === "ios" ? "#007aff" : "#a7a6ab",
+  segmentActiveTextColor: platform === "ios" ? "#F8F8F8" : "#007aff",
+  segmentBorderColor: platform === "ios" ? "#007aff" : "#a7a6ab",
+  segmentBorderColorMain: platform === "ios" ? "#a7a6ab" : "#a7a6ab",
 
   // Spinner
   defaultSpinnerColor: "#45D56E",
   inverseSpinnerColor: "#1A191B",
 
   // Tab
-  tabDefaultBg: platform === "ios" ? "#F8F8F8" : "#2f343f",
-  topTabBarTextColor: platform === "ios" ? "#6b6b6b" : "#aaa",
-  topTabBarActiveTextColor: platform === "ios" ? "#007aff" : "#F8F8F8",
-  topTabBarBorderColor: platform === "ios" ? "#a7a6ab" : "#F8F8F8",
-  topTabBarActiveBorderColor: platform === "ios" ? "#007aff" : "#F8F8F8",
+  tabDefaultBg: "#2f343f",
+  topTabBarTextColor: "#aaa",
+  topTabBarActiveTextColor: "#F8F8F8",
+  topTabBarBorderColor: "#2f343f",
+  topTabBarActiveBorderColor: "#F8F8F8",
 
   // Tabs
-  tabBgColor: "#F8F8F8",
+  tabBgColor: "#2f343f",
   tabFontSize: 15,
 
   // Text
-  textColor: "#000",
-  inverseTextColor: "#F8F8F8",
+  textColor: "#F8F8F8",
+  inverseTextColor: "#000",
   noteFontSize: 14,
   get defaultTextColor() {
     return this.textColor;
@@ -233,8 +237,8 @@ export default {
   titleFontfamily: platform === "ios" ? "System" : "Roboto_medium",
   titleFontSize: platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
-  subtitleColor: platform === "ios" ? "#000" : "#F8F8F8",
-  titleFontColor: platform === "ios" ? "#000" : "#F8F8F8",
+  subtitleColor: "#F8F8F8",
+  titleFontColor: "#F8F8F8",
 
   // Other
   borderRadiusBase: platform === "ios" ? 5 : 2,
