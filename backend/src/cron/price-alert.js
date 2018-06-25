@@ -26,9 +26,10 @@ const config = {
 
 module.exports = () => {
     console.log('PriceAlert CRON start -------');
-    // upper alert
+
     price_alert('>');
     price_alert('<');
+
     function price_alert(lower_or_higher) {
         knex('price_alert')
             .join('price', 'price_alert.price_id', 'price.id')
@@ -44,14 +45,16 @@ module.exports = () => {
                     const price_point = (alert.fiat === true) ? parseInt(alert.price_point) : alert.price_point;
                     const price = (alert.fiat === true) ? parseInt(alert.price) : alert.price;
 
-                    const notification_message = alert.symbol + ' price alert (' + lower_or_higher + price_point + ' ' + alert.currency + '): ' + price + ' ' + alert.currency;
+                    const notification_title = 'CoinMarketNews - ' + alert.symbol + ' price alert';
+                    const notification_message = alert.symbol + ' ' + lower_or_higher + ' ' + price_point + ' ' + alert.currency + ': ' + price + ' ' + alert.currency;
 
                     console.log(notification_message);
 
                     var message = {
                         app_id: ONESIGNAL_APP_ID,
+                        headings: { "en": notification_title },
                         contents: { "en": notification_message },
-                        included_segments: ["All"]
+                        included_segments: ["All"]  // TODO: add user.id
                     };
 
                     axios.post(ONESIGNAL_URI, message, config)
