@@ -89,7 +89,7 @@ module.exports = () => {
                                                     if (news.title.includes(coin.name) || news.title.includes(coin.symbol)) {
                                                         coin_news.push({ coin_id: coin.id, news_id: insert_news_ok[0] });
                                                         // send push notif
-                                                        news_alert(news, coin_id);
+                                                        // news_alert(news, coin);
                                                     }
                                                     // TODO: same for content ?
                                                 });
@@ -113,33 +113,35 @@ module.exports = () => {
             });
         });
 
-    function news_alert(news, coin_id); {
+    function news_alert(news, coin) {
         knex
             .select('user_id')
             .from('news_alert')
-            .where('coin_id', '=', coin_id)
-            .andWhere('favorite', '=', true)
+            .where('coin_id', '=', coin.id)
+            .andWhere('favourite', '=', true)
             .then(function (ids) {
                 console.log(ids);
-                const notification_title = 'CoinMarketNews - ' + alert.symbol + ' news alert';
-                const notification_message = news.title;
+                if (ids.length > 0) {
+                    const notification_title = 'CoinMarketNews - ' + coin.symbol + ' news alert';
+                    const notification_message = news.title;
 
-                console.log(notification_message);
+                    console.log(notification_message);
 
-                var message = {
-                    app_id: ONESIGNAL_APP_ID,
-                    headings: { "en": notification_title },
-                    contents: { "en": notification_message },
-                    url: news.link,
-                    included_segments: ["All"]  // TODO: add all ids
-                };
-                axios.post(ONESIGNAL_URI, message, config)
-                    .then(function (response) {
-                        console.log('notification sent: ' + notification_message);
-                    })
-                    .catch(function (error) {
-                        console.log('error: ' + error);
-                    });
+                    var message = {
+                        app_id: ONESIGNAL_APP_ID,
+                        headings: { "en": notification_title },
+                        contents: { "en": notification_message },
+                        url: news.link,
+                        included_segments: ["All"]  // TODO: add all ids
+                    };
+                    axios.post(ONESIGNAL_URI, message, config)
+                        .then(function (response) {
+                            console.log('notification sent: ' + notification_message);
+                        })
+                        .catch(function (error) {
+                            console.log('error: ' + error);
+                        });
+                }
             })
     }
 }
