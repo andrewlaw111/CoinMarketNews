@@ -22,13 +22,13 @@ services:
     links:
     - "db"
     command: "sh start.sh"
-  web:
-    image: nginx
-    links:
-      - app
-    depends_on:
-      - app
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - "80:80"
+  # web:
+  #   image: nginx
+  #   links:
+  #     - app
+  #   depends_on:
+  #     - app
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #   ports:
+  #     - "80:80"
