@@ -73,7 +73,8 @@ export default class CoinService {
                     if (!(price.coinmarketcap_id in price_array)) {
                         price_array[price.coinmarketcap_id] = [];
                     }
-                    price.price = parseFloat(price.price);
+                    // TODO: adapt decimals for each currency ( 3 = BTC ) => 8 decimals
+                    price.price = (price.currency_id == 3) ? parseFloat(price.price).toFixed(8) : parseFloat(price.price);
                     price.volume_24h = parseFloat(price.volume_24h);
                     price.market_cap = parseFloat(price.market_cap);
                     price.percent_change_1h = parseFloat(price.percent_change_1h);
