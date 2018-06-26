@@ -11,8 +11,19 @@ interface ICoinsPageProps {
     darkMode: boolean;
 }
 
-export default class CoinInfo extends React.Component<ICoinsPageProps> {
+interface ICoinsPageStates {
+    numberOfLines: number;
+}
+
+export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPageStates> {
     public styles: typeof styles;
+
+    public constructor(props: ICoinsPageProps) {
+        super(props);
+        this.state = {
+            numberOfLines: 8,
+        };
+    }
 
     public componentWillMount() {
         this.styles = (this.props.darkMode) ? darkStyles : styles;
@@ -20,16 +31,16 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
     public componentWillReceiveProps(nextProps: ICoinsPageProps) {
         this.styles = (this.props.darkMode) ? darkStyles : styles;
     }
-    
+
     public renderAboutCoin() {
         return (
             <Card style={this.styles.Card}>
                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                    <Text>{this.props.coin.name}</Text>
+                    <Text>What is {this.props.coin.name}?</Text>
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
                     <Body>
-                        <Text>{this.props.coin.about}</Text>
+                        <Text numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress.bind(this)}>{this.props.coin.about}</Text>
                     </Body>
                 </CardItem>
             </Card>
@@ -71,11 +82,9 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
                 return (
                     <View key={index} style={styles.coinInfoStatsLine}>
                         <Text style={styles.coinInfoStatsText}>
-                            {stat.statType}:
+                            {stat.statType}
                         </Text>
-                        <Text style={styles.coinInfoStatsText}>
-                            {stat.stat}
-                        </Text>
+                        {(stat.statType == 'Rank') ? <Text style={[styles.bold, styles.coinInfoStatsText]}>#{stat.stat}</Text> : <Text style={styles.coinInfoStatsText}>{stat.stat}</Text>}
                     </View>
                 );
             } else {
@@ -121,12 +130,12 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
             if (link.link) {
                 return (
                     <CardItem key={index} style={this.styles.cardItem}>
-                        <Icon active={true} type="FontAwesome" name={link.linkIcon} />
+                        <Icon active={true} type="FontAwesome" name={link.linkIcon} style={this.styles.linkIcon}/>
                         <Text>
                             {link.linkType}:
                         </Text>
                         <Right>
-                            <Text onPress={this.handleLinkPress.bind(this, link.link.link)}>
+                            <Text onPress={this.handleLinkPress.bind(this, link.link.link)} style={this.styles.link}>
                                 {link.link.name}
                             </Text>
                         </Right>
@@ -147,6 +156,9 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
                             <Card style={this.styles.Card}>
+                                <CardItem header={true} bordered={true} style={this.styles.cardItem}>
+                                    <Text>Information</Text>
+                                </CardItem>
                                 <CardItem style={this.styles.cardItem}>
                                     <Body style={styles.coinInfoStats}>
                                         {this.renderCoinStats()}
@@ -159,6 +171,9 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.official_website || this.props.coin.medium || this.props.coin.telegram || this.props.coin.twitter || this.props.coin.reddit) ? (
                             < Card style={this.styles.Card}>
+                                <CardItem header={true} bordered={true} style={this.styles.cardItem}>
+                                    <Text>Links</Text>
+                                </CardItem>
                                 {this.renderCoinLinks()}
                             </Card>
                         ) : (
@@ -172,14 +187,27 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
     private handleLinkPress = (link: string) => {
         Linking.openURL(link);
     }
+    private handleAboutPress = () => {
+        const newNumberOfLines = (this.state.numberOfLines === null) ? 8 : null;
+        this.setState({ numberOfLines: newNumberOfLines });
+    }
 }
 
 const styles = StyleSheet.create({
+    bold: {     
+        fontWeight: 'bold',   
+    },
     Card: {
 
     },
     cardItem: {
 
+    },
+    linkIcon: {
+        color: "#454951",
+    },
+    link: {
+        color: "#2a6496",
     },
     coinInfoStats: {
         flex: 1,
@@ -198,12 +226,21 @@ const styles = StyleSheet.create({
 });
 
 const darkStyles = StyleSheet.create({
+    bold: {     
+        fontWeight: 'bold',   
+    },
     Card: {
         borderColor: "#41444c",
         backgroundColor: "#454951",
     },
     cardItem: {
         backgroundColor: "#454951",
+    },
+    linkIcon: {
+        color: "#454951",
+    },
+    link: {
+        color: "#2a6496",
     },
     coinInfoStats: {
         flex: 1,
