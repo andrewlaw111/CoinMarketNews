@@ -28,7 +28,6 @@ Promise.all([
     getCoins();
     getNews();
     loadSettings();
-    return data;
   }),
   loadFavourites(),
   // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),

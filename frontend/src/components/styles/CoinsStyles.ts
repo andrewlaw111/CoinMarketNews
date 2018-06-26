@@ -19,7 +19,8 @@ export const coinsStyles = StyleSheet.create({
         color: "#D8D8D8"
     },
     coinText: {
-
+        textAlign: "center",
+        width: 37,
     },
     coinThumbnail: {
         backgroundColor: "grey",
@@ -44,7 +45,7 @@ export const coinsStyles = StyleSheet.create({
     },
     listCoinName: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
     },
     listCoinRight: {
         alignItems: "center",

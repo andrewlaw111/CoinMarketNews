@@ -44,7 +44,6 @@ export const loadSettings = async () => {
     if (settings !== null) {
         return store.dispatch(loadSettingsToStore(JSON.parse(settings)));
     } else {
-        console.log("no settings");
         return;
     }
 };
