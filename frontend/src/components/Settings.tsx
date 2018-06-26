@@ -146,7 +146,6 @@ class PureSettings extends React.Component<ISettingsProps>{
         const settings = { ...this.props.appSettings };
         settings.pushNotifications = !settings.pushNotifications;
         this.props.changeSettings(settings)
-
         axios
             .patch(
                 `${Config.API_SERVER}/user`,

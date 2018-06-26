@@ -41,10 +41,10 @@ export const loadSettingsToStore = (settings: ISettings) => {
 export const loadSettings = async () => {
 
     const settings = await AsyncStorage.getItem("@CoinMarketNews:settingsStore");
-    console.error(settings);
     if (settings !== null) {
         return store.dispatch(loadSettingsToStore(JSON.parse(settings)));
     } else {
+        console.log("no settings");
         return;
     }
 };

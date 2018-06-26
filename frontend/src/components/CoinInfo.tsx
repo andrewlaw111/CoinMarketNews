@@ -2,7 +2,9 @@ import React from "react";
 
 import { Body, Card, CardItem, Icon, Right, StyleProvider, Text } from "native-base";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
+
 import getTheme from "../../native-base-theme/components"
+import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { ICoin } from "../models";
 
@@ -140,8 +142,8 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
 
     public render() {
         return (
-            <ScrollView style={this.styles.infoBackground}>
-                <StyleProvider style={getTheme()} >
+            <StyleProvider style={getTheme(commonColour)} >
+                <ScrollView style={this.styles.infoBackground}>
                     <View >
                         {(this.props.coin.about) ? this.renderAboutCoin() : null}
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
@@ -165,8 +167,8 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
                                 null
                             )}
                     </View>
-                </StyleProvider>
-            </ScrollView>
+                </ScrollView>
+            </StyleProvider>
         );
     }
     private handleLinkPress = (link: string) => {

@@ -22,11 +22,11 @@ export function loginSuccess(user: IUser): ILoginSuccessAction {
     };
 }
 
-export const getUser = async () => {
+export const getUser = async (OneSignal: any) => {
     try {
         const token = await AsyncStorage.getItem("@CoinMarketNews:userToken");
         if (token !== null) {
-            axios
+            return axios
                 .get<IUser>(
                     `${Config.API_SERVER}/user`,
                     // `http://10.0.0.22:8000/user`,
@@ -36,25 +36,31 @@ export const getUser = async () => {
                         },
                     },
             ).then((result) => {
+                OneSignal.sendTags({user_id: result.data.id })
                 store.dispatch(loginSuccess(result.data));
+                return result.data;
             }).catch((err) => {
+                console.log(err)
                 // tslint:disable-next-line:no-console
                 console.error(err);
             });
         } else {
-            axios
+            return axios
                 .post<IUser>(
                     // `http://10.0.0.22:8000/user`,
                     `${Config.API_SERVER}/user`,
-                ).then((result) => {
-                    store.dispatch(loginSuccess(result.data));
-                }).catch((err) => {
-                    // tslint:disable-next-line:no-console
-                    console.error(err);
-                });
+            ).then((result) => {
+                store.dispatch(loginSuccess(result.data));
+                OneSignal.sendTag("user_id", result.data.id)
+            }).catch((err) => {
+                console.log(err)
+                // tslint:disable-next-line:no-console
+                console.error(err);
+            });
         }
     } catch (error) {
         // tslint:disable-next-line:no-console
         console.log("error", error);
+        return error
     }
 };

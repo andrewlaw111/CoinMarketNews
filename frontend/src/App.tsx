@@ -7,6 +7,7 @@ import { getNews } from "./redux/actions/news";
 import { getUser } from "./redux/actions/user";
 import { registerScreens } from "./screens";
 import { loadSettings } from "./redux/actions/settings";
+import { IUser } from "./models";
 
 registerScreens(); // this is where you register all of your app's screens
 
@@ -18,48 +19,51 @@ registerScreens(); // this is where you register all of your app's screens
 //   },
 // });
 
-// tslint:disable-next-line:no-var-requires
-const OneSignal = require("react-native-onesignal").default;
-OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
+import OneSignal from "react-native-onesignal";
+OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed")
 
 // start the app
 Promise.all([
-  getUser().then(() => {
+  getUser(OneSignal).then((data) => {
     getCoins();
     getNews();
     loadSettings();
+    return data;
   }),
   loadFavourites(),
   // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
-]).then((sources) => {
-  // start the app
-  Navigation.startTabBasedApp({
-    tabs: [
-      {
-        icon: require("./coin.png"),
-        // icon: sources[2],
-        label: "Coins",
-        screen: "CoinMarketNews.Coins", // this is a registered name for a screen
-        selectedIcon: require("./coin.png"), // iOS only
-        // selectedIcon: sources[2], // iOS only
+])
+  .then((sources) => {
+    // start the app
+    Navigation.startTabBasedApp({
+      tabs: [
+        {
+          icon: require("./coin.png"),
+          // icon: sources[2],
+          label: "Coins",
+          screen: "CoinMarketNews.Coins", // this is a registered name for a screen
+          selectedIcon: require("./coin.png"), // iOS only
+          // selectedIcon: sources[2], // iOS only
 
-      },
-      {
-        icon: sources[2],
-        label: "News",
-        screen: "CoinMarketNews.News",
-        selectedIcon: sources[2], // iOS only
-        title: "Coin Market News",
-      },
-      {
-        icon: sources[3],
-        label: "Settings",
-        screen: "CoinMarketNews.Settings",
-        selectedIcon: sources[3], // iOS only
-        title: "Settings",
-      },
-    ],
+        },
+        {
+          icon: sources[2],
+          label: "News",
+          screen: "CoinMarketNews.News",
+          selectedIcon: sources[2], // iOS only
+          title: "Coin Market News",
+        },
+        {
+          icon: sources[3],
+          label: "Settings",
+          screen: "CoinMarketNews.Settings",
+          selectedIcon: sources[3], // iOS only
+          title: "Settings",
+        },
+      ],
+    })
+  }).catch((err) => {
+    console.log("error", err);
   });
-});
