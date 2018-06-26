@@ -25,7 +25,6 @@ class PureSettings extends React.Component<ISettingsProps>{
         statusBarBlur: true,
         statusBarColor: "blue",
     };
-    public colorMode: string;
     public styles: typeof styles;
 
     public constructor(props: ISettingsProps) {
@@ -59,7 +58,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                         <TouchableOpacity>
                             <CardItem style={this.styles.CardItem}>
                                 <View style={this.styles.CardLeft}>
-                                    <Image source={require("../coin.png")} style={this.styles.CoinIcon} />
+                                    {/* <Image source={require("../coin.png")} style={this.styles.CoinIcon} /> */}
                                     <Text style={this.styles.settingsText}>Preferred Crypto Currency</Text>
                                 </View>
                                 <Picker

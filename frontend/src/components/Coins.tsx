@@ -1,16 +1,14 @@
 import React from "react";
 import Config from "react-native-config";
-import FastImage from "react-native-fast-image";
 import { isIphoneX } from "react-native-iphone-x-helper";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
-import { Container, Content, Icon, Spinner, Tab, Tabs, Text, Thumbnail, StyleProvider } from "native-base";
-import { FlatList, Platform, TouchableOpacity, View } from "react-native";
+import { Container, Tab, Tabs, StyleProvider } from "native-base";
+import { Platform, } from "react-native";
 
 import CoinOptions from "./CoinsOptions";
 import { ICoinPrice, IUser, ISettings } from "../models";
-import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
 import { coinsStyles, darkCoinsStyles } from "./styles/CoinsStyles"
@@ -22,8 +20,8 @@ import CoinList from "./CoinList";
 import sortCoins from "./functions/CoinsSort";
 
 interface ICoinsListProps {
-    coins: ICoinPrice[];
     appSettings: ISettings;
+    coins: ICoinPrice[];
     user: IUser;
     navigator: Navigator;
 }
@@ -41,7 +39,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         statusBarBlur: true,
         statusBarColor: "blue",
     };
-    public darkMode: boolean;
     public styles: typeof coinsStyles;
 
     public constructor(props: ICoinsListProps) {
@@ -53,15 +50,18 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             setting: "000",
         };
     }
-    public componentWillReceiveProps(nextProps: ICoinsListProps){
+    public componentWillMount() {
+        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
+    }
+    public componentWillReceiveProps(nextProps: ICoinsListProps) {
+        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
+
         this.setState({
             coins: nextProps.coins
         })
     }
-    public render() {
-        console.log("coins")
-        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
 
+    public render() {
         let iOSStyle = {};
         if (Platform.OS === "ios") {
             if (isIphoneX()) {
@@ -119,7 +119,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             coins,
             setting,
         })
-        
+
     }
 
 }

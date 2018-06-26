@@ -3,22 +3,18 @@ import Config from "react-native-config";
 import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
 
-import { Container, Content, Icon, Spinner, Tab, Tabs, Text, Thumbnail, StyleProvider } from "native-base";
-import { FlatList, Platform, TouchableOpacity, View } from "react-native";
+import { Icon, Text, Thumbnail, StyleProvider, Spinner } from "native-base";
+import { FlatList, TouchableOpacity, View } from "react-native";
 
-import CoinOptions from "./CoinsOptions";
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
 import { coinsStyles, darkCoinsStyles } from "./styles/CoinsStyles"
-import getSettingID from "./functions/CoinsSettings";
-import sortCoins from "./functions/CoinsSort";
 import displayCoinOptions from "./functions/CoinsRenderSettings";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
-import { loadSettings } from "../redux/actions/settings";
 
 
 interface ICoinListProps {
@@ -55,7 +51,6 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         let heartColour: string;
         if (this.props.favourites.indexOf(info.item.id) > -1) {
             heartColour = "red";
-            console.log("red");
         } else {
             heartColour = "grey";
         }
@@ -112,38 +107,44 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     public render() {
         this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
         const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1)
+
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <View>
+                <View style={this.styles.coinListComponent}>
                     {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                    {(this.props.favouriteTab) ? (
-                        (this.props.favourites.length > 0) ? (
-                            <FlatList
-                                data={favouriteCoins}
-                                extraData={this.props.favourites}
-                                renderItem={this.renderCoinList}
-                                keyExtractor={this.keyExtractor}
-                                style={this.styles.coinList}
-                                // tslint:disable-next-line:jsx-no-lambda
-                                getItemLayout={(data, index) => ({ length: 70, offset: 70 * index, index })}
-                            />
-                        ) : (
-                                <View style={this.styles.coinListComponent}>
-                                    <Text style={this.styles.coinText}>
-                                        You have no favourite coins! Click on the ❤️ to add some favourites!
+                    {(this.props.coins.length > 0) ? (
+                        /* tslint:disable-next-line:jsx-no-multiline-js */
+                        (this.props.favouriteTab) ? (
+                            (favouriteCoins.length > 0) ? (
+                                <FlatList
+                                    data={favouriteCoins}
+                                    extraData={this.props.favourites}
+                                    renderItem={this.renderCoinList}
+                                    keyExtractor={this.keyExtractor}
+                                    style={this.styles.coinList}
+                                    getItemLayout={this.getItemLayout}
+                                />
+                            ) : (
+                                    <View style={this.styles.coinListComponent}>
+                                        <Text style={this.styles.coinText}>
+                                            You have no favourite coins! Click on the ❤️ to add some favourites!
                                             </Text>
-                                </View>
+                                    </View>
+                                )
+                        ) : (
+                                <FlatList
+                                    data={this.props.coins}
+                                    extraData={this.props.favourites}
+                                    renderItem={this.renderCoinList}
+                                    keyExtractor={this.keyExtractor}
+                                    style={this.styles.coinList}
+                                    getItemLayout={this.getItemLayout}
+                                />
                             )
                     ) : (
-                            <FlatList
-                                data={this.props.coins}
-                                extraData={this.props.favourites}
-                                renderItem={this.renderCoinList}
-                                keyExtractor={this.keyExtractor}
-                                style={this.styles.coinList}
-                                // tslint:disable-next-line:jsx-no-lambda
-                                getItemLayout={(data, index) => ({ length: 70, offset: 70 * index, index })}
-                            />
+                            <View style={this.styles.coinListComponent}>
+                                <Spinner />
+                            </View>
                         )
                     }
                 </View>
@@ -163,6 +164,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
             return this.props.removeCoinFavourite(coinID, token);
         }
     }
+    private getItemLayout = (data: any, index: number) => ({ length: 70, offset: 70 * index, index });
     private keyExtractor = (item: ICoinPrice) => item.id.toString();
 }
 

@@ -10,9 +10,8 @@ interface ICoinOptionsProps {
     handleOptionsPress: (options: string) => void;
 }
 
-export default class CoinOptions extends React.Component<ICoinOptionsProps>{
+export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
     public render() {
-        console.log("render");
         interface IOptionsButton {
             active: boolean;
             first: boolean;
@@ -78,6 +77,7 @@ export default class CoinOptions extends React.Component<ICoinOptionsProps>{
             <Button
                 style={styles.smallpadding}
                 first={button.first}
+                last={button.last}
                 active={button.active}
                 onPress={this.handlePress.bind(this, button.handler)}
                 key={index}

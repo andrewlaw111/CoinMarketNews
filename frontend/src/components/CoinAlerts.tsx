@@ -9,6 +9,7 @@ import { IRootState } from "../redux/store";
 
 interface ICoinsPageProps {
     coin: ICoin;
+    darkMode: boolean;
 }
 
 class PureCoinAlerts extends React.Component<ICoinsPageProps> {

@@ -39,9 +39,12 @@ Promise.all([
     tabs: [
       {
         icon: require("./coin.png"),
+        // icon: sources[2],
         label: "Coins",
         screen: "CoinMarketNews.Coins", // this is a registered name for a screen
         selectedIcon: require("./coin.png"), // iOS only
+        // selectedIcon: sources[2], // iOS only
+
       },
       {
         icon: sources[2],

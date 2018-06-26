@@ -19,16 +19,8 @@ interface INewsListProps {
 }
 
 class PureNewsList extends React.Component<INewsListProps> {
-    public colorMode: string;
     public styles: typeof styles;
 
-    constructor(props: INewsListProps) {
-        super(props);
-
-        this.colorMode = "dark";
-        this.styles = (this.colorMode === "dark") ? darkStyles : styles;
-
-    }
     public static navigatorStyle = {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
@@ -40,7 +32,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                 <TouchableOpacity
                     onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)}
                 >
-                    <CardItem header={true} style={this.styles.cardItem}>
+                    <CardItem header={true} bordered={true}  style={this.styles.cardItem}>
                         <Text
                             style={this.styles.headingText}
                         >

@@ -8,16 +8,26 @@ import { ICoin } from "../models";
 
 interface ICoinsPageProps {
     coin: ICoin;
+    darkMode: boolean;
 }
 
 export default class CoinInfo extends React.Component<ICoinsPageProps> {
+    public styles: typeof styles;
+
+    public componentWillMount() {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
+    public componentWillReceiveProps(nextProps: ICoinsPageProps) {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
+    
     public renderAboutCoin() {
         return (
-            <Card>
-                <CardItem header={true} bordered={true}>
+            <Card style={this.styles.Card}>
+                <CardItem header={true} bordered={true} style={this.styles.cardItem}>
                     <Text>{this.props.coin.name}</Text>
                 </CardItem>
-                <CardItem>
+                <CardItem style={this.styles.cardItem}>
                     <Body>
                         <Text>{this.props.coin.about}</Text>
                     </Body>
@@ -110,7 +120,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
         return links.map((link, index) => {
             if (link.link) {
                 return (
-                    <CardItem key={index}>
+                    <CardItem key={index} style={this.styles.cardItem}>
                         <Icon active={true} type="FontAwesome" name={link.linkIcon} />
                         <Text>
                             {link.linkType}:
@@ -130,13 +140,14 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
 
     public render() {
         return (
-            <ScrollView>
+            <ScrollView style={this.styles.infoBackground}>
                 <StyleProvider style={getTheme()} >
-                    <View>
+                    <View >
                         {(this.props.coin.about) ? this.renderAboutCoin() : null}
+                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
-                            < Card >
-                                <CardItem>
+                            <Card style={this.styles.Card}>
+                                <CardItem style={this.styles.cardItem}>
                                     <Body style={styles.coinInfoStats}>
                                         {this.renderCoinStats()}
                                     </Body>
@@ -145,8 +156,9 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
                         ) : (
                                 null
                             )}
+                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.official_website || this.props.coin.medium || this.props.coin.telegram || this.props.coin.twitter || this.props.coin.reddit) ? (
-                            < Card >
+                            < Card style={this.styles.Card}>
                                 {this.renderCoinLinks()}
                             </Card>
                         ) : (
@@ -163,6 +175,12 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
 }
 
 const styles = StyleSheet.create({
+    Card: {
+
+    },
+    cardItem: {
+
+    },
     coinInfoStats: {
         flex: 1,
     },
@@ -173,5 +191,32 @@ const styles = StyleSheet.create({
     },
     coinInfoStatsText: {
         flex: 1,
+    },
+    infoBackground: {
+        flex: 1,
+    },
+});
+
+const darkStyles = StyleSheet.create({
+    Card: {
+        borderColor: "#41444c",
+        backgroundColor: "#454951",
+    },
+    cardItem: {
+        backgroundColor: "#454951",
+    },
+    coinInfoStats: {
+        flex: 1,
+    },
+    coinInfoStatsLine: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    coinInfoStatsText: {
+        flex: 1,
+    },
+    infoBackground: {
+        backgroundColor: "#2f343f",
     },
 });
