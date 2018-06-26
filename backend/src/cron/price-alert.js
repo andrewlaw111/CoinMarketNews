@@ -54,6 +54,8 @@ module.exports = () => {
                         app_id: ONESIGNAL_APP_ID,
                         headings: { "en": notification_title },
                         contents: { "en": notification_message },
+                        ios_badgeType: 'Increase',
+                        ios_badgeCount: 1,
                         included_segments: ["All"]  // TODO: add user.id
                     };
 
