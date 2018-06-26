@@ -38,6 +38,10 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     public darkMode: boolean;
     public styles: typeof coinsStyles;
 
+    public componentWillReceiveProps(nextProps: ICoinListProps){
+        console.log(nextProps);
+    }
+
     public constructor(props: ICoinListProps) {
         super(props);
         this.state = {
@@ -135,6 +139,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                 <FlatList
                                     data={this.props.coins}
                                     extraData={this.props.favourites}
+                                    initialNumToRender={15}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
                                     style={this.styles.coinList}

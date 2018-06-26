@@ -72,6 +72,26 @@ export default class UserService {
             })
     }
 
+    public changeNotifications(token: string, notifications: boolean) {
+        console.log(token);
+        console.log(notifications);
+
+        return knex
+        .select("user_id")
+        .from("sessions")    
+        .where("token", token)
+        .then((users) => {
+            console.log(users);
+        return knex("users")
+            .update({
+                notifications
+            })
+            .where("id", users[0].user_id)
+            .then((data) => {
+                return data;
+            });
+        })
+    }
     public deleteFavourite(token: string, coinID: number) {
         return knex
             .select("user_id")
@@ -94,7 +114,7 @@ export default class UserService {
             })
             .catch((err) => {
                 console.log(err)
-                
+
             });
     }
     public saveFavourite(token: string, coinID: number) {

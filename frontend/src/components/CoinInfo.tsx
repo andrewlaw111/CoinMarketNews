@@ -20,16 +20,16 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
     public componentWillReceiveProps(nextProps: ICoinsPageProps) {
         this.styles = (this.props.darkMode) ? darkStyles : styles;
     }
-    
+
     public renderAboutCoin() {
         return (
             <Card style={this.styles.Card}>
                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                    <Text>{this.props.coin.name}</Text>
+                    <Text style={this.styles.cardText}>{this.props.coin.name}</Text>
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
                     <Body>
-                        <Text>{this.props.coin.about}</Text>
+                        <Text style={this.styles.cardText}>{this.props.coin.about}</Text>
                     </Body>
                 </CardItem>
             </Card>
@@ -69,11 +69,11 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
         return stats.map((stat, index) => {
             if (stat.stat) {
                 return (
-                    <View key={index} style={styles.coinInfoStatsLine}>
-                        <Text style={styles.coinInfoStatsText}>
+                    <View key={index} style={this.styles.coinInfoStatsLine}>
+                        <Text style={this.styles.coinInfoStatsText}>
                             {stat.statType}:
                         </Text>
-                        <Text style={styles.coinInfoStatsText}>
+                        <Text style={this.styles.coinInfoStatsText}>
                             {stat.stat}
                         </Text>
                     </View>
@@ -121,12 +121,12 @@ export default class CoinInfo extends React.Component<ICoinsPageProps> {
             if (link.link) {
                 return (
                     <CardItem key={index} style={this.styles.cardItem}>
-                        <Icon active={true} type="FontAwesome" name={link.linkIcon} />
-                        <Text>
+                        <Icon style={this.styles.cardText} active={true} type="FontAwesome" name={link.linkIcon} />
+                        <Text style={this.styles.cardText} >
                             {link.linkType}:
                         </Text>
                         <Right>
-                            <Text onPress={this.handleLinkPress.bind(this, link.link.link)}>
+                            <Text style={this.styles.cardText} onPress={this.handleLinkPress.bind(this, link.link.link)}>
                                 {link.link.name}
                             </Text>
                         </Right>
@@ -181,6 +181,8 @@ const styles = StyleSheet.create({
     cardItem: {
 
     },
+    cardText: {
+    },
     coinInfoStats: {
         flex: 1,
     },
@@ -205,6 +207,9 @@ const darkStyles = StyleSheet.create({
     cardItem: {
         backgroundColor: "#454951",
     },
+    cardText: {
+        color: "#F8F8F8"
+    },
     coinInfoStats: {
         flex: 1,
     },
@@ -215,6 +220,7 @@ const darkStyles = StyleSheet.create({
     },
     coinInfoStatsText: {
         flex: 1,
+        color: "#F8F8F8"
     },
     infoBackground: {
         backgroundColor: "#2f343f",

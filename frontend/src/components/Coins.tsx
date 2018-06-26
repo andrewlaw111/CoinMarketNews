@@ -29,8 +29,6 @@ interface ICoinsListProps {
 export interface ICoinsListState {
     coins: ICoinPrice[];
     setting: string,
-    cryptoCurrencyName: string;
-    fiatCurrencyName: string;
 }
 
 class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
@@ -45,8 +43,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         super(props);
         this.state = {
             coins: this.props.coins.slice(),
-            cryptoCurrencyName: "BTC",
-            fiatCurrencyName: "USD",
             setting: "000",
         };
     }
@@ -76,11 +72,11 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                 <Container style={this.styles.coinListComponent}>
                     <Tabs style={iOSStyle} initialPage={0}>
                         <Tab heading="Favourites">
-                            <CoinOptions cryptoCurrencyName={this.state.cryptoCurrencyName} fiatCurrencyName={this.state.fiatCurrencyName} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
+                            <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
                             <CoinList coins={this.state.coins} favouriteTab={true} handlePress={this.handlePress} setting={this.state.setting} user={this.props.user} />
                         </Tab>
                         <Tab heading="Market">
-                            <CoinOptions cryptoCurrencyName={this.state.cryptoCurrencyName} fiatCurrencyName={this.state.fiatCurrencyName} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
+                            <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
                             <CoinList coins={this.state.coins} favouriteTab={false} handlePress={this.handlePress} setting={this.state.setting} user={this.props.user} />
                         </Tab>
                     </Tabs>
@@ -106,7 +102,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                 }],
             },
             navigatorStyle: {},
-            passProps: { coinID: info.item.id, coinPrice: info.item },
+            passProps: { appSettings: this.props.appSettings, coinID: info.item.id, coinPrice: info.item },
             screen: "CoinMarketNews.CoinsPage",
             title: info.item.name,
             titleImage: `http://${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png`,

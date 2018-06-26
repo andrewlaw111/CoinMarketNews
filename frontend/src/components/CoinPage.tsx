@@ -29,9 +29,17 @@ interface ICoinsPageState {
 }
 
 class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
+    public styles: typeof styles;
+
     public static navigatorStyle = {
         tabBarHidden: true,
     };
+    public componentWillMount() {
+        this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
+    }
+    public componentWillReceiveProps(nextProps: ICoinsPageProps) {
+        this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
+    }
 
     constructor(props: ICoinsPageProps) {
         super(props);
@@ -44,14 +52,14 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
     public renderNoConnection() {
         console.log("no connection");
         return (
-            <View>
+            <View style={this.styles.pageBackground}>
                 <Spinner />
             </View>
         );
     }
     public render() {
         return (
-            <Container>
+            <Container style={this.styles.pageBackground}>
                 <Tabs springTension={2} initialPage={0} >
                     <Tab heading="Info">
                         {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinInfo coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
@@ -86,7 +94,6 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
 
 const mapStateToProps = (state: IRootState) => {
     return {
-        appSettings: state.settings.settings,
         coins: state.coins.coins,
         user: state.user.user,
     };
@@ -95,3 +102,15 @@ const mapStateToProps = (state: IRootState) => {
 const CoinsList = connect(mapStateToProps)(PureCoinsList);
 export default CoinsList;
 
+const styles = StyleSheet.create({
+    pageBackground: {
+        flex: 1,
+    },
+});
+
+const darkStyles = StyleSheet.create({
+    pageBackground: {
+        backgroundColor: "#2f343f",
+        flex: 1,
+    },
+});
