@@ -4,31 +4,39 @@ import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, StyleProvider, Text } from "native-base";
 import { ScrollView, StyleSheet, View, WebView } from "react-native";
-import getTheme from "../../native-base-theme/components";
+
+import getTheme from '../../native-base-theme/components';
+import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { ICoin, ICoinPrice } from "../models";
 import { IRootState } from "../redux/store";
 
-interface ICoinsPageProps {
+interface ICoinPriceProps {
     coin: ICoin;
     coinPrice: ICoinPrice;
     darkMode: boolean;
     priceWidget: string;
 }
 
-class PureCoinPrice extends React.Component<ICoinsPageProps> {
-    
+class PureCoinPrice extends React.Component<ICoinPriceProps> {
+    public styles: typeof styles;
+
+    public componentWillMount() {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
+    public componentWillReceiveProps(nextProps: ICoinPriceProps) {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
     public render() {
-         
         return (
-            <ScrollView>
-                <StyleProvider style={getTheme()} >
+            <StyleProvider style={getTheme(commonColour)} >
+                <ScrollView style={this.styles.price}>
                     <Container>
-                        <Card>
-                            <CardItem header={true}>
+                        <Card style={this.styles.card}>
+                            <CardItem style={this.styles.cardItem} header={true}>
                                 <Text>Price</Text>
                             </CardItem>
-                            <CardItem>
+                            <CardItem style={this.styles.cardItem}>
                                 <Body>
                                     <Text>
                                         {this.props.coinPrice.price_fiat.price}
@@ -42,17 +50,17 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                                 </Body>
                             </CardItem>
                         </Card>
-                        <Card style={{ height: 300 }}>
+                        <Card style={this.styles.card}>
                             <WebView
-                                source={{ uri: this.props.priceWidget}}
-                                style={{ height: 300 }}
+                                source={{ uri: this.props.priceWidget }}
+                                style={this.styles.webView}
                             />
                         </Card>
-                        <Card>
-                            <CardItem header={true}>
+                        <Card style={this.styles.card}>
+                            <CardItem style={this.styles.cardItem} header={true}>
                                 <Text>Market Data</Text>
                             </CardItem>
-                            <CardItem>
+                            <CardItem style={this.styles.cardItem}>
                                 <Body>
                                     <Text>
                                         Market Capitalization
@@ -70,8 +78,8 @@ class PureCoinPrice extends React.Component<ICoinsPageProps> {
                             </CardItem>
                         </Card>
                     </Container>
-                </StyleProvider>
-            </  ScrollView>
+                </ScrollView>
+            </StyleProvider>
         );
     }
 }
@@ -87,4 +95,61 @@ const CoinPrice = connect(mapStateToProps)(PureCoinPrice);
 export default CoinPrice;
 
 const styles = StyleSheet.create({
+    card: {
+    },
+    cardItem: {
+    },
+    coinInfoStats: {
+        flex: 1,
+    },
+    coinInfoStatsLine: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    coinInfoStatsText: {
+        flex: 1,
+    },
+    cardText: {
+
+    },
+    price: {
+        flex: 1,
+    },
+    webView: {
+        height: 300
+    }
+});
+
+const darkStyles = StyleSheet.create({
+    card: {
+        borderColor: "#41444c",
+        backgroundColor: "#454951",
+    },
+    cardItem: {
+        backgroundColor: "#454951",
+    },
+    cardText: {
+        color: "#F8F8F8"
+    },
+    coinInfoStats: {
+        flex: 1,
+    },
+    coinInfoStatsLine: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    coinInfoStatsText: {
+        flex: 1,
+    },
+    price: {
+        backgroundColor: "#2f343f",
+        flex: 1,
+    },
+    webView: {
+        borderColor: "#41444c",
+        backgroundColor: "#2f343f",
+        height: 300
+    }
 });

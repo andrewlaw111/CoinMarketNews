@@ -7,8 +7,8 @@ export interface ISettingsState {
 
 const defaultSettingsState: ISettingsState = {
     settings: {
-        fiatCurrency: 1,
-        cryptoCurrency: 1,
+        fiatCurrency: "USD",
+        cryptoCurrency: "BTC",
         pushNotifications: false,
         darkMode: false,
     },
@@ -22,7 +22,6 @@ export const settingsReducer = (state: ISettingsState = defaultSettingsState, ac
             };
 
         case LOAD_SETTINGS:
-            console.log("loadSettings: ", action.settings);
             return {
                 settings: action.settings, // Use concat to add a new link
             };

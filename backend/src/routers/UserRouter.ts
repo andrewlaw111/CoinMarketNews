@@ -1,7 +1,7 @@
 import * as express from "express";
 import { IUser, IUserToken } from "../services/UserService";
 
-export default class UserRoutuer {
+export default class UserRouter {
     public userService: any;
 
     public constructor(userService: any) {
@@ -12,6 +12,7 @@ export default class UserRoutuer {
         const router = express.Router();
         router.route("/")
             .get(this.getUser)
+            .patch(this.changeNotifications)
             .post(this.createUser)
             .put(this.updateUser);
         router.route("/favourites/")
@@ -23,6 +24,12 @@ export default class UserRoutuer {
         console.log('Get user')
         return this.userService.getUser(req.headers.token)
             .then((data: IUser) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private changeNotifications = (req: express.Request, res: express.Response) => {
+        console.log(req.headers)
+        return this.userService.changeNotifications(req.headers.token, req.body.data.notifications)
+            .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
 

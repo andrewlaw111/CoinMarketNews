@@ -1,57 +1,70 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, Text } from "native-base";
+import { Body, Card, CardItem, Container, Text, StyleProvider } from "native-base";
 import { StyleSheet, View } from "react-native";
+
+import getTheme from '../../native-base-theme/components';
+import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { ICoin } from "../models";
 import { IRootState } from "../redux/store";
 
-interface ICoinsPageProps {
+interface ICoinsAlertsProps {
     coin: ICoin;
     darkMode: boolean;
 }
 
-class PureCoinAlerts extends React.Component<ICoinsPageProps> {
+class PureCoinAlerts extends React.Component<ICoinsAlertsProps> {
+    public styles: typeof styles;
+
+    public componentWillMount() {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
+    public componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
 
     public render() {
         return (
-            <Container>
-                <Card>
-                    <CardItem header={true}>
-                        <Text>{this.props.coin.name}</Text>
-                    </CardItem>
-                    <CardItem>
-                        <Body>
-                            <Text>Your text here</Text>
-                        </Body>
-                    </CardItem>
-                </Card>
-                <Card>
-                    <CardItem header={true}>
-                        <Text>NativeBase</Text>
-                    </CardItem>
-                    <CardItem>
-                        <Body>
-                            <Text>
-                                Your text here
+            <StyleProvider style={getTheme(commonColour)} >
+                <Container style={this.styles.alertsPage}>
+                    <Card style={this.styles.card}>
+                        <CardItem style={this.styles.cardItem} header={true}>
+                            <Text>{this.props.coin.name}</Text>
+                        </CardItem>
+                        <CardItem style={this.styles.cardItem}>
+                            <Body>
+                                <Text>Your text here</Text>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Card style={this.styles.card}>
+                        <CardItem style={this.styles.cardItem} header={true}>
+                            <Text>NativeBase</Text>
+                        </CardItem>
+                        <CardItem style={this.styles.cardItem}>
+                            <Body>
+                                <Text>
+                                    Your text here
                             </Text>
-                        </Body>
-                    </CardItem>
-                </Card>
-                <Card>
-                    <CardItem header={true}>
-                        <Text>NativeBase</Text>
-                    </CardItem>
-                    <CardItem>
-                        <Body>
-                            <Text>
-                                Your text here
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Card style={this.styles.card}>
+                        <CardItem style={this.styles.cardItem} header={true}>
+                            <Text>NativeBase</Text>
+                        </CardItem>
+                        <CardItem style={this.styles.cardItem}>
+                            <Body>
+                                <Text>
+                                    Your text here
                                     </Text>
-                        </Body>
-                    </CardItem>
-                </Card>
-            </Container>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                </Container>
+            </StyleProvider>
         );
     }
 }
@@ -67,4 +80,61 @@ const CoinAlerts = connect(mapStateToProps)(PureCoinAlerts);
 export default CoinAlerts;
 
 const styles = StyleSheet.create({
+    card: {
+    },
+    cardItem: {
+    },
+    coinInfoStats: {
+        flex: 1,
+    },
+    coinInfoStatsLine: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    coinInfoStatsText: {
+        flex: 1,
+    },
+    cardText: {
+
+    },
+    alertsPage: {
+        flex: 1,
+    },
+    webView: {
+        height: 300
+    }
+});
+
+const darkStyles = StyleSheet.create({
+    card: {
+        borderColor: "#41444c",
+        backgroundColor: "#454951",
+    },
+    cardItem: {
+        backgroundColor: "#454951",
+    },
+    cardText: {
+        color: "#F8F8F8"
+    },
+    coinInfoStats: {
+        flex: 1,
+    },
+    coinInfoStatsLine: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    coinInfoStatsText: {
+        flex: 1,
+    },
+    alertsPage: {
+        backgroundColor: "#2f343f",
+        flex: 1,
+    },
+    webView: {
+        borderColor: "#41444c",
+        backgroundColor: "#2f343f",
+        height: 300
+    }
 });

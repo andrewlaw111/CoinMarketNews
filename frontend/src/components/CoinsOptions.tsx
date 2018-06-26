@@ -1,11 +1,11 @@
 import React from "react";
 import { Button, Segment, Col, Grid, Text } from "native-base";
 import { StyleSheet } from "react-native";
+import { ISettings } from "../models";
 
 
 interface ICoinOptionsProps {
-    cryptoCurrencyName: string;
-    fiatCurrencyName: string;
+    appSettings: ISettings;
     settings: string;
     handleOptionsPress: (options: string) => void;
 }
@@ -45,13 +45,13 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
             first: true,
             handler: "Fiat",
             last: false,
-            text: this.props.fiatCurrencyName,
+            text: this.props.appSettings.fiatCurrency,
         }, {
             active: this.props.settings[1] === "1",
             first: false,
             handler: "Crypto",
             last: true,
-            text: this.props.cryptoCurrencyName,
+            text: this.props.appSettings.cryptoCurrency,
         }];
         const rightButtons: IOptionsButton[] = [{
             active: this.props.settings[2] === "0",

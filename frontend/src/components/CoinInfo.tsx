@@ -36,11 +36,11 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         return (
             <Card style={this.styles.Card}>
                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                    <Text>What is {this.props.coin.name}?</Text>
+                    <Text style={this.styles.cardText}>What is {this.props.coin.name}?</Text>
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
                     <Body>
-                        <Text numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress.bind(this)}>{this.props.coin.about}</Text>
+                        <Text style={this.styles.cardText} numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress.bind(this)}>{this.props.coin.about}</Text>
                     </Body>
                 </CardItem>
             </Card>
@@ -80,11 +80,11 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         return stats.map((stat, index) => {
             if (stat.stat) {
                 return (
-                    <View key={index} style={styles.coinInfoStatsLine}>
-                        <Text style={styles.coinInfoStatsText}>
-                            {stat.statType}
+                    <View key={index} style={this.styles.coinInfoStatsLine}>
+                        <Text style={this.styles.coinInfoStatsText}>
+                            {stat.statType}:
                         </Text>
-                        {(stat.statType == 'Rank') ? <Text style={[styles.bold, styles.coinInfoStatsText]}>#{stat.stat}</Text> : <Text style={styles.coinInfoStatsText}>{stat.stat}</Text>}
+                        {(stat.statType == 'Rank') ? <Text style={[this.styles.bold, this.styles.coinInfoStatsText]}>#{stat.stat}</Text> : <Text style={this.styles.coinInfoStatsText}>{stat.stat}</Text>}
                     </View>
                 );
             } else {
@@ -130,12 +130,12 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
             if (link.link) {
                 return (
                     <CardItem key={index} style={this.styles.cardItem}>
-                        <Icon active={true} type="FontAwesome" name={link.linkIcon} style={this.styles.linkIcon} />
-                        <Text>
+                        <Icon style={[this.styles.cardText, this.styles.linkIcon]} active={true} type="FontAwesome" name={link.linkIcon} />
+                        <Text style={this.styles.cardText} >
                             {link.linkType}
                         </Text>
                         <Right>
-                            <Text onPress={this.handleLinkPress.bind(this, link.link.link)} style={this.styles.link}>
+                            <Text style={[this.styles.cardText, this.styles.link]} onPress={this.handleLinkPress.bind(this, link.link.link)}>
                                 {link.link.name}
                             </Text>
                         </Right>
@@ -175,7 +175,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                                     <Text>Links</Text>
                                 </CardItem>
                                 <CardItem style={this.styles.cardItem}>
-                                    <Body style={styles.coinInfoStats}>
+                                    <Body style={this.styles.coinInfoStats}>
                                         {this.renderCoinLinks()}
                                     </Body>
                                 </CardItem>
@@ -213,6 +213,8 @@ const styles = StyleSheet.create({
     link: {
         color: "#2a6496",
     },
+    cardText: {
+    },
     coinInfoStats: {
         flex: 1,
     },
@@ -246,6 +248,9 @@ const darkStyles = StyleSheet.create({
     link: {
         color: "#2a6496",
     },
+    cardText: {
+        color: "#F8F8F8"
+    },
     coinInfoStats: {
         flex: 1,
     },
@@ -256,6 +261,7 @@ const darkStyles = StyleSheet.create({
     },
     coinInfoStatsText: {
         flex: 1,
+        color: "#F8F8F8"
     },
     infoBackground: {
         backgroundColor: "#2f343f",

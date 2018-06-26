@@ -71,8 +71,8 @@ export interface INews {
 }
 
 export interface ISettings {
-    fiatCurrency: number;
-    cryptoCurrency: number;
+    fiatCurrency: string;
+    cryptoCurrency: string;
     pushNotifications: boolean;
     darkMode: boolean;
 }

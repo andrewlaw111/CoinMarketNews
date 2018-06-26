@@ -17,6 +17,7 @@ interface ICoinsNewsProps {
 }
 interface ICoinsNewsState {
     news: INews[];
+    noNews: boolean;
 }
 
 export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNewsState> {
@@ -26,11 +27,19 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
         super(props);
         this.state = {
             news: [],
+            noNews: false,
         };
     }
     public componentDidMount() {
         this.getNews();
     }
+    public componentWillMount() {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
+    public componentWillReceiveProps(nextProps: ICoinsNewsProps) {
+        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    }
+
     public renderList = (info: { item: INews, index: number }) => (
         <Card style={this.styles.card}>
             <TouchableOpacity onPress={this.handleLinkPress.bind(this, info.item.link)}>
@@ -48,19 +57,30 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
             </TouchableOpacity>
         </Card>
     )
+    public renderNews() {
+        return (
+            <FlatList
+                data={this.state.news}
+                renderItem={this.renderList}
+                keyExtractor={this.keyExtractor}
+                style={this.styles.news}
+            />
+        )
+    }
+    public renderNoNews() {
+        return (
+            <View style={this.styles.news}>
+                <Text>
+                    No news was found, please check again later.
+                </Text>
+            </View>
+        )
+    }
     public render() {
-        this.styles = (this.props.darkMode) ? darkStyles : styles;
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <Container>
-                    <StyleProvider style={getTheme()} >
-                        <FlatList
-                            data={this.state.news}
-                            renderItem={this.renderList}
-                            keyExtractor={this.keyExtractor}
-                            style={this.styles.news}
-                        />
-                    </StyleProvider>
+                    {(this.state.noNews) ? this.renderNoNews() : this.renderNews()}
                 </Container>
             </StyleProvider>
         );
@@ -69,10 +89,18 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
         axios
             .get<INews[]>(`${Config.API_SERVER}/news/${this.props.coin.id}`)
             .then((response) => {
-                this.setState({
-                    news: response.data,
-                });
-            });
+                if (response.data.length > 0) {
+                    this.setState({
+                        news: response.data,
+                    });
+                } else {
+                    this.setState({
+                        noNews: true,
+                    });
+                }
+            })
+            .catch((data) => {
+            })
     }
     private handleLinkPress = (link: string) => {
         Linking.openURL(link);
@@ -106,7 +134,7 @@ const styles = StyleSheet.create({
 
     },
     news: {
-
+        flex: 1,
     }
 });
 
@@ -134,5 +162,6 @@ const darkStyles = StyleSheet.create({
     },
     news: {
         backgroundColor: "#2f343f",
+        flex: 1,
     },
 });

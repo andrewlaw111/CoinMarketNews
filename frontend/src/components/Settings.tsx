@@ -11,6 +11,8 @@ import { ISettings, ICoinPrice, IUser } from "../models";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
+import Config from "react-native-config";
+import axios from "axios";
 
 interface ISettingsProps {
     coins: ICoinPrice[];
@@ -30,7 +32,7 @@ class PureSettings extends React.Component<ISettingsProps>{
     public constructor(props: ISettingsProps) {
         super(props);
     }
-    
+
     public render() {
         this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
         return (
@@ -44,12 +46,15 @@ class PureSettings extends React.Component<ISettingsProps>{
                                     <Text style={this.styles.settingsText}>Preferred  Fiat Currency</Text>
                                 </View>
                                 <Picker
-                                    selectedValue={"BTC"}
-                                    style={{ height: 50, width: 100 }}
-                                // onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
+                                    selectedValue={this.props.appSettings.fiatCurrency}
+                                    style={this.styles.picker}
+                                    onValueChange={this.handleFiatCurrencyValueChange}
                                 >
-                                    <Picker.Item label="Java" value="java" />
-                                    <Picker.Item label="JavaScript" value="js" />
+                                    <Picker.Item label="USD" value="USD" />
+                                    <Picker.Item label="EUR" value="EUR" />
+                                    <Picker.Item label="CAD" value="CAD" />
+                                    <Picker.Item label="GBP" value="GBP" />
+                                    <Picker.Item label="HKD" value="HKD" />
                                 </Picker>
                             </CardItem>
                         </TouchableOpacity>
@@ -62,12 +67,12 @@ class PureSettings extends React.Component<ISettingsProps>{
                                     <Text style={this.styles.settingsText}>Preferred Crypto Currency</Text>
                                 </View>
                                 <Picker
-                                    selectedValue={"USD"}
-                                    style={{ height: 50, width: 100 }}
-                                // onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
+                                    selectedValue={this.props.appSettings.cryptoCurrency}
+                                    style={this.styles.picker}
+                                    onValueChange={this.handleCryptoCurrencyValueChange}
                                 >
-                                    <Picker.Item label="Java" value="java" />
-                                    <Picker.Item label="JavaScript" value="js" />
+                                    <Picker.Item label="BTC" value="BTC" />
+                                    <Picker.Item label="ETH" value="ETH" />
                                 </Picker>
                             </CardItem>
                         </TouchableOpacity>
@@ -80,7 +85,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                                     <Text style={this.styles.settingsText}>Push notifications</Text>
                                 </View>
                                 <View >
-                                    <Switch value={true} />
+                                    <Switch value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
                                 </View>
                             </CardItem>
                         </TouchableOpacity>
@@ -122,12 +127,41 @@ class PureSettings extends React.Component<ISettingsProps>{
             </StyleProvider>
         );
     }
+    private handleCryptoCurrencyValueChange = (itemValue: string, itemIndex: number) => {
+        const settings = { ...this.props.appSettings };
+        settings.cryptoCurrency = itemValue;
+        this.props.changeSettings(settings)
+    }
     private handleDarkModeValueChange = () => {
         const settings = { ...this.props.appSettings };
         settings.darkMode = !settings.darkMode;
         this.props.changeSettings(settings)
     }
-    private handlePress = () => console.error(this.props.appSettings.darkMode)
+    private handleFiatCurrencyValueChange = (itemValue: string, itemIndex: number) => {
+        const settings = { ...this.props.appSettings };
+        settings.fiatCurrency = itemValue;
+        this.props.changeSettings(settings)
+    }
+    private handleNotificationChange = (token: string) => {
+        const settings = { ...this.props.appSettings };
+        settings.pushNotifications = !settings.pushNotifications;
+        this.props.changeSettings(settings)
+
+        axios
+            .patch(
+                `${Config.API_SERVER}/user`,
+                {
+                    data: {
+                        notifications: settings.pushNotifications
+                    }
+                },
+                {
+                    headers: {
+                        token 
+                    }
+                }
+            )
+    }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -169,10 +203,14 @@ const styles = StyleSheet.create({
         marginRight: 20,
         left: -4,
     },
+    picker: {
+        height: 50,
+        width: 100
+    },
     Settings: {
     },
     settingsText: {
-        
+
     }
     // CardLeftText: {
     //     flex: 0.8,
@@ -207,6 +245,11 @@ const darkStyles = StyleSheet.create({
     CoinIcon: {
         marginRight: 20,
         left: -4,
+    },
+    picker: {
+        color: "#F8F8F8",
+        height: 50,
+        width: 100
     },
     Settings: {
         backgroundColor: "#2f343f",
