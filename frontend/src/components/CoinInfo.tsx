@@ -82,7 +82,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                 return (
                     <View key={index} style={this.styles.coinInfoStatsLine}>
                         <Text style={this.styles.coinInfoStatsText}>
-                            {stat.statType}:
+                            {stat.statType}
                         </Text>
                         {(stat.statType == 'Rank') ? <Text style={[this.styles.bold, this.styles.coinInfoStatsText]}>#{stat.stat}</Text> : <Text style={this.styles.coinInfoStatsText}>{stat.stat}</Text>}
                     </View>
@@ -151,7 +151,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         return (
             <ScrollView style={this.styles.infoBackground}>
                 <StyleProvider style={getTheme()} >
-                    <View >
+                    <View>
                         {(this.props.coin.about) ? this.renderAboutCoin() : null}
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
@@ -243,7 +243,7 @@ const darkStyles = StyleSheet.create({
         backgroundColor: "#454951",
     },
     linkIcon: {
-        color: "#454951",
+        color: "#2a6496",
     },
     link: {
         color: "#2a6496",
