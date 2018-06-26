@@ -84,7 +84,7 @@ export default class CoinService {
                 // console.log(price_array);
                 return knex.select('id', 'coinmarketcap_id', 'name', 'symbol', 'rank')
                     .from('coin')
-                    .orderBy("rank", "desc")
+                    .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
                         coins.map(function (coin: any) {
                             coin.price_fiat = price_array[coin.coinmarketcap_id][1];
