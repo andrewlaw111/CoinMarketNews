@@ -50,14 +50,15 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
         let heartColour: string;
         if (this.props.favourites.indexOf(info.item.id) > -1) {
-            heartColour = "red";
+            heartColour = "orange";
         } else {
             heartColour = "grey";
         }
 
         const percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(info.item);
-
+        const coinCurrency = (this.props.setting[1] === '1') ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a;</Text> : <Text style={this.styles.coinPrice}>$</Text>;
+        // BTC : &#xf15a; / ETH : &#xf42e;
         const priceColour = (parseFloat(percentageChange) > 0) ? "green" : (parseFloat(percentageChange) === 0) ? "grey" : "red";
         return (
             <View style={this.styles.listItem}>
@@ -65,7 +66,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                     <View style={this.styles.listCoin} >
 
                         <View style={this.styles.listCoinLeft}>
-                            <Text style={this.styles.coinText}>{info.item.rank}. </Text>
+                            <Text style={this.styles.coinText}>{info.item.rank}</Text>
                             <View style={{ backgroundColor: "#fff", borderRadius: 50, overflow: "hidden", }}>
                                 <Thumbnail
                                     style={this.styles.coinThumbnail}
@@ -78,9 +79,11 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                             <View style={this.styles.listCoinName}>
                                 <Text style={this.styles.coinName}>{info.item.name}</Text>
                                 <Text style={this.styles.coinSymbol}>{info.item.symbol}</Text>
-                                <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a; &#xf42e;</Text>
                             </View>
-                            <Text note={true} style={this.styles.coinPrice}>{coinPrice}</Text>
+                            <View style={this.styles.listCoinName}>
+                                <Text note={true} style={this.styles.coinPrice}>{coinPrice} </Text>
+                                {coinCurrency}
+                            </View>
                         </View>
 
                         <View style={this.styles.listCoinRight}>
@@ -92,8 +95,8 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                 onPress={this.handlePressHeart.bind(this, info.item.id, this.props.user.token)}
                             >
                                 <Icon
-                                    type="FontAwesome"
-                                    name="heart"
+                                    type="Ionicons"
+                                    name="ios-star"
                                     style={{ color: heartColour }}
                                 />
                             </TouchableOpacity>

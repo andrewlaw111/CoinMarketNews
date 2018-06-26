@@ -123,16 +123,16 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
             {
                 link: this.props.coin.official_website,
                 linkIcon: "link",
-                linkType: "Official Website",
+                linkType: "Website",
             },
         ];
         return links.map((link, index) => {
             if (link.link) {
                 return (
                     <CardItem key={index} style={this.styles.cardItem}>
-                        <Icon active={true} type="FontAwesome" name={link.linkIcon} style={this.styles.linkIcon}/>
+                        <Icon active={true} type="FontAwesome" name={link.linkIcon} style={this.styles.linkIcon} />
                         <Text>
-                            {link.linkType}:
+                            {link.linkType}
                         </Text>
                         <Right>
                             <Text onPress={this.handleLinkPress.bind(this, link.link.link)} style={this.styles.link}>
@@ -170,11 +170,15 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                             )}
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.official_website || this.props.coin.medium || this.props.coin.telegram || this.props.coin.twitter || this.props.coin.reddit) ? (
-                            < Card style={this.styles.Card}>
+                            <Card style={this.styles.Card}>
                                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
                                     <Text>Links</Text>
                                 </CardItem>
-                                {this.renderCoinLinks()}
+                                <CardItem style={this.styles.cardItem}>
+                                    <Body style={styles.coinInfoStats}>
+                                        {this.renderCoinLinks()}
+                                    </Body>
+                                </CardItem>
                             </Card>
                         ) : (
                                 null
@@ -194,8 +198,8 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
 }
 
 const styles = StyleSheet.create({
-    bold: {     
-        fontWeight: 'bold',   
+    bold: {
+        fontWeight: 'bold',
     },
     Card: {
 
@@ -226,8 +230,8 @@ const styles = StyleSheet.create({
 });
 
 const darkStyles = StyleSheet.create({
-    bold: {     
-        fontWeight: 'bold',   
+    bold: {
+        fontWeight: 'bold',
     },
     Card: {
         borderColor: "#41444c",
