@@ -22,17 +22,26 @@ const newsService = new NewsService();
 const priceService = new PriceService();
 const userService = new UserService();
 
-// import cron = require('cron');
-// const CoinPriceUpdate = require("./cron/coin-price-update");
-// // const CoinInfosUpdate = require("./cron/coin-infos-update");
-// const PriceUpdate = require("./cron/price-update");
-// const NewsUpdate = require("./cron/news-update");
+import cron = require('cron');
+const CoinPriceUpdate = require("./cron/coin-price-update");
+const CoinInfosUpdate = require("./cron/coin-infos-update");
+const PriceUpdate = require("./cron/price-update");
+const NewsUpdate = require("./cron/news-update");
 
-// var CronJob = cron.CronJob;
-// new CronJob('0 */5 * * * *', function () { new CoinPriceUpdate(); }, function () {}, true, 'America/Los_Angeles');
-// //new CronJob('0 */5 * * * *', function () { new CoinInfosUpdate(); }, function () {}, true, 'America/Los_Angeles');
-// new CronJob('40 */5 * * * *', function () { new PriceUpdate(); }, function () {}, true, 'America/Los_Angeles');
-// new NewsUpdate();   // detects new news automatically
+var CronJob = cron.CronJob;
+
+if (process.env.CRON_COIN_PRICE === "true") {
+    new CronJob('0 */5 * * * *', function () { new CoinPriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
+}
+if (process.env.CRON_COIN_INFOS === "true") {
+    new CronJob('0 */5 * * * *', function () { new CoinInfosUpdate(); }, function () { }, true, 'America/Los_Angeles');
+}
+if (process.env.CRON_PRICE === "true") {
+    new CronJob('0 */5 * * * *', function () { new PriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
+}
+if (process.env.CRON_NEWS === "true") {
+    new NewsUpdate();   // detects new news automatically
+}
 
 const chart = fs.readFileSync('./public/chart.html', "utf8");
 
@@ -50,7 +59,7 @@ app.use('/icon', function (req, res) {
     // TODO: check if coin exists?
     // TODO: move to front !!!
     const coinName = req.path.replace(/\//, '').replace(/\.png/, '').toUpperCase();
-    const icon = text2png(' \n'+coinName+' \n', { textColor: 'white', font: '70px Futura', padding: 60 });
+    const icon = text2png(' \n' + coinName + ' \n', { textColor: 'white', font: '70px Futura', padding: 60 });
     fs.writeFileSync('./public/cryptocurrency-icons/' + coinName + '.png', icon);
     // res.send(icon);
     res.sendFile(path.join(__dirname + '/../public/cryptocurrency-icons/' + coinName + '.png'));
