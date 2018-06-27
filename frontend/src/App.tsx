@@ -91,7 +91,6 @@ Promise.all([
       ],
       tabsStyle: {
         tabBarButtonColor: tabBarColours.tabBarButtonColor,
-        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
         navBarBackgroundColor: colours.backgroundColor,
         screenBackgroundColor: colours.screenBackgroundColor,

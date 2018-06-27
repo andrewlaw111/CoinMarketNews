@@ -106,7 +106,7 @@ export default NewsList;
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     cardItem: {

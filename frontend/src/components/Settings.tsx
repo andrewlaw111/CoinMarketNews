@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Card, CardItem, Content, Icon, Text, StyleProvider, Button } from "native-base";
-import { View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS } from "react-native";
+import { Image, View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS } from "react-native";
 
 
 import { connect } from "react-redux";
@@ -114,7 +114,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                         <TouchableOpacity>
                             <CardItem style={this.styles.CardItem}>
                                 <View style={this.styles.CardLeft}>
-                                    {/* <Image source={require("../coin.png")} style={this.styles.CoinIcon} /> */}
+                                    <Image source={require("../coin.png")} style={this.styles.CoinIcon} />
                                     <Text style={this.styles.settingsText}>Preferred Crypto Currency</Text>
                                 </View>
                                 {this.renderCryptoPicker()}
@@ -316,7 +316,7 @@ export default Settings;
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     Card: {
-        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
         margin: 10,
     },
