@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Body, Card, CardItem, Icon, Right, StyleProvider, Text } from "native-base";
+import { Body, Card, CardItem, Icon, Right, StyleProvider, Text, Container } from "native-base";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
 
 import getTheme from "../../native-base-theme/components"
@@ -42,7 +42,9 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
                     <Body>
-                        <Text style={this.styles.cardText} numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress}>{this.props.coin.about}</Text>
+                        <Text style={this.styles.cardText} numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress}>
+                            {this.props.coin.about}
+                        </Text>
                     </Body>
                 </CardItem>
             </Card>
@@ -152,8 +154,8 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
     public render() {
         return (
             <StyleProvider style={getTheme(commonColour)} >
-                <ScrollView >
-                    <View style={this.styles.infoBackground}>
+                <ScrollView style={this.styles.infoBackground} >
+                    <View style={{ paddingBottom: 20 }}>
                         {(this.props.coin.about) ? this.renderAboutCoin() : null}
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
@@ -195,7 +197,9 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
     }
     private handleAboutPress = () => {
         const newNumberOfLines = (this.state.numberOfLines === null) ? 8 : null;
-        this.setState({ numberOfLines: newNumberOfLines });
+        this.setState({
+            numberOfLines: newNumberOfLines
+        });
     }
 }
 
@@ -204,11 +208,11 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         fontWeight: 'bold',
     },
     Card: {
-        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     linkIcon: {
         color: (darkMode) ? "#2a6496" : "#000",
@@ -232,7 +236,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         color: (darkMode) ? "#F8F8F8" : "#000",
     },
     infoBackground: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         paddingBottom: 20,
     },
 });

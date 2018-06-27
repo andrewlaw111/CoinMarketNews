@@ -7,32 +7,59 @@ import { getNews } from "./redux/actions/news";
 import { getUser } from "./redux/actions/user";
 import { registerScreens } from "./screens";
 import { loadSettings } from "./redux/actions/settings";
-import { IUser } from "./models";
+import { IUser, ISettings } from "./models";
 
 registerScreens(); // this is where you register all of your app's screens
-
-// Navigation.startSingleScreenApp({
-//   animationType: "slide-down", // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
-//   screen: {
-//     screen: "CoinMarketNews.Splash", // unique ID registered with Navigation.registerScreen
-//     title: "Welcome", // title of the screen as appears in the nav bar (optional)
-//   },
-// });
 
 import OneSignal from "react-native-onesignal";
 OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed")
 
+let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string };
+
+let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, }
+function setColour(darkMode: boolean) {
+  if (darkMode) {
+    colours = {
+      backgroundColor: "#343a44",
+      navBarTextColor: "#FFF",
+      screenBackgroundColor: "#454951",
+    }
+    tabBarColours = {
+      tabBarButtonColor: "#fff",
+      tabBarSelectedButtonColor: "red",
+      tabBarBackgroundColor: "#343a44"
+    }
+  } else {
+    colours = {
+      backgroundColor: "#F8F8F8",
+      navBarTextColor: "#000",
+      screenBackgroundColor: "#F8F8F8",
+    }
+    tabBarColours = {
+      tabBarButtonColor: "#343a44",
+      tabBarSelectedButtonColor: "red",
+      tabBarBackgroundColor: "#F8F8F8"
+    }
+  }
+};
 // start the app
 Promise.all([
   getUser(OneSignal).then((data) => {
     getCoins();
     getNews();
-    loadSettings();
   }),
   loadFavourites(),
   // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
+  loadSettings()
+    .then((settings: ISettings) => {
+      if (settings) {
+        setColour(settings.darkMode)
+      } else {
+        setColour(false)
+      }
+    })
 ])
   .then((sources) => {
     // start the app
@@ -62,6 +89,24 @@ Promise.all([
           title: "Settings",
         },
       ],
+      tabsStyle: {
+        tabBarButtonColor: tabBarColours.tabBarButtonColor,
+        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
+        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+        navBarBackgroundColor: colours.backgroundColor,
+        navBarTextColor: colours.navBarTextColor,
+        statusBarColor: colours.backgroundColor
+      },
+      appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
+        tabBarButtonColor: tabBarColours.tabBarButtonColor,
+        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
+        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+        navBarBackgroundColor: colours.backgroundColor,
+        navBarTextColor: colours.navBarTextColor,
+        screenBackgroundColor: "translucent",
+        statusBarColor: colours.backgroundColor
+      },
+      animationType: "none"
     })
   }).catch((err) => {
     console.log("error", err);

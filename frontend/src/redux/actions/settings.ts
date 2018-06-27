@@ -42,7 +42,8 @@ export const loadSettings = async () => {
 
     const settings = await AsyncStorage.getItem("@CoinMarketNews:settingsStore");
     if (settings !== null) {
-        return store.dispatch(loadSettingsToStore(JSON.parse(settings)));
+        store.dispatch(loadSettingsToStore(JSON.parse(settings)));
+        return JSON.parse(settings);
     } else {
         return;
     }

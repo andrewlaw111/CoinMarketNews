@@ -29,7 +29,6 @@ export const getUser = async (OneSignal: any) => {
             return axios
                 .get<IUser>(
                     `${Config.API_SERVER}/user`,
-                    // `http://10.0.0.22:8000/user`,
                     {
                         headers: {
                             token,
@@ -50,7 +49,7 @@ export const getUser = async (OneSignal: any) => {
                     // `http://10.0.0.22:8000/user`,
                     `${Config.API_SERVER}/user`,
             ).then((result) => {
-                // store.dispatch(loginSuccess(result.data));
+                store.dispatch(loginSuccess(result.data));
                 OneSignal.sendTag("user_id", result.data.id)
             }).catch((err) => {
                 console.log(err)

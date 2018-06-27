@@ -26,7 +26,6 @@ class PureNewsList extends React.Component<INewsListProps> {
     public static navigatorStyle = {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
-        statusBarColor: "blue",
     };
     public renderNewsList = (info: { item: INews, index: number }) => (
         <View>
