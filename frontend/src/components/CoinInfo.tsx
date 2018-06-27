@@ -20,7 +20,7 @@ interface ICoinsPageStates {
 export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPageStates> {
     public styles: typeof styles;
 
-    public constructor(props: ICoinsPageProps) {
+    constructor(props: ICoinsPageProps) {
         super(props);
         this.state = {
             numberOfLines: 8,
