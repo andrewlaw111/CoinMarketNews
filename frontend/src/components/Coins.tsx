@@ -11,7 +11,7 @@ import CoinOptions from "./CoinsOptions";
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { IRootState } from "../redux/store";
 
-import { coinsStyles, darkCoinsStyles } from "./styles/CoinsStyles"
+import { styles } from "./styles/CoinsStyles";
 import getSettingID from "./functions/CoinsSettings";
 
 import getTheme from '../../native-base-theme/components';
@@ -35,9 +35,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
     public static navigatorStyle = {
         navBarHidden: true,
         statusBarBlur: true,
-        statusBarColor: "blue",
     };
-    public styles: typeof coinsStyles;
 
     public constructor(props: ICoinsListProps) {
         super(props);
@@ -46,11 +44,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             setting: "000",
         };
     }
-    public componentWillMount() {
-        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
-    }
     public componentWillReceiveProps(nextProps: ICoinsListProps) {
-        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
 
         this.setState({
             coins: nextProps.coins
@@ -58,24 +52,46 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
     }
 
     public render() {
-        let iOSStyle = {};
+        let tabBarColour = {};
+        let backgroundColour: string;
+        let textColour: string;
+        if (this.props.appSettings.darkMode) {
+            backgroundColour = "#343a44";
+            textColour = "#F8F8F8"
+        } else {
+            backgroundColour = "#F8F8F8";
+            textColour = "#000"
+        }
+
         if (Platform.OS === "ios") {
             if (isIphoneX()) {
-                iOSStyle = { paddingTop: 38, backgroundColor: "#F8F8F8" };
+                tabBarColour = { paddingTop: 38, backgroundColor: backgroundColour };
             } else {
-                iOSStyle = { paddingTop: 14, backgroundColor: "#F8F8F8" };
+                tabBarColour = { paddingTop: 14, backgroundColor: backgroundColour };
             }
         }
 
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <Container style={this.styles.coinListComponent}>
-                    <Tabs style={iOSStyle} initialPage={0}>
-                        <Tab heading="Favourites">
+                <Container style={styles(this.props.appSettings.darkMode).coinListComponent}>
+                    <Tabs style={tabBarColour} initialPage={0}>
+                        <Tab
+                            heading="Favourites"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}
+                        >
                             <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
                             <CoinList coins={this.state.coins} favouriteTab={true} handlePress={this.handlePress} setting={this.state.setting} user={this.props.user} />
                         </Tab>
-                        <Tab heading="Market">
+                        <Tab
+                            heading="Market"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour, }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}
+                        >
                             <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
                             <CoinList coins={this.state.coins} favouriteTab={false} handlePress={this.handlePress} setting={this.state.setting} user={this.props.user} />
                         </Tab>

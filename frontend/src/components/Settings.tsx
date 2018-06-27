@@ -11,12 +11,16 @@ import { ISettings, ICoinPrice, IUser } from "../models";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
+
 import Config from "react-native-config";
 import axios from "axios";
+import { Navigator, Navigation } from "react-native-navigation";
 
 interface ISettingsProps {
     coins: ICoinPrice[];
     appSettings: ISettings;
+    navigator: Navigator;
     user: IUser;
     changeSettings: (settings: ISettings) => void;
 }
@@ -25,13 +29,10 @@ class PureSettings extends React.Component<ISettingsProps>{
     public static navigatorStyle = {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
-        statusBarColor: "blue",
     };
+
     public styles: typeof styles;
 
-    public constructor(props: ISettingsProps) {
-        super(props);
-    }
     public renderCryptoPicker() {
         const options = ["BTC", "ETH"]
         const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
@@ -178,7 +179,87 @@ class PureSettings extends React.Component<ISettingsProps>{
     private handleDarkModeValueChange = () => {
         const settings = { ...this.props.appSettings };
         settings.darkMode = !settings.darkMode;
-        this.props.changeSettings(settings)
+
+        let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, }
+        let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string };
+        if (settings.darkMode) {
+            colours = {
+                backgroundColor: "#343a44",
+                navBarTextColor: "#FFF",
+                screenBackgroundColor: "#454951",
+            }
+            tabBarColours = {
+                tabBarButtonColor: "#FFF",
+                tabBarSelectedButtonColor: "red",
+                tabBarBackgroundColor: "#343a44"
+            }
+        } else {
+            colours = {
+                backgroundColor: "#F8F8F8",
+                navBarTextColor: "#000",
+                screenBackgroundColor: "#F8F8F8",
+            }
+            tabBarColours = {
+                tabBarButtonColor: "#343a44",
+                tabBarSelectedButtonColor: "red",
+                tabBarBackgroundColor: "#F8F8F8"
+            }
+        }
+        Promise.all([
+            // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
+            FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
+            FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
+        ])
+            .then((sources) => {
+                // start the app
+                Navigation.startTabBasedApp({
+                    tabs: [
+                        {
+                            icon: require("../coin.png"),
+                            label: "Coins",
+                            screen: "CoinMarketNews.Coins", // this is a registered name for a screen
+                            selectedIcon: require("../coin.png"), // iOS only
+                        },
+                        {
+                            icon: sources[0],
+                            label: "News",
+                            screen: "CoinMarketNews.News",
+                            selectedIcon: sources[0], // iOS only
+                            title: "Coin Market News",
+                        },
+                        {
+                            icon: sources[1],
+                            label: "Settings",
+                            screen: "CoinMarketNews.Settings",
+                            selectedIcon: sources[1], // iOS only
+                            title: "Settings",
+                        },
+                    ],
+                    tabsStyle: {
+                        tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
+                        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                        initialTabIndex: 2,
+                        navBarBackgroundColor: colours.backgroundColor,
+                        navBarTextColor: colours.navBarTextColor,
+                        screenBackgroundColor: colours.screenBackgroundColor,
+                    },
+                    appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
+                        tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
+                        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                        initialTabIndex: 2,
+                        navBarBackgroundColor: colours.backgroundColor,
+                        navBarTextColor: colours.navBarTextColor,
+                        screenBackgroundColor: colours.screenBackgroundColor,
+                        statusBarColor: colours.backgroundColor
+                    },
+                    animationType: "fade"
+                })
+                this.props.changeSettings(settings)
+            }).catch((err) => {
+                console.log("error", err);
+            });
     }
     private handleFiatCurrencyValueChange = (itemValue: string, itemIndex: number) => {
         const settings = { ...this.props.appSettings };

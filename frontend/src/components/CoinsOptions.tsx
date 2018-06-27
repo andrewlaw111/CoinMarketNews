@@ -75,32 +75,31 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
 
         const buttonTemplate = (button: IOptionsButton, index: number) => (
             <Button
-                style={styles.smallpadding}
+                style={styles(this.props.appSettings.darkMode, button.active).buttons}
                 first={button.first}
                 last={button.last}
-                active={button.active}
                 onPress={this.handlePress.bind(this, button.handler)}
                 key={index}
             >
-                <Text style={styles.nopadding}>
+                <Text style={styles(this.props.appSettings.darkMode, button.active).buttonText}>
                     {button.text}
                 </Text>
             </Button>
         );
         return (
-            <Grid style={styles.coinListFilters} >
+            <Grid style={{ flex: 0 }} >
                 <Col style={{ flex: 0.4 }}>
-                    <Segment>
+                    <Segment style={styles(this.props.appSettings.darkMode).coinListFilters}>
                         {leftButtons.map((button, index) => buttonTemplate(button, index))}
                     </Segment>
                 </Col>
                 <Col style={{ flex: 0.25 }}>
-                    <Segment>
+                    <Segment style={styles(this.props.appSettings.darkMode).coinListFilters}>
                         {middleButtons.map((button, index) => buttonTemplate(button, index))}
                     </Segment>
                 </Col>
                 <Col style={{ flex: 0.35 }}>
-                    <Segment>
+                    <Segment style={styles(this.props.appSettings.darkMode).coinListFilters}>
                         {rightButtons.map((button, index) => buttonTemplate(button, index))}
                     </Segment>
                 </Col>
@@ -111,16 +110,20 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
         this.props.handleOptionsPress(options);
     }
 }
-const styles = StyleSheet.create({
+
+const styles = (darkMode: boolean, active?: boolean) => StyleSheet.create({
     coinListFilters: {
-        backgroundColor: "#000",
-        flex: 0,
+        backgroundColor: (darkMode) ? "#343a44" : "#F8F8F8",
     },
-    nopadding: {
+    buttonText: {
+        color: (darkMode) ? "#F8F8F8"  : (active) ? "#F8F8F8" : "#6b6b6b",
         paddingLeft: 0,
         paddingRight: 0,
     },
-    smallpadding: {
+    buttons: {
+        backgroundColor: (darkMode) ? (active) ? "#3f78ba" : "#343a44" : (active) ? "#3f78ba" : "#F8F8F8",
+        borderColor: (darkMode) ? "#343a44" : "#F8F8F8",
+        borderRadius: 5,
         paddingLeft: 5,
         paddingRight: 5,
     },

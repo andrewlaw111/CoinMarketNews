@@ -41,31 +41,37 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
         this.styles = (this.props.darkMode) ? darkStyles : styles;
     }
 
-    public renderList = (info: { item: INews, index: number }) => (
-        <Card style={this.styles.card}>
-            <TouchableOpacity onPress={this.handleLinkPress.bind(this, info.item.link)}>
-                <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                    <Text style={this.styles.cardText}>{info.item.title}</Text>
-                </CardItem>
-                <CardItem button={true} style={this.styles.cardItem}>
-                    <Body>
-                        <Text style={this.styles.cardText} numberOfLines={3}>{info.item.content}</Text>
-                    </Body>
-                </CardItem>
-                <CardItem footer={true} style={this.styles.cardItem}>
-                    {/* <Text style={this.styles.cardText}>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text> */}
-                    <Moment element={Text} fromNow={true}>{info.item.created_at}</Moment>
-                </CardItem>
-            </TouchableOpacity>
-        </Card>
-    )
+    public renderList = (info: { item: INews, index: number }) => {
+        let coinStyle = this.styles.card;
+        if (info.index === this.state.news.length - 1) {
+            coinStyle = this.styles.lastCard;
+        }
+        return (
+            <Card style={coinStyle}>
+                <TouchableOpacity onPress={this.handleLinkPress.bind(this, info.item.link)}>
+                    <CardItem header={true} bordered={true} style={this.styles.cardItem}>
+                        <Text style={this.styles.cardText}>{info.item.title}</Text>
+                    </CardItem>
+                    <CardItem button={true} style={this.styles.cardItem}>
+                        <Body>
+                            <Text style={this.styles.cardText} numberOfLines={3}>{info.item.content}</Text>
+                        </Body>
+                    </CardItem>
+                    <CardItem footer={true} style={this.styles.cardItem}>
+                        {/* <Text style={this.styles.cardText}>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text> */}
+                        <Moment element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                    </CardItem>
+                </TouchableOpacity>
+            </Card>
+        )
+    }
     public renderNews() {
         return (
             <FlatList
                 data={this.state.news}
                 renderItem={this.renderList}
                 keyExtractor={this.keyExtractor}
-                style={this.styles.news}
+                style={this.styles.newsList}
             />
         )
     }
@@ -81,7 +87,7 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
     public render() {
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <Container>
+                <Container style={this.styles.news}>
                     {(this.state.noNews) ? this.renderNoNews() : this.renderNews()}
                 </Container>
             </StyleProvider>
@@ -110,20 +116,13 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
     private keyExtractor = (item: INews) => item.id.toString();
 }
 
-const mapStateToProps = (state: IRootState) => {
-    return {
-        coins: state.coins.coins,
-        user: state.user.user,
-    };
-};
-
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     cardText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
@@ -139,11 +138,18 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     coinInfoStatsText: {
         flex: 1,
     },
-    news: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
-        flex: 1,
-        paddingBottom: 20,
+    lastCard: {
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+        marginBottom: 20,
     },
+    news: {
+        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
+        flex: 1,
+    },
+    newsList: {
+        paddingBottom: 20,
+    }
 });
 
 const styles = styleTemplate(false);

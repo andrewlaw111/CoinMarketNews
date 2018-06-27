@@ -1,12 +1,12 @@
 import { StyleSheet } from "react-native";
 
-let template = (darkMode: boolean) => StyleSheet.create({
+export const styles = (darkMode: boolean) => StyleSheet.create({
     coinList: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
         flex: 1,
     },
     coinListComponent: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
         flex: 1,
     },
     coinName: {
@@ -33,6 +33,7 @@ let template = (darkMode: boolean) => StyleSheet.create({
         margin: 0,
     },
     listCoin: {
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
         flex: 1,
         flexDirection: "row",
     },
@@ -63,7 +64,7 @@ let template = (darkMode: boolean) => StyleSheet.create({
     },
     listItem: {
         borderColor: (darkMode) ? "#5d626d" : "#d6d7da",
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
         borderWidth: 0.5,
     },
     listStyle: {
@@ -74,6 +75,6 @@ let template = (darkMode: boolean) => StyleSheet.create({
     }
 });
 
-export const coinsStyles = template(false);
+// export const coinsStyles = template(false);
 
-export const darkCoinsStyles = template(true);
+// export const darkCoinsStyles = template(true);

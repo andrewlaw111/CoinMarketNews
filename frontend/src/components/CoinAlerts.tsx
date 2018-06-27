@@ -81,14 +81,14 @@ export default CoinAlerts;
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : null,
-        backgroundColor: (darkMode) ? "#454951" : null,
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : null,
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     cardText: {
-        color: (darkMode) ? "#F8F8F8" : null
+        color: (darkMode) ? "#F8F8F8" : "#000"
     },
     coinInfoStats: {
         flex: 1,
@@ -102,15 +102,10 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         flex: 1,
     },
     alertsPage: {
-        backgroundColor: (darkMode) ? "#2f343f" : null,
+        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         flex: 1,
         paddingBottom: 20,
     },
-    webView: {
-        borderColor: (darkMode) ? "#41444c" : null,
-        backgroundColor: (darkMode) ? "#2f343f" : null,
-        height: 300
-    }
 });
 
 

@@ -56,7 +56,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                                 style={this.styles.webView}
                             />
                         </Card>
-                        <Card style={this.styles.card}>
+                        <Card style={this.styles.cardMarketData}>
                             <CardItem style={this.styles.cardItem} header={true}>
                                 <Text>Market Data</Text>
                             </CardItem>
@@ -96,11 +96,16 @@ export default CoinPrice;
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+    },
+    cardMarketData: {
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+        marginBottom: 20,
     },
     cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     cardText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
@@ -117,13 +122,12 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         flex: 1,
     },
     price: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         flex: 1,
-        paddingBottom: 20,
     },
     webView: {
-        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
-        backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         height: 300,
     },
 })

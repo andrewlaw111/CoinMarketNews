@@ -10,12 +10,11 @@ import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
-import { coinsStyles, darkCoinsStyles } from "./styles/CoinsStyles"
+import { styles } from "./styles/CoinsStyles";
 import displayCoinOptions from "./functions/CoinsRenderSettings";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
-
 
 interface ICoinListProps {
     coins: ICoinPrice[];
@@ -35,13 +34,6 @@ export interface ICoinListState {
 }
 
 class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
-    public darkMode: boolean;
-    public styles: typeof coinsStyles;
-
-    public componentWillMount() {
-        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
-    }
-
     public constructor(props: ICoinListProps) {
         super(props);
         this.state = {
@@ -62,36 +54,36 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         const percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(info.item);
         
-        const coinCurrency = (this.props.setting[1] === '1') ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a;</Text> : <Text style={this.styles.coinPrice}>$</Text>;
+        const coinCurrency = (this.props.setting[1] === '1') ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a;</Text> : <Text style={styles(this.props.appSettings.darkMode).coinPrice}>$</Text>;
         // BTC : &#xf15a; / ETH : &#xf42e;
         const priceColour = (parseFloat(percentageChange) > 0) ? "green" : (parseFloat(percentageChange) === 0) ? "grey" : "red";
         return (
-            <View style={this.styles.listItem}>
+            <View style={styles(this.props.appSettings.darkMode).listItem}>
                 <TouchableOpacity onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
-                    <View style={this.styles.listCoin} >
+                    <View style={styles(this.props.appSettings.darkMode).listCoin} >
 
-                        <View style={this.styles.listCoinLeft}>
-                            <Text style={this.styles.coinText}>{info.item.rank}</Text>
+                        <View style={styles(this.props.appSettings.darkMode).listCoinLeft}>
+                            <Text style={styles(this.props.appSettings.darkMode).coinText}>{info.item.rank}</Text>
                             <View style={{ backgroundColor: "#fff", borderRadius: 50, overflow: "hidden", }}>
                                 <Thumbnail
-                                    style={this.styles.coinThumbnail}
+                                    style={styles(this.props.appSettings.darkMode).coinThumbnail}
                                     source={{ uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }}
                                 />
                             </View>
                         </View>
 
-                        <View style={this.styles.listCoinBody}>
-                            <View style={this.styles.listCoinName}>
-                                <Text style={this.styles.coinName}>{info.item.name}</Text>
-                                <Text style={this.styles.coinSymbol}>{info.item.symbol}</Text>
+                        <View style={styles(this.props.appSettings.darkMode).listCoinBody}>
+                            <View style={styles(this.props.appSettings.darkMode).listCoinName}>
+                                <Text style={styles(this.props.appSettings.darkMode).coinName}>{info.item.name}</Text>
+                                <Text style={styles(this.props.appSettings.darkMode).coinSymbol}>{info.item.symbol}</Text>
                             </View>
-                            <View style={this.styles.listCoinName}>
+                            <View style={styles(this.props.appSettings.darkMode).listCoinName}>
                                 {coinCurrency}
-                                <Text note={true} style={this.styles.coinPrice}>{coinPrice} </Text>
+                                <Text note={true} style={styles(this.props.appSettings.darkMode).coinPrice}>{coinPrice} </Text>
                             </View>
                         </View>
 
-                        <View style={this.styles.listCoinRight}>
+                        <View style={styles(this.props.appSettings.darkMode).listCoinRight}>
                             <View style={{ alignItems: "flex-end" }}>
                                 <Text note={true} style={{ color: priceColour, fontSize: 18 }}>{percentageChange}%</Text>
                             </View>
@@ -117,7 +109,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
 
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <View style={this.styles.coinListComponent}>
+                <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                     {/* tslint:disable-next-line:jsx-no-multiline-js */}
                     {(this.props.coins.length > 0) ? (
                         /* tslint:disable-next-line:jsx-no-multiline-js */
@@ -128,12 +120,12 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     extraData={this.props.favourites}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
-                                    style={this.styles.coinList}
+                                    style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
                                 />
                             ) : (
-                                    <View style={this.styles.coinListComponent}>
-                                        <Text style={this.styles.NoFavourites}>
+                                    <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
+                                        <Text style={styles(this.props.appSettings.darkMode).NoFavourites}>
                                             You have no favourite coins! Click on the ❤️ to add some favourites!
                                             </Text>
                                     </View>
@@ -145,12 +137,12 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     initialNumToRender={15}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
-                                    style={this.styles.coinList}
+                                    style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
                                 />
                             )
                     ) : (
-                            <View style={this.styles.coinListComponent}>
+                            <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                                 <Spinner />
                             </View>
                         )
