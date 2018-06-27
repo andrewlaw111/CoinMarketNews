@@ -16,17 +16,11 @@ interface ICoin {
     proof: string;
     mineable: string;
     premined: string;
-    official_website: string;
+    website: string;
     medium: string;
     reddit: string;
     twitter: string;
     telegram: string;
-}
-
-interface ISource {
-    id: number;
-    name: string;
-    link: string;
 }
 
 export default class CoinService {
@@ -75,27 +69,11 @@ export default class CoinService {
     }
     private updateCoinList() {
         this.lastUpdated = Date.now();
-        return knex('source')
-            .where('name', '!=', '')
-            .orderBy('id', 'asc')
-            .then((sources: ISource[]) => {
-                const source_array: any = [];
-                sources.map(function (source: ISource) {
-                    source_array[source.id] = source;
-                })
-                return knex.select('*')
-                    .from('coin')
-                    .orderBy("rank", "asc")
-                    .then((coins: ICoin[]) => {
-                        coins.map(function (coin: ICoin) {
-                            coin.official_website = source_array[coin.official_website];
-                            coin.medium = source_array[coin.medium];
-                            coin.reddit = source_array[coin.reddit];
-                            coin.twitter = source_array[coin.twitter];
-                            coin.telegram = source_array[coin.telegram];
-                        })
-                        return this.coinList = coins;
-                    });
+        return knex.select('*')
+            .from('coin')
+            .orderBy("rank", "asc")
+            .then((coins: ICoin[]) => {
+                return this.coinList = coins;
             });
     }
 }
