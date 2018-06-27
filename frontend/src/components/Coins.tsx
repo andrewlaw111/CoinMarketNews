@@ -16,6 +16,7 @@ import getSettingID from "./functions/CoinsSettings";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
+import IonIcons from "react-native-vector-icons/Ionicons";
 import CoinList from "./CoinList";
 import sortCoins from "./functions/CoinsSort";
 
@@ -102,27 +103,31 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
     }
 
     private handlePress = (info: { item: ICoinPrice, index: number }) => {
-        this.props.navigator.push({
-            animated: true,
-            animationType: "fade",
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorButtons: {
-                rightButtons: [{
-                    buttonColor: "blue",
-                    buttonFontSize: 14,
-                    buttonFontWeight: "600",
-                    id: "edit",
-                    showAsAction: "ifRoom",
-                    testID: "e2e_rules", // optional, used to locate this view in end-to-end tests
-                    title: "Edit", // for a textual button, provide the button title (label)
-                }],
-            },
-            navigatorStyle: {},
-            passProps: { appSettings: this.props.appSettings, coinID: info.item.id, coinPrice: info.item },
-            screen: "CoinMarketNews.CoinsPage",
-            title: info.item.name,
-            titleImage: `http://${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
-        });
+        Promise.all([
+            // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
+            IonIcons.getImageSource("ios-star", 24, "grey"),
+        ]).then((sources) => {
+            this.props.navigator.push({
+                animated: true,
+                animationType: "fade",
+                backButtonHidden: false, // hide the back button altogether (optional)
+                navigatorButtons: {
+                    rightButtons: [{
+                        buttonColor: "blue",
+                        buttonFontSize: 14,
+                        buttonFontWeight: "600",
+                        id: "like",
+                        showAsAction: "ifRoom",
+                        icon: sources[0], // for icon button, provide the local 
+                    }],
+                },
+                navigatorStyle: {},
+                passProps: { appSettings: this.props.appSettings, coinID: info.item.id, coinPrice: info.item },
+                screen: "CoinMarketNews.CoinsPage",
+                title: info.item.name,
+                titleImage: `http://${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
+            });
+        })
     }
     private handleOptionsPress = (options: string) => {
         const setting: string = getSettingID(options, this.state.setting);

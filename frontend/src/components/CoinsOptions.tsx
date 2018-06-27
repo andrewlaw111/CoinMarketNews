@@ -138,8 +138,8 @@ const styles = (darkMode: boolean, active?: boolean) => StyleSheet.create({
     },
     buttons: {
         backgroundColor: (darkMode) ? (active) ? "#3f78ba" : "#343a44" : (active) ? "#3f78ba" : "#F8F8F8",
-        // borderColor: (darkMode) ? "#343a44" : "#F8F8F8",
-        // borderRadius: 5,
+        borderColor: (darkMode) ? "#343a44" : "#F8F8F8",
+        borderRadius: 5,
         paddingLeft: 5,
         paddingRight: 5,
     },
