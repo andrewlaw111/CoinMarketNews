@@ -53,7 +53,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
     }
 
     public render() {
-        let tabBarColour = {};
+        let iosTabs = {};
         let backgroundColour: string;
         let textColour: string;
         if (this.props.appSettings.darkMode) {
@@ -66,16 +66,16 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
 
         if (Platform.OS === "ios") {
             if (isIphoneX()) {
-                tabBarColour = { paddingTop: 38, backgroundColor: backgroundColour };
+                iosTabs = { paddingTop: 38, backgroundColor: backgroundColour };
             } else {
-                tabBarColour = { paddingTop: 14, backgroundColor: backgroundColour };
+                iosTabs = { paddingTop: 14, backgroundColor: backgroundColour };
             }
         }
 
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <Container style={styles(this.props.appSettings.darkMode).coinListComponent}>
-                    <Tabs style={tabBarColour} initialPage={0}>
+                    <Tabs style={iosTabs} initialPage={0}>
                         <Tab
                             heading="Favourites"
                             activeTabStyle={{ backgroundColor: backgroundColour }}

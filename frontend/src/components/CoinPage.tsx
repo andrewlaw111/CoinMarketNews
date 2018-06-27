@@ -61,20 +61,50 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
         );
     }
     public render() {
+        let backgroundColour: string;
+        let textColour: string;
+        if (this.props.appSettings.darkMode) {
+            backgroundColour = "#343a44";
+            textColour = "#F8F8F8"
+        } else {
+            backgroundColour = "#F8F8F8";
+            textColour = "#000"
+        }
+
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <Container style={this.styles.pageBackground}>
                     <Tabs springTension={2} initialPage={0} >
-                        <Tab heading="Info">
+                        <Tab
+                            heading="Info"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}>
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinInfo coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
                         </Tab>
-                        <Tab heading="News">
+                        <Tab
+                            heading="News"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}>
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinNews coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
                         </Tab>
-                        <Tab heading="Price">
+                        <Tab
+                            heading="Price"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}>
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinPrice coin={this.state.coin} coinPrice={this.props.coinPrice} darkMode={this.props.appSettings.darkMode} priceWidget={this.state.priceWidget} />}
                         </Tab>
-                        <Tab heading="Alerts">
+                        <Tab
+                            heading="Alerts"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}>
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinAlerts coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
                         </Tab>
                     </Tabs>
