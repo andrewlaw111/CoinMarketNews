@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Card, CardItem, Content, Icon, Text, StyleProvider, Button } from "native-base";
-import { Image, View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS } from "react-native";
 
 
 import { connect } from "react-redux";
@@ -129,7 +129,13 @@ class PureSettings extends React.Component<ISettingsProps>{
                                     <Text style={this.styles.settingsText}>Push notifications</Text>
                                 </View>
                                 <View >
-                                    <Switch value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
+                                    {/* tslint:disable-next-line:jsx-no-multiline-js*/}
+                                    {(Platform.OS === "ios") ?
+                                        (
+                                            <Switch value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
+                                        ) : (
+                                            <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
+                                        )}
                                 </View>
                             </CardItem>
                         </TouchableOpacity>
@@ -142,7 +148,13 @@ class PureSettings extends React.Component<ISettingsProps>{
                                     <Text style={this.styles.settingsText}>Dark Mode</Text>
                                 </View>
                                 <View >
-                                    <Switch value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
+                                    {/* tslint:disable-next-line:jsx-no-multiline-js*/}
+                                    {(Platform.OS === "ios") ?
+                                        (
+                                            <Switch value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
+                                        ) : (
+                                            <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
+                                        )}
                                 </View>
                             </CardItem>
                         </TouchableOpacity>
