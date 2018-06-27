@@ -69,7 +69,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                             data={this.props.news}
                             renderItem={this.renderNewsList}
                             keyExtractor={this.keyExtractor}
-                            style={this.styles.news}
+                            style={this.styles.newsList}
                         />
                     </View>
                 </StyleProvider>
@@ -107,23 +107,24 @@ export default NewsList;
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : null,
-        backgroundColor: (darkMode) ? "#454951" : null,
+        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : null,
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     headingText: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
         textDecorationLine: "underline",
     },
     news: {
-        backgroundColor: (darkMode) ? "#2f343f" : null,
+        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
     },
     newsList: {
+        // paddingBottom: 20,
     },
     newsText: {
-        color: (darkMode) ? "#F8F8F8" : null
+        color: (darkMode) ? "#F8F8F8" : "#000"
     },
 });
 

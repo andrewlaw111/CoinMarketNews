@@ -2,29 +2,29 @@ import { StyleSheet } from "react-native";
 
 let template = (darkMode: boolean) => StyleSheet.create({
     coinList: {
-        backgroundColor: (darkMode) ? "#2f343f" : null,
-        flex: 0,
+        backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
+        flex: 1,
     },
     coinListComponent: {
-        backgroundColor: (darkMode) ? "#454951" : null,
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
         flex: 1,
     },
     coinName: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
         fontSize: 18,
         fontWeight: "bold",
         marginRight: 10,
     },
     coinPrice: {
-        color: "#C2C2C2",
+        color: (darkMode) ? "#C2C2C2" : "#666",
         fontWeight: "bold",
         fontSize: 16,
     },
     coinSymbol: {
-        color: "#D8D8D8"
+        color: (darkMode) ? "#D8D8D8" : "#666",
     },
     coinText: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
         textAlign: "center",
         width: 37,
     },
@@ -51,7 +51,6 @@ let template = (darkMode: boolean) => StyleSheet.create({
     },
     listCoinName: {
         flexDirection: "row",
-        // justifyContent: "space-between",
     },
     listCoinRight: {
         alignItems: "center",
@@ -59,14 +58,12 @@ let template = (darkMode: boolean) => StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-end",
         paddingRight: 10,
-        // right: -,
     },
     listCoinRightText: {
-        // textAlign: "right",
     },
     listItem: {
         borderColor: (darkMode) ? "#5d626d" : "#d6d7da",
-        backgroundColor: (darkMode) ? "#454951" : null,
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
         borderWidth: 0.5,
     },
     listStyle: {

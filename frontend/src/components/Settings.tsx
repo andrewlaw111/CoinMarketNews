@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Card, CardItem, Content, Icon, Text, StyleProvider, Button } from "native-base";
-import { Image, View, StyleSheet, TouchableOpacity, Switch, Picker } from "react-native";
+import { Image, View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS } from "react-native";
 
 
 import { connect } from "react-redux";
@@ -32,6 +32,50 @@ class PureSettings extends React.Component<ISettingsProps>{
     public constructor(props: ISettingsProps) {
         super(props);
     }
+    public renderCryptoPicker() {
+        const options = ["BTC", "ETH"]
+        if (Platform.OS === "ios") {
+            ActionSheetIOS.showActionSheetWithOptions({
+                options: options,
+            },
+                (buttonIndex) => {
+                    this.handleCryptoCurrencyValueChange(options[buttonIndex], buttonIndex);
+                });
+        }
+        else {
+            return (
+                <Picker
+                    selectedValue={this.props.appSettings.cryptoCurrency}
+                    style={this.styles.picker}
+                    onValueChange={this.handleCryptoCurrencyValueChange}
+                >
+                    {options.map((option: string, index: number) => <Picker.Item key={index} label={option} value={option} />)}
+                </Picker>
+            )
+        }
+    }
+    public renderFiatPicker() {
+        const options = ["USD", "EUR", "CAD", "GBP", "HKD"]
+        if (Platform.OS === "ios") {
+            ActionSheetIOS.showActionSheetWithOptions({
+                options: options,
+            },
+                (buttonIndex) => {
+                    this.handleFiatCurrencyValueChange(options[buttonIndex], buttonIndex);
+                });
+        }
+        else {
+            return (
+                <Picker
+                    selectedValue={this.props.appSettings.fiatCurrency}
+                    style={this.styles.picker}
+                    onValueChange={this.handleFiatCurrencyValueChange}
+                >
+                    {options.map((option: string, index: number) => <Picker.Item key={index} label={option} value={option} />)}
+                </Picker>
+            )
+        }
+    }
 
     public render() {
         this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
@@ -45,17 +89,8 @@ class PureSettings extends React.Component<ISettingsProps>{
                                     <Icon type="FontAwesome" name="dollar" style={this.styles.CardLeftIcon} />
                                     <Text style={this.styles.settingsText}>Preferred  Fiat Currency</Text>
                                 </View>
-                                <Picker
-                                    selectedValue={this.props.appSettings.fiatCurrency}
-                                    style={this.styles.picker}
-                                    onValueChange={this.handleFiatCurrencyValueChange}
-                                >
-                                    <Picker.Item label="USD" value="USD" />
-                                    <Picker.Item label="EUR" value="EUR" />
-                                    <Picker.Item label="CAD" value="CAD" />
-                                    <Picker.Item label="GBP" value="GBP" />
-                                    <Picker.Item label="HKD" value="HKD" />
-                                </Picker>
+                                {this.renderFiatPicker()}
+
                             </CardItem>
                         </TouchableOpacity>
                     </Card>
@@ -66,14 +101,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                                     {/* <Image source={require("../coin.png")} style={this.styles.CoinIcon} /> */}
                                     <Text style={this.styles.settingsText}>Preferred Crypto Currency</Text>
                                 </View>
-                                <Picker
-                                    selectedValue={this.props.appSettings.cryptoCurrency}
-                                    style={this.styles.picker}
-                                    onValueChange={this.handleCryptoCurrencyValueChange}
-                                >
-                                    <Picker.Item label="BTC" value="BTC" />
-                                    <Picker.Item label="ETH" value="ETH" />
-                                </Picker>
+                                {this.renderCryptoPicker()}
                             </CardItem>
                         </TouchableOpacity>
                     </Card>
@@ -182,12 +210,12 @@ export default Settings;
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     Card: {
-        borderColor: (darkMode) ? "#41444c" : null,
-        backgroundColor: (darkMode) ? "#454951" : null,
+        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
         margin: 10,
     },
     CardItem: {
-        backgroundColor: (darkMode) ? "#454951" : null,
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
         minHeight: 70,
         flex: 1,
         flexDirection: "row",
@@ -199,7 +227,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         justifyContent: "flex-start"
     },
     CardLeftIcon: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
         marginRight: 15,
     },
     CoinIcon: {
@@ -207,17 +235,19 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         left: -4,
     },
     picker: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
         height: 50,
         width: 100
     },
     Settings: {
-        backgroundColor: (darkMode) ? "#2f343f" : null,
+        paddingTop: 10,
+        paddingBottom: 10,
+        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
     },
     settingsText: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
     }
 })
 
-const styles = styleTemplate(true);
+const styles = styleTemplate(false);
 const darkStyles = styleTemplate(true);

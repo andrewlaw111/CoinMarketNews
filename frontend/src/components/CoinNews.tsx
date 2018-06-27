@@ -119,14 +119,14 @@ const mapStateToProps = (state: IRootState) => {
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : null,
-        backgroundColor: (darkMode) ? "#454951" : null,
+        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : null,
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     cardText: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
     },
     coinInfoStats: {
         flex: 1,
@@ -140,8 +140,9 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         flex: 1,
     },
     news: {
-        backgroundColor: (darkMode) ? "#2f343f" : null,
+        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
         flex: 1,
+        paddingBottom: 20,
     },
 });
 

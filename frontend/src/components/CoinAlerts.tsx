@@ -104,6 +104,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     alertsPage: {
         backgroundColor: (darkMode) ? "#2f343f" : null,
         flex: 1,
+        paddingBottom: 20,
     },
     webView: {
         borderColor: (darkMode) ? "#41444c" : null,

@@ -42,7 +42,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
                     <Body>
-                        <Text style={this.styles.cardText} numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress.bind(this)}>{this.props.coin.about}</Text>
+                        <Text style={this.styles.cardText} numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress}>{this.props.coin.about}</Text>
                     </Body>
                 </CardItem>
             </Card>
@@ -152,8 +152,8 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
     public render() {
         return (
             <StyleProvider style={getTheme(commonColour)} >
-                <ScrollView style={this.styles.infoBackground}>
-                    <View >
+                <ScrollView >
+                    <View style={this.styles.infoBackground}>
                         {(this.props.coin.about) ? this.renderAboutCoin() : null}
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
@@ -204,20 +204,20 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         fontWeight: 'bold',
     },
     Card: {
-        borderColor: (darkMode) ? "#41444c" : null,
-        backgroundColor: (darkMode) ? "#454951" : null,
+        borderColor: (darkMode) ? "#41444c" : "#F8F8F8",
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : null,
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     linkIcon: {
-        color: (darkMode) ? "#2a6496" : null,
+        color: (darkMode) ? "#2a6496" : "#000",
     },
     link: {
-        color: (darkMode) ? "#2a6496" : null,
+        color: (darkMode) ? "#2a6496" : "#000",
     },
     cardText: {
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
     },
     coinInfoStats: {
         flex: 1,
@@ -229,10 +229,11 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     },
     coinInfoStatsText: {
         flex: 1,
-        color: (darkMode) ? "#F8F8F8" : null,
+        color: (darkMode) ? "#F8F8F8" : "#000",
     },
     infoBackground: {
-        backgroundColor: (darkMode) ? "#2f343f" : null,
+        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
+        paddingBottom: 20,
     },
 });
 
