@@ -249,7 +249,6 @@ class PureSettings extends React.Component<ISettingsProps>{
                     ],
                     tabsStyle: {
                         tabBarButtonColor: tabBarColours.tabBarButtonColor,
-                        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
                         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
                         initialTabIndex: 2,
                         navBarBackgroundColor: colours.backgroundColor,
