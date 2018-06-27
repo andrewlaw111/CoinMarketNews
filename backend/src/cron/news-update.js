@@ -25,33 +25,6 @@ module.exports = () => {
         .then((coins) => {
             let feeder = new RssFeedEmitter();
 
-            feeder.add({
-                url: 'https://cointelegraph.com/rss',
-                refresh: 2000
-            });
-
-            feeder.add({
-                url: 'https://www.newsbtc.com/feed/',
-                refresh: 2000
-            });
-
-            feeder.add({
-                url: 'https://feeds.feedburner.com/CoinDesk',
-                refresh: 2000
-            });
-
-            feeder.add({
-                url: 'https://www.ccn.com/feed',
-                refresh: 2000
-            });
-
-            feeder.add({
-                url: 'https://toshitimes.com/feed/',
-                refresh: 2000
-            });
-
-            // feeder.list();
-
             feeder.on('new-item', function (item) {
                 // TODO: test date of news (only insert recent news)
                 knex('news')
@@ -111,6 +84,17 @@ module.exports = () => {
                         }
                     });
             });
+
+            knex('source')
+                .then(function (sources) {
+                    console.log(sources);
+                    for (const source of sources) {
+                        feeder.add({
+                            url: source.link,
+                            refresh: 5*60*1000  // every 5 minutes
+                        });
+                    }
+                });
         });
 
     function news_alert(news, coin) {
