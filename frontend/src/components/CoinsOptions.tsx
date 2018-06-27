@@ -149,6 +149,6 @@ const styles = (darkMode: boolean, active?: boolean) => StyleSheet.create({
     gridStyle: {
         flex: 0,
         borderBottomColor: (darkMode) ? "#555" : "#888",
-        borderBottomWidth: 1
+        borderBottomWidth: 0.5
     }
 })

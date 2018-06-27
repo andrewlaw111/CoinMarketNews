@@ -2,11 +2,11 @@ import { StyleSheet } from "react-native";
 
 export const styles = (darkMode: boolean) => StyleSheet.create({
     coinList: {
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         flex: 1,
     },
     coinListComponent: {
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         flex: 1,
     },
     coinName: {

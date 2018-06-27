@@ -26,7 +26,7 @@ function setColour(darkMode: boolean) {
     }
     tabBarColours = {
       tabBarButtonColor: "#fff",
-      tabBarSelectedButtonColor: "#3f78ba",
+      tabBarSelectedButtonColor: "#2874F0",
       tabBarBackgroundColor: "#343a44"
     }
   } else {
@@ -37,7 +37,7 @@ function setColour(darkMode: boolean) {
     }
     tabBarColours = {
       tabBarButtonColor: "#343a44",
-      tabBarSelectedButtonColor: "#3f78ba",
+      tabBarSelectedButtonColor: "#2874F0",
       tabBarBackgroundColor: "#F8F8F8"
     }
   }
@@ -92,6 +92,7 @@ Promise.all([
       tabsStyle: {
         tabBarButtonColor: tabBarColours.tabBarButtonColor,
         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+        navBarTextColor: colours.navBarTextColor,
         navBarBackgroundColor: colours.backgroundColor,
         screenBackgroundColor: colours.screenBackgroundColor,
       },

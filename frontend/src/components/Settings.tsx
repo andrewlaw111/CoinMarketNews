@@ -202,7 +202,7 @@ class PureSettings extends React.Component<ISettingsProps>{
             }
             tabBarColours = {
                 tabBarButtonColor: "#FFF",
-                tabBarSelectedButtonColor: "#3f78ba",
+                tabBarSelectedButtonColor: "#2874F0",
                 tabBarBackgroundColor: "#343a44"
             }
         } else {
@@ -213,7 +213,7 @@ class PureSettings extends React.Component<ISettingsProps>{
             }
             tabBarColours = {
                 tabBarButtonColor: "#343a44",
-                tabBarSelectedButtonColor: "#3f78ba",
+                tabBarSelectedButtonColor: "#2874F0",
                 tabBarBackgroundColor: "#F8F8F8"
             }
         }
@@ -251,6 +251,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                         tabBarButtonColor: tabBarColours.tabBarButtonColor,
                         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
                         initialTabIndex: 2,
+                        navBarTextColor: colours.navBarTextColor,
                         navBarBackgroundColor: colours.backgroundColor,
                         screenBackgroundColor: colours.screenBackgroundColor,
                     },
@@ -347,7 +348,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     },
     Settings: {
         paddingTop: 10,
-        paddingBottom: 10,
+        paddingBottom: 20,
         backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
     },
     settingsText: {
