@@ -49,7 +49,7 @@ module.exports = () => {
                 }
                 callback();
             });
-    }, { afterProcessDelay: 10000 });
+    }, { afterProcessDelay: 10000 });   // delay 10 sec between tasks
 
     knex('coin').count()
         .then((coins) => {
