@@ -151,15 +151,9 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
 
     public render() {
         return (
-<<<<<<< HEAD
-            <StyleProvider style={getTheme(commonColour)} >
-                <ScrollView style={this.styles.infoBackground}>
-                    <View >
-=======
             <ScrollView style={this.styles.infoBackground}>
                 <StyleProvider style={getTheme()} >
                     <View>
->>>>>>> e0d694df0bb1982e6890395e585de67bad5ad558
                         {(this.props.coin.about) ? this.renderAboutCoin() : null}
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
@@ -192,8 +186,8 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                                 null
                             )}
                     </View>
-                </ScrollView>
-            </StyleProvider>
+                </StyleProvider>
+            </ScrollView>
         );
     }
     private handleLinkPress = (link: string) => {
