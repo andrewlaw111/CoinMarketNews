@@ -4,7 +4,7 @@ interface INews {
     title: string;
     content: string;
     source_id: string | null;
-    coin: string[] | null;
+    coins: string[] | null;
     link: string,
     created_at: string,
     counter: number
@@ -39,7 +39,8 @@ export default class NewsService {
                         });
                         // console.log(news_source);
                         data.map(function (news: INews) {
-                            news.coin = news_source[news.id];
+                            news.coins = news_source[news.id];
+                            delete news.source_id;
                             news.content = news.content.substr(0, 200);
                             return news;
                         });
@@ -60,10 +61,13 @@ export default class NewsService {
             .orderBy("created_at", "desc")
             .then((data: INews[]) => {
                 data.map(function (news: INews) {
+                    delete news.source_id;
                     news.content = news.content.substr(0, 200);
                     return news;
                 });
                 return data;
             });
     }
+
+    
 }
