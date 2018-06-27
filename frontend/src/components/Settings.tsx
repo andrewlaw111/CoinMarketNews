@@ -34,13 +34,21 @@ class PureSettings extends React.Component<ISettingsProps>{
     }
     public renderCryptoPicker() {
         const options = ["BTC", "ETH"]
+        const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
+            options: options,
+        },
+            (buttonIndex) => {
+                this.handleCryptoCurrencyValueChange(options[buttonIndex], buttonIndex);
+            });
         if (Platform.OS === "ios") {
-            ActionSheetIOS.showActionSheetWithOptions({
-                options: options,
-            },
-                (buttonIndex) => {
-                    this.handleCryptoCurrencyValueChange(options[buttonIndex], buttonIndex);
-                });
+            return (
+                <Button onPress={IOSPicker}>
+                    <Text>
+                        {this.props.appSettings.cryptoCurrency}
+                    </Text>
+                </Button>
+
+            )
         }
         else {
             return (
@@ -56,13 +64,20 @@ class PureSettings extends React.Component<ISettingsProps>{
     }
     public renderFiatPicker() {
         const options = ["USD", "EUR", "CAD", "GBP", "HKD"]
+        const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
+            options: options,
+        },
+            (buttonIndex) => {
+                this.handleFiatCurrencyValueChange(options[buttonIndex], buttonIndex);
+            });
         if (Platform.OS === "ios") {
-            ActionSheetIOS.showActionSheetWithOptions({
-                options: options,
-            },
-                (buttonIndex) => {
-                    this.handleFiatCurrencyValueChange(options[buttonIndex], buttonIndex);
-                });
+            return (
+                <Button onPress={IOSPicker}>
+                    <Text>
+                        {this.props.appSettings.fiatCurrency}
+                    </Text>
+                </Button>
+            )
         }
         else {
             return (
