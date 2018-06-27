@@ -156,7 +156,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                 },
                 {
                     headers: {
-                        token 
+                        token
                     }
                 }
             )
@@ -180,11 +180,14 @@ const mapStateToProps = (state: IRootState) => {
 const Settings = connect(mapStateToProps, mapDispatchToProps)(PureSettings);
 export default Settings;
 
-const styles = StyleSheet.create({
+const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     Card: {
+        borderColor: (darkMode) ? "#41444c" : null,
+        backgroundColor: (darkMode) ? "#454951" : null,
         margin: 10,
     },
     CardItem: {
+        backgroundColor: (darkMode) ? "#454951" : null,
         minHeight: 70,
         flex: 1,
         flexDirection: "row",
@@ -196,6 +199,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     CardLeftIcon: {
+        color: (darkMode) ? "#F8F8F8" : null,
         marginRight: 15,
     },
     CoinIcon: {
@@ -203,57 +207,17 @@ const styles = StyleSheet.create({
         left: -4,
     },
     picker: {
+        color: (darkMode) ? "#F8F8F8" : null,
         height: 50,
         width: 100
     },
     Settings: {
+        backgroundColor: (darkMode) ? "#2f343f" : null,
     },
     settingsText: {
-
-    }
-    // CardLeftText: {
-    //     flex: 0.8,
-    // },
-    // CardRight: {
-    //     // flex: 0.1,
-    // }
-})
-
-const darkStyles = StyleSheet.create({
-    Card: {
-        borderColor: "#41444c",
-        backgroundColor: "#454951",
-        margin: 10,
-    },
-    CardItem: {
-        backgroundColor: "#454951",
-        minHeight: 70,
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    CardLeft: {
-        // flex: 0.9,
-        flexDirection: "row",
-        justifyContent: "flex-start"
-    },
-    CardLeftIcon: {
-        color: "#F8F8F8",
-        marginRight: 15,
-    },
-    CoinIcon: {
-        marginRight: 20,
-        left: -4,
-    },
-    picker: {
-        color: "#F8F8F8",
-        height: 50,
-        width: 100
-    },
-    Settings: {
-        backgroundColor: "#2f343f",
-    },
-    settingsText: {
-        color: "#F8F8F8"
+        color: (darkMode) ? "#F8F8F8" : null,
     }
 })
+
+const styles = styleTemplate(true);
+const darkStyles = styleTemplate(true);

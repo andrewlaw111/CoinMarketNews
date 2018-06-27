@@ -10,6 +10,7 @@ import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { INews, IUser, ISettings } from "../models";
 import { IRootState } from "../redux/store";
+import { BlockOverflowProperty } from "csstype";
 
 interface INewsListProps {
     appSettings: ISettings,
@@ -32,7 +33,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                 <TouchableOpacity
                     onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)}
                 >
-                    <CardItem header={true} bordered={true}  style={this.styles.cardItem}>
+                    <CardItem header={true} bordered={true} style={this.styles.cardItem}>
                         <Text
                             style={this.styles.headingText}
                         >
@@ -105,43 +106,27 @@ const mapStateToProps = (state: IRootState) => {
 const NewsList = connect(mapStateToProps)(PureNewsList);
 export default NewsList;
 
-const styles = StyleSheet.create({
+const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
+        borderColor: (darkMode) ? "#41444c" : null,
+        backgroundColor: (darkMode) ? "#454951" : null,
     },
     cardItem: {
-
+        backgroundColor: (darkMode) ? "#454951" : null,
     },
     headingText: {
+        color: (darkMode) ? "#F8F8F8" : null,
         textDecorationLine: "underline",
     },
     news: {
+        backgroundColor: (darkMode) ? "#2f343f" : null,
     },
     newsList: {
     },
     newsText: {
-
-    }
-});
-
-const darkStyles = StyleSheet.create({
-    card: {
-        borderColor: "#41444c",
-        backgroundColor: "#454951",
-    },
-    cardItem: {
-        backgroundColor: "#454951",
-    },
-    headingText: {
-        color: "#F8F8F8",
-        textDecorationLine: "underline",
-    },
-    news: {
-        backgroundColor: "#2f343f",
-    },
-    newsList: {
-    },
-    newsText: {
-        color: "#F8F8F8"
+        color: (darkMode) ? "#F8F8F8" : null
     },
 });
 
+const styles = styleTemplate(false);
+const darkStyles = styleTemplate(true);

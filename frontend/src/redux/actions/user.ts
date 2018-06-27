@@ -36,7 +36,7 @@ export const getUser = async (OneSignal: any) => {
                         },
                     },
             ).then((result) => {
-                OneSignal.sendTags({user_id: result.data.id })
+                // OneSignal.sendTags({user_id: result.data.id })
                 store.dispatch(loginSuccess(result.data));
                 return result.data;
             }).catch((err) => {
@@ -50,7 +50,7 @@ export const getUser = async (OneSignal: any) => {
                     // `http://10.0.0.22:8000/user`,
                     `${Config.API_SERVER}/user`,
             ).then((result) => {
-                store.dispatch(loginSuccess(result.data));
+                // store.dispatch(loginSuccess(result.data));
                 OneSignal.sendTag("user_id", result.data.id)
             }).catch((err) => {
                 console.log(err)
