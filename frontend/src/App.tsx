@@ -26,7 +26,7 @@ function setColour(darkMode: boolean) {
     }
     tabBarColours = {
       tabBarButtonColor: "#fff",
-      tabBarSelectedButtonColor: "red",
+      tabBarSelectedButtonColor: "#3f78ba",
       tabBarBackgroundColor: "#343a44"
     }
   } else {
@@ -37,7 +37,7 @@ function setColour(darkMode: boolean) {
     }
     tabBarColours = {
       tabBarButtonColor: "#343a44",
-      tabBarSelectedButtonColor: "red",
+      tabBarSelectedButtonColor: "#3f78ba",
       tabBarBackgroundColor: "#F8F8F8"
     }
   }
@@ -94,8 +94,7 @@ Promise.all([
         tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
         navBarBackgroundColor: colours.backgroundColor,
-        navBarTextColor: colours.navBarTextColor,
-        statusBarColor: colours.backgroundColor
+        screenBackgroundColor: colours.screenBackgroundColor,
       },
       appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
         tabBarButtonColor: tabBarColours.tabBarButtonColor,
@@ -103,8 +102,8 @@ Promise.all([
         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
         navBarBackgroundColor: colours.backgroundColor,
         navBarTextColor: colours.navBarTextColor,
-        screenBackgroundColor: "translucent",
-        statusBarColor: colours.backgroundColor
+        screenBackgroundColor: colours.screenBackgroundColor,
+        statusBarColor: "translucent",
       },
       animationType: "none"
     })

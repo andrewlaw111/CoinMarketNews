@@ -6,6 +6,9 @@ import { connect } from "react-redux";
 import { Container, Content, Spinner, Tab, Tabs, ScrollableTab, StyleProvider } from "native-base";
 import { StyleSheet, View } from "react-native";
 
+import getTheme from "../../native-base-theme/components";
+import commonColour from '../../native-base-theme/variables/commonColor';
+
 import { ICoin, ICoinPrice, IUser, ISettings } from "../models";
 import { IRootState } from "../redux/store";
 
@@ -59,22 +62,24 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
     }
     public render() {
         return (
-            <Container style={this.styles.pageBackground}>
-                <Tabs springTension={2} initialPage={0} >
-                    <Tab heading="Info">
-                        {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinInfo coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
-                    </Tab>
-                    <Tab heading="News">
-                        {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinNews coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
-                    </Tab>
-                    <Tab heading="Price">
-                        {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinPrice coin={this.state.coin} coinPrice={this.props.coinPrice} darkMode={this.props.appSettings.darkMode} priceWidget={this.state.priceWidget} />}
-                    </Tab>
-                    <Tab heading="Alerts">
-                        {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinAlerts coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
-                    </Tab>
-                </Tabs>
-            </Container>
+            <StyleProvider style={getTheme(commonColour)}>
+                <Container style={this.styles.pageBackground}>
+                    <Tabs springTension={2} initialPage={0} >
+                        <Tab heading="Info">
+                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinInfo coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
+                        </Tab>
+                        <Tab heading="News">
+                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinNews coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
+                        </Tab>
+                        <Tab heading="Price">
+                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinPrice coin={this.state.coin} coinPrice={this.props.coinPrice} darkMode={this.props.appSettings.darkMode} priceWidget={this.state.priceWidget} />}
+                        </Tab>
+                        <Tab heading="Alerts">
+                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinAlerts coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
+                        </Tab>
+                    </Tabs>
+                </Container>
+            </StyleProvider>
         );
     }
     private getCoin = () => {

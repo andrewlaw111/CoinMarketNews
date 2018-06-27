@@ -52,7 +52,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                         footer={true}
                         style={this.styles.cardItem}
                     >
-                        <Moment element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                        <Moment style={this.styles.newsText} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                     </CardItem>
                 </TouchableOpacity>
             </Card>
@@ -117,7 +117,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         textDecorationLine: "underline",
     },
     news: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#E1E1E1",
+        backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
     },
     newsList: {
         // paddingBottom: 20,

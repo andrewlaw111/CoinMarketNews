@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Segment, Col, Grid, Text } from "native-base";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { ISettings } from "../models";
 
 
@@ -73,21 +73,37 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
             text: "1H",
         }];
 
-        const buttonTemplate = (button: IOptionsButton, index: number) => (
-            <Button
-                style={styles(this.props.appSettings.darkMode, button.active).buttons}
-                first={button.first}
-                last={button.last}
-                onPress={this.handlePress.bind(this, button.handler)}
-                key={index}
-            >
-                <Text style={styles(this.props.appSettings.darkMode, button.active).buttonText}>
-                    {button.text}
-                </Text>
-            </Button>
-        );
+        const buttonTemplate = (button: IOptionsButton, index: number) => {
+            if (Platform.OS === "ios") {
+                return (
+                    <Button
+                        style={{ paddingLeft: 5, paddingRight: 5 }}
+                        onPress={this.handlePress.bind(this, button.handler)}
+                        key={index}
+                    >
+                        <Text style={{ paddingLeft: 0, paddingRight: 0, }}>
+                            {button.text}
+                        </Text>
+                    </Button>
+                )
+            } else {
+                return (
+                    <Button
+                        style={styles(this.props.appSettings.darkMode, button.active).buttons}
+                        first={button.first}
+                        last={button.last}
+                        onPress={this.handlePress.bind(this, button.handler)}
+                        key={index}
+                    >
+                        <Text style={styles(this.props.appSettings.darkMode, button.active).buttonText}>
+                            {button.text}
+                        </Text>
+                    </Button>
+                )
+            }
+        };
         return (
-            <Grid style={{ flex: 0 }} >
+            <Grid style={styles(this.props.appSettings.darkMode).gridStyle} >
                 <Col style={{ flex: 0.4 }}>
                     <Segment style={styles(this.props.appSettings.darkMode).coinListFilters}>
                         {leftButtons.map((button, index) => buttonTemplate(button, index))}
@@ -116,15 +132,20 @@ const styles = (darkMode: boolean, active?: boolean) => StyleSheet.create({
         backgroundColor: (darkMode) ? "#343a44" : "#F8F8F8",
     },
     buttonText: {
-        color: (darkMode) ? "#F8F8F8"  : (active) ? "#F8F8F8" : "#6b6b6b",
+        color: (darkMode) ? "#F8F8F8" : (active) ? "#F8F8F8" : "#6b6b6b",
         paddingLeft: 0,
         paddingRight: 0,
     },
     buttons: {
         backgroundColor: (darkMode) ? (active) ? "#3f78ba" : "#343a44" : (active) ? "#3f78ba" : "#F8F8F8",
-        borderColor: (darkMode) ? "#343a44" : "#F8F8F8",
-        borderRadius: 5,
+        // borderColor: (darkMode) ? "#343a44" : "#F8F8F8",
+        // borderRadius: 5,
         paddingLeft: 5,
         paddingRight: 5,
     },
+    gridStyle: {
+        flex: 0,
+        borderBottomColor: (darkMode) ? "#555" : "#888",
+        borderBottomWidth: 1
+    }
 })
