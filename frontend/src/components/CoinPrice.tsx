@@ -127,5 +127,5 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     },
 })
 
-const styles = styleTemplate(true);
-const darkStyles = styleTemplate(false);
+const styles = styleTemplate(false);
+const darkStyles = styleTemplate(true);
