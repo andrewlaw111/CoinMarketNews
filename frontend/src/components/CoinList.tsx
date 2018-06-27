@@ -38,8 +38,8 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     public darkMode: boolean;
     public styles: typeof coinsStyles;
 
-    public componentWillReceiveProps(nextProps: ICoinListProps){
-        console.log(nextProps);
+    public componentWillMount() {
+        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
     }
 
     public constructor(props: ICoinListProps) {
@@ -61,6 +61,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
 
         const percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(info.item);
+        
         const coinCurrency = (this.props.setting[1] === '1') ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a;</Text> : <Text style={this.styles.coinPrice}>$</Text>;
         // BTC : &#xf15a; / ETH : &#xf42e;
         const priceColour = (parseFloat(percentageChange) > 0) ? "green" : (parseFloat(percentageChange) === 0) ? "grey" : "red";
@@ -85,8 +86,8 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                 <Text style={this.styles.coinSymbol}>{info.item.symbol}</Text>
                             </View>
                             <View style={this.styles.listCoinName}>
-                                <Text note={true} style={this.styles.coinPrice}>{coinPrice} </Text>
                                 {coinCurrency}
+                                <Text note={true} style={this.styles.coinPrice}>{coinPrice} </Text>
                             </View>
                         </View>
 
@@ -112,7 +113,6 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     }
 
     public render() {
-        this.styles = (this.props.appSettings.darkMode) ? darkCoinsStyles : coinsStyles;
         const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1)
 
         return (
@@ -133,7 +133,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                 />
                             ) : (
                                     <View style={this.styles.coinListComponent}>
-                                        <Text style={this.styles.coinText}>
+                                        <Text style={this.styles.NoFavourites}>
                                             You have no favourite coins! Click on the ❤️ to add some favourites!
                                             </Text>
                                     </View>

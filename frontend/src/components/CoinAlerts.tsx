@@ -79,43 +79,16 @@ const mapStateToProps = (state: IRootState) => {
 const CoinAlerts = connect(mapStateToProps)(PureCoinAlerts);
 export default CoinAlerts;
 
-const styles = StyleSheet.create({
+const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
+        borderColor: (darkMode) ? "#41444c" : null,
+        backgroundColor: (darkMode) ? "#454951" : null,
     },
     cardItem: {
-    },
-    coinInfoStats: {
-        flex: 1,
-    },
-    coinInfoStatsLine: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    coinInfoStatsText: {
-        flex: 1,
+        backgroundColor: (darkMode) ? "#454951" : null,
     },
     cardText: {
-
-    },
-    alertsPage: {
-        flex: 1,
-    },
-    webView: {
-        height: 300
-    }
-});
-
-const darkStyles = StyleSheet.create({
-    card: {
-        borderColor: "#41444c",
-        backgroundColor: "#454951",
-    },
-    cardItem: {
-        backgroundColor: "#454951",
-    },
-    cardText: {
-        color: "#F8F8F8"
+        color: (darkMode) ? "#F8F8F8" : null
     },
     coinInfoStats: {
         flex: 1,
@@ -129,12 +102,16 @@ const darkStyles = StyleSheet.create({
         flex: 1,
     },
     alertsPage: {
-        backgroundColor: "#2f343f",
+        backgroundColor: (darkMode) ? "#2f343f" : null,
         flex: 1,
     },
     webView: {
-        borderColor: "#41444c",
-        backgroundColor: "#2f343f",
+        borderColor: (darkMode) ? "#41444c" : null,
+        backgroundColor: (darkMode) ? "#2f343f" : null,
         height: 300
     }
 });
+
+
+const styles = styleTemplate(false);
+const darkStyles = styleTemplate(true);

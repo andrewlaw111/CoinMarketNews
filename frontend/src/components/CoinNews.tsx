@@ -116,40 +116,17 @@ const mapStateToProps = (state: IRootState) => {
         user: state.user.user,
     };
 };
-const styles = StyleSheet.create({
+
+const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
+        borderColor: (darkMode) ? "#41444c" : null,
+        backgroundColor: (darkMode) ? "#454951" : null,
     },
     cardItem: {
-    },
-    coinInfoStats: {
-        flex: 1,
-    },
-    coinInfoStatsLine: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    coinInfoStatsText: {
-        flex: 1,
+        backgroundColor: (darkMode) ? "#454951" : null,
     },
     cardText: {
-
-    },
-    news: {
-        flex: 1,
-    }
-});
-
-const darkStyles = StyleSheet.create({
-    card: {
-        borderColor: "#41444c",
-        backgroundColor: "#454951",
-    },
-    cardItem: {
-        backgroundColor: "#454951",
-    },
-    cardText: {
-        color: "#F8F8F8"
+        color: (darkMode) ? "#F8F8F8" : null,
     },
     coinInfoStats: {
         flex: 1,
@@ -163,7 +140,11 @@ const darkStyles = StyleSheet.create({
         flex: 1,
     },
     news: {
-        backgroundColor: "#2f343f",
+        backgroundColor: (darkMode) ? "#2f343f" : null,
         flex: 1,
     },
 });
+
+const styles = styleTemplate(false);
+
+const darkStyles = styleTemplate(true);
