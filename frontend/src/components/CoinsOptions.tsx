@@ -78,6 +78,9 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
                 return (
                     <Button
                         style={{ paddingLeft: 5, paddingRight: 5 }}
+                        first={button.first}
+                        last={button.last}
+                        active={button.active}
                         onPress={this.handlePress.bind(this, button.handler)}
                         key={index}
                     >
