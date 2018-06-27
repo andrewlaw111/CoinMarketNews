@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
+import Moment from 'react-moment';
 
 import { Body, Card, CardItem, StyleProvider, Text, Content, Spinner } from "native-base";
 import { FlatList, Linking, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -41,7 +42,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                     </CardItem>
                     <CardItem style={this.styles.cardItem}>
                         <Body>
-                            <Text style={this.styles.newsText}>
+                            <Text style={this.styles.newsText} numberOfLines={3}>
                                 {this.props.news[info.index].content}
                             </Text>
                         </Body>
@@ -51,9 +52,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                         footer={true}
                         style={this.styles.cardItem}
                     >
-                        <Text style={this.styles.newsText} >
-                            {new Date(Date.parse(info.item.created_at)).toLocaleString()}
-                        </Text>
+                        <Moment element={Text} fromNow={true}>{info.item.created_at}</Moment>
                     </CardItem>
                 </TouchableOpacity>
             </Card>

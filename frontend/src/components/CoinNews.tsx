@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import Config from "react-native-config";
+import Moment from 'react-moment';
 
 import { Body, Card, CardItem, Container, Text, StyleProvider, Content, Spinner } from "native-base";
 import { FlatList, Linking, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -48,11 +49,12 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                 </CardItem>
                 <CardItem button={true} style={this.styles.cardItem}>
                     <Body>
-                        <Text style={this.styles.cardText}>{info.item.content}</Text>
+                        <Text style={this.styles.cardText} numberOfLines={3}>{info.item.content}</Text>
                     </Body>
                 </CardItem>
                 <CardItem footer={true} style={this.styles.cardItem}>
-                    <Text style={this.styles.cardText}>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text>
+                    {/* <Text style={this.styles.cardText}>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text> */}
+                    <Moment element={Text} fromNow={true}>{info.item.created_at}</Moment>
                 </CardItem>
             </TouchableOpacity>
         </Card>
