@@ -30,16 +30,16 @@ exports.up = function (knex, Promise) {
                 coins.string('proof');
                 coins.boolean('mineable');
                 coins.boolean('premined');
-                coins.integer("official_website").unsigned();
-                coins.foreign("official_website").references("source.id");
-                coins.integer("medium").unsigned();
-                coins.foreign("medium").references("source.id");
-                coins.integer("reddit").unsigned();
-                coins.foreign("reddit").references("source.id");
-                coins.integer("twitter").unsigned();
-                coins.foreign("twitter").references("source.id");
-                coins.integer("telegram").unsigned();
-                coins.foreign("telegram").references("source.id");
+                coins.string("website_name");
+                coins.string("website_link");
+                coins.string("medium_name");
+                coins.string("medium_link");
+                coins.string("reddit_name");
+                coins.string("reddit_link");
+                coins.string("twitter_name");
+                coins.string("twitter_link");
+                coins.string("telegram_name");
+                coins.string("telegram_link");
             }).then(() => {
                 return knex.schema.createTable("coin_news", (coinNews) => {
                     coinNews.increments();
@@ -86,8 +86,10 @@ exports.up = function (knex, Promise) {
                                         priceAlert.increments();
                                         priceAlert.integer("user_id").unsigned();
                                         priceAlert.foreign("user_id").references("users.id");
-                                        priceAlert.integer("price_id").unsigned();
-                                        priceAlert.foreign("price_id").references("price.id");
+                                        priceAlert.integer("coinmarketcap_id").unsigned();
+                                        priceAlert.foreign("coinmarketcap_id").references("coin.coinmarketcap_id");
+                                        priceAlert.integer("currency_id").unsigned();
+                                        priceAlert.foreign("currency_id").references("currency.id");
                                         priceAlert.boolean('upper');
                                         priceAlert.decimal('price_point');
                                         priceAlert.boolean('active');
@@ -99,10 +101,7 @@ exports.up = function (knex, Promise) {
                                             newsAlert.integer("coin_id").unsigned();
                                             newsAlert.foreign("coin_id").references("coin.id");
                                             newsAlert.boolean('favourite');
-                                            newsAlert.boolean('subscribe_website');
-                                            newsAlert.boolean('subscribe_medium');
-                                            newsAlert.boolean('subscribe_reddit');
-                                            newsAlert.boolean('subscribe_twitter');
+                                            newsAlert.boolean('alert');
                                         })
                                     });
                                 });
@@ -116,29 +115,29 @@ exports.up = function (knex, Promise) {
 };
 
 exports.down = function (knex, Promise) {
-return knex.schema.dropTable('news_alert')
-    .then(() => {
-        return knex.schema.dropTable('price_alert')
-            .then(() => {
-                return knex.schema.dropTable('price')
-                    .then(() => {
-                        return knex.schema.dropTable('users')
-                            .then(() => {
-                                return knex.schema.dropTable('currency')
-                                    .then(() => {
-                                        return knex.schema.dropTable('coin_news')
-                                            .then(() => {
-                                                return knex.schema.dropTable('coin')
-                                                    .then(() => {
-                                                        return knex.schema.dropTable('news')
-                                                            .then(() => {
-                                                                return knex.schema.dropTable('source')
-                                                            });
-                                                    });
-                                            });
-                                    });
-                            })
-                    });
-            });
-    });
+    return knex.schema.dropTable('news_alert')
+        .then(() => {
+            return knex.schema.dropTable('price_alert')
+                .then(() => {
+                    return knex.schema.dropTable('price')
+                        .then(() => {
+                            return knex.schema.dropTable('users')
+                                .then(() => {
+                                    return knex.schema.dropTable('currency')
+                                        .then(() => {
+                                            return knex.schema.dropTable('coin_news')
+                                                .then(() => {
+                                                    return knex.schema.dropTable('coin')
+                                                        .then(() => {
+                                                            return knex.schema.dropTable('news')
+                                                                .then(() => {
+                                                                    return knex.schema.dropTable('source')
+                                                                });
+                                                        });
+                                                });
+                                        });
+                                })
+                        });
+                });
+        });
 };
