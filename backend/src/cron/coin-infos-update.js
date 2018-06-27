@@ -5,7 +5,7 @@ module.exports = () => {
     console.log('CoinInfosUpdate CRON start -------');
     var c = new Crawler({
         maxConnections: 1,
-        rateLimit: 6000, // 1 query every 6 seconds
+        rateLimit: 10000, // 1 query every 10 seconds
         userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
         referer: 'https://coinlib.io/',
         retries: 0,
@@ -25,7 +25,6 @@ module.exports = () => {
                     const update_coin = {};
                     // console.log($.html());
                     console.log('-----');
-
 
                     const about = $('.coin-description').clone().children('strong, a').remove().end().text().trim();
                     if (about != '') {
@@ -52,34 +51,24 @@ module.exports = () => {
 
                     // websites
                     if ($('#info i').eq(0).hasClass('fa-link')) {   // official_website
-                        const update_source = {};
-                        update_source.name = $('#info a').eq(0).text().trim();
-                        update_source.link = $('#info a').eq(0).attr('href').trim();
-                        updateSource(res.options.coin.official_website, update_source);
+                        update_coin.website_name = $('#info a').eq(0).text().trim();
+                        update_coin.website_link = $('#info a').eq(0).attr('href').trim();
                     }
                     $('#info a').each(function () {
                         const link = $(this).attr('href').trim();
-                        console.log(link);
+                        // console.log(link);
                         if (link.match(/reddit\.com/)) {
-                            const update_source = {};
-                            update_source.name = $(this).text().trim();
-                            update_source.link = link;
-                            updateSource(res.options.coin.reddit, update_source);
+                            update_coin.reddit_name = $(this).text().trim();
+                            update_coin.reddit_link = link;
                         } else if (link.match(/twitter\.com/)) {
-                            const update_source = {};
-                            update_source.name = $(this).text().trim();
-                            update_source.link = link;
-                            updateSource(res.options.coin.twitter, update_source);
+                            update_coin.twitter_name = $(this).text().trim();
+                            update_coin.twitter_link = link;
                         } else if (link.match(/t\.me/) || link.match(/telegram/)) {
-                            const update_source = {};
-                            update_source.name = $(this).text().trim();
-                            update_source.link = link;
-                            updateSource(res.options.coin.telegram, update_source);
+                            update_coin.telegram_name = $(this).text().trim();
+                            update_coin.telegram_link = link;
                         } else if (link.match(/medium\.com/)) {
-                            const update_source = {};
-                            update_source.name = $(this).text().trim();
-                            update_source.link = link;
-                            updateSource(res.options.coin.medium, update_source);
+                            update_coin.medium_name = $(this).text().trim();
+                            update_coin.medium_link = link;
                         }
                     });
 
@@ -100,30 +89,20 @@ module.exports = () => {
 
     knex.select()
         .from("coin")
-        .offset(0)
-        .limit(20)
+        .whereNotNull('type')
         .orderBy('rank', 'asc')
         .then((coins) => {
-            // console.log(coins);
+            console.log(coins);
             for (let coin of coins) {
                 if (coin.symbol == 'MIOTA') {
                     coin.symbol = 'IOT';
                 }
                 const url = 'https://coinlib.io/coin/' + coin.symbol + '/';
-                console.log(url);
+                // console.log(url);
                 c.queue({
                     uri: url,
                     coin: coin
                 });
-            }
-        });
-}
-function updateSource(source_id, source) {
-    knex('source')
-        .where('id', '=', source_id)
-        .update(source).then((data) => {
-            if (data) {
-                console.log(source.name + ' source updated');
             }
         });
 }
