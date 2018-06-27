@@ -31,21 +31,21 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps> {
                 <Container style={this.styles.alertsPage}>
                     <Card style={this.styles.card}>
                         <CardItem style={this.styles.cardItem} header={true}>
-                            <Text>{this.props.coin.name}</Text>
+                            <Text style={this.styles.cardText}>{this.props.coin.name}</Text>
                         </CardItem>
                         <CardItem style={this.styles.cardItem}>
                             <Body>
-                                <Text>Your text here</Text>
+                                <Text style={this.styles.cardText}>Your text here</Text>
                             </Body>
                         </CardItem>
                     </Card>
                     <Card style={this.styles.card}>
                         <CardItem style={this.styles.cardItem} header={true}>
-                            <Text>NativeBase</Text>
+                            <Text style={this.styles.cardText}>NativeBase</Text>
                         </CardItem>
                         <CardItem style={this.styles.cardItem}>
                             <Body>
-                                <Text>
+                                <Text style={this.styles.cardText}>
                                     Your text here
                             </Text>
                             </Body>
@@ -53,11 +53,11 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps> {
                     </Card>
                     <Card style={this.styles.card}>
                         <CardItem style={this.styles.cardItem} header={true}>
-                            <Text>NativeBase</Text>
+                            <Text style={this.styles.cardText}>NativeBase</Text>
                         </CardItem>
                         <CardItem style={this.styles.cardItem}>
                             <Body>
-                                <Text>
+                                <Text style={this.styles.cardText}>
                                     Your text here
                                     </Text>
                             </Body>

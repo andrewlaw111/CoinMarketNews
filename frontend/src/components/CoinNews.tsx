@@ -59,7 +59,7 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                     </CardItem>
                     <CardItem footer={true} style={this.styles.cardItem}>
                         {/* <Text style={this.styles.cardText}>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text> */}
-                        <Moment element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                        <Moment style={this.styles.cardText} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                     </CardItem>
                 </TouchableOpacity>
             </Card>

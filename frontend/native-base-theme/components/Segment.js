@@ -15,8 +15,9 @@ export default (variables = variable) => {
 			paddingHorizontal: 20,
 			height: 30,
 			backgroundColor: "transparent",
-			borderWidth: 1,
+			borderWidth: platform === "ios" ? 1 : 2,
 			borderLeftWidth: 0,
+			borderRightWidth: platform === "ios" ? 1 : 0,
 			borderColor: variables.segmentBorderColor,
 			elevation: 0,
 			".active": {
@@ -26,13 +27,14 @@ export default (variables = variable) => {
 				},
 			},
 			".first": {
-				borderTopLeftRadius: platform === "ios" ? 5 : undefined,
-				borderBottomLeftRadius: platform === "ios" ? 5 : undefined,
-				borderLeftWidth: 1,
+				borderTopLeftRadius: platform === "ios" ? 5 : 5,
+				borderBottomLeftRadius: platform === "ios" ? 5 : 5,
+				borderLeftWidth: platform === "ios" ? 1 : 2,
 			},
 			".last": {
-				borderTopRightRadius: platform === "ios" ? 5 : undefined,
-				borderBottomRightRadius: platform === "ios" ? 5 : undefined,
+				borderTopRightRadius: platform === "ios" ? 5 : 5,
+				borderBottomRightRadius: platform === "ios" ? 5 : 5,
+				borderRightWidth: platform === "ios" ? 1 : 2,
 			},
 			"NativeBase.Text": {
 				color: variables.segmentTextColor,

@@ -34,17 +34,17 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                     <Container>
                         <Card style={this.styles.card}>
                             <CardItem style={this.styles.cardItem} header={true}>
-                                <Text>Price</Text>
+                                <Text style={this.styles.cardText}>Price</Text>
                             </CardItem>
                             <CardItem style={this.styles.cardItem}>
                                 <Body>
-                                    <Text>
+                                    <Text style={this.styles.cardText}>
                                         {this.props.coinPrice.price_fiat.price}
                                     </Text>
-                                    <Text>
+                                    <Text style={this.styles.cardText}>
                                         {this.props.coinPrice.price_fiat.percent_change_24h}
                                     </Text>
-                                    <Text>
+                                    <Text style={this.styles.cardText}>
                                         {this.props.coinPrice.price_fiat.price / (100 + this.props.coinPrice.price_fiat.percent_change_24h)}
                                     </Text>
                                 </Body>
@@ -58,20 +58,20 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                         </Card>
                         <Card style={this.styles.cardMarketData}>
                             <CardItem style={this.styles.cardItem} header={true}>
-                                <Text>Market Data</Text>
+                                <Text style={this.styles.cardText}>Market Data</Text>
                             </CardItem>
                             <CardItem style={this.styles.cardItem}>
                                 <Body>
-                                    <Text>
+                                    <Text style={this.styles.cardText}>
                                         Market Capitalization
-                            </Text>
-                                    <Text>
+                                    </Text>
+                                    <Text style={this.styles.cardText}>
                                         {this.props.coinPrice.price_fiat.market_cap}
                                     </Text>
-                                    <Text>
+                                    <Text style={this.styles.cardText}>
                                         24 Hour Volume
-                            </Text>
-                                    <Text>
+                                    </Text>
+                                    <Text style={this.styles.cardText}>
                                         {this.props.coinPrice.price_fiat.volume_24h}
                                     </Text>
                                 </Body>

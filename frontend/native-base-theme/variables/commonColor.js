@@ -205,10 +205,10 @@ export default {
   segmentActiveTextColor: platform === "ios" ? "#F8F8F8" : "#2f343f",
   segmentBorderColor: platform === "ios" ? "#007aff" : "#F8F8F8",
   segmentBorderColorMain: platform === "ios" ? "#a7a6ab" : "#2f343f",
-
+  
   // Spinner
-  defaultSpinnerColor: "#45D56E",
-  inverseSpinnerColor: "#1A191B",
+  defaultSpinnerColor: "#3f78ba",
+  inverseSpinnerColor: "#3f78ba",
 
   // Tab
   tabDefaultBg: platform === "ios" ? "#F8F8F8" : "#2f343f",

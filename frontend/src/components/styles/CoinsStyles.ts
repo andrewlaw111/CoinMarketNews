@@ -72,9 +72,6 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     },
     NoFavourites: {
         textAlign: "center",
+        color: (darkMode) ? "#F8F8F8" : "#000"
     }
 });
-
-// export const coinsStyles = template(false);
-
-// export const darkCoinsStyles = template(true);
