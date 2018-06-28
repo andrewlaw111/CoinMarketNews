@@ -52,7 +52,7 @@ export const addAlerts = (alerts: IAlerts, token: string) => {
     if (token) {
         axios
             .post(
-                `${Config.API_SERVER}/user/price_alert`, 
+                `${Config.API_SERVER}/user/price_alert`,
                 alertToServer,
                 {
                     headers: {
@@ -112,17 +112,19 @@ export const loadAlertsToStore = (alerts: IAlerts) => {
 
 export const loadAlerts = async (token: string) => {
 
-    axios
-    .post(
-        `${Config.API_SERVER}/user/price_alert`, 
-        alertToServer,
-        {
-            headers: {
-                token,
-            },
-        }
+    // axios
+    //     .get(
+    //         `${Config.API_SERVER}/user/price_alert`,)
+    //         {
+    //             headers: {
+    //                 token,
+    //             },
+    //         }
 
-    )
+    //     ).then((response) => {
+    //         console.error(response.data)
+    //         // loadAlertsToStore(response.data)
+    //     })
 };
 
 export const removeAlerts = (alerts: IAlerts, token: string) => {
