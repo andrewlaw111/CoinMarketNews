@@ -70,7 +70,7 @@ module.exports = () => {
                                                             if (news.title.includes(coin.name) || news.title.includes(coin.symbol)) {
                                                                 coin_news.push({ coin_id: coin.id, news_id: insert_news_ok[0] });
                                                                 // send push notif
-                                                                // news_alert(news, coin);
+                                                                news_alert(news, coin);
                                                             }
                                                             // TODO: same for content ?
                                                         });
@@ -111,7 +111,7 @@ module.exports = () => {
             .select('user_id')
             .from('news_alert')
             .where('coin_id', '=', coin.id)
-            .andWhere('favourite', '=', true)
+            .andWhere('alert', '=', true)
             .then(function (ids) {
                 console.log(ids);
                 if (ids.length > 0) {
@@ -120,13 +120,25 @@ module.exports = () => {
 
                     console.log(notification_message);
 
+                    const filters = [];
+
+                    ids.map(function (value, index) {
+                        if(index===0) {
+                            filters.push({ "field": "tag", "key": "user_id", "relation": "=", "value": value.user_id });
+                        } else {
+                            filters.push({"operator": "OR"}, { "field": "tag", "key": "user_id", "relation": "=", "value": value.user_id });
+                        }
+                    })
+
                     var message = {
                         app_id: ONESIGNAL_APP_ID,
                         headings: { "en": notification_title },
                         contents: { "en": notification_message },
                         url: news.link,
-                        included_segments: ["All"]  // TODO: add all ids
+                        included_segments: ["All"],
+                        filters: filters
                     };
+                    console.log(message);
                     axios.post(ONESIGNAL_URI, message, config)
                         .then(function (response) {
                             console.log('notification sent: ' + notification_message);
