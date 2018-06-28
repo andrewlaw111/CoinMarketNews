@@ -110,11 +110,11 @@ module.exports = () => {
             coin_fix['WICC'] = 'WICEXT';
 
             for (let coin of coins) {
-                if (coin_fix.indexOf(coin) > -1) {
-                    coin.symbol = coin_fix[coin];
+                if (coin.symbol in coin_fix) {
+                    coin.symbol = coin_fix[coin.symbol];
                 }
                 const url = 'https://coinlib.io/coin/' + coin.symbol + '/';
-                // console.log(url);
+                console.log(url);
                 c.queue({
                     uri: url,
                     coin: coin
