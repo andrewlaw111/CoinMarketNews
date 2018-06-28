@@ -1,15 +1,5 @@
 const axios = require('axios');
-// import { knex } from '../utils/init-app';
-
-var knex = require('knex')({
-    client: 'postgresql',
-    connection: {
-        host: 'localhost',
-        database: "postgres",
-        user: "postgres",
-        password: "password"
-    }
-});
+import { knex } from '../utils/init-app';
 
 const ONESIGNAL_URI = "https://onesignal.com/api/v1/notifications";
 const ONESIGNAL_APP_ID = "155944be-3bde-4703-82f1-2545b31dc1ed";
@@ -32,10 +22,12 @@ module.exports = () => {
 
     function price_alert(lower_or_higher) {
         knex('price_alert')
-            .join('price', 'price_alert.price_id', 'price.id')
+            .join('price', function () {
+                this.on('price_alert.coinmarketcap_id', '=', 'price.coinmarketcap_id').andOn('price_alert.currency_id', '=', 'price.currency_id')
+            })
             .join('currency', 'price.currency_id', 'currency.id')
             .join('coin', 'price.coinmarketcap_id', 'coin.coinmarketcap_id')
-            .select('price_alert.id', 'coin.symbol as symbol', 'price_alert.price_point', 'price.price', 'currency.symbol as currency', 'currency.fiat')
+            .select('price_alert.id', 'price_alert.user_id', 'coin.symbol as symbol', 'price_alert.price_point', 'price.price', 'currency.symbol as currency', 'currency.fiat')
             .where('price_alert.active', '=', true)
             .where('price_alert.upper', '=', (lower_or_higher === '>'))
             .andWhere('price.price', lower_or_higher, knex.raw('price_alert.price_point'))
@@ -56,7 +48,10 @@ module.exports = () => {
                         contents: { "en": notification_message },
                         ios_badgeType: 'Increase',
                         ios_badgeCount: 1,
-                        included_segments: ["All"]  // TODO: add user.id
+                        included_segments: ["All"],
+                        filters: [
+                            { "field": "tag", "key": "user_id", "relation": "=", "value": alert.user_id }
+                        ]
                     };
 
                     axios.post(ONESIGNAL_URI, message, config)

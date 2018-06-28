@@ -31,6 +31,10 @@ var message = {
     ios_badgeCount: 1,
     url: 'https://www.google.com.hk/search?q=onesignal',
     included_segments: ["All"]
+    // ,
+    // filters: [
+    //     {"field": "tag", "key": "user_id", "relation": "=", "value": 17}
+    // ]
 };
 
 axios.post(ONESIGNAL_URI, message, config)
