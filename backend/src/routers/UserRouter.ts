@@ -15,7 +15,14 @@ export default class UserRouter {
             .patch(this.changeNotifications)
             .post(this.createUser)
             .put(this.updateUser);
-        router.route("/favourites/")
+        router.route("/price_alert/")
+            .post(this.createPriceAlert)
+            .delete(this.deletePriceAlert)
+            .put(this.updatePriceAlert);
+        router.route("/news_alert/")
+            .post(this.createNewsAlert)
+            .delete(this.deleteNewsAlert);
+        router.route("/favourites/")    // not used
             .post(this.saveFavourite)
             .delete(this.deleteFavourite);
         return router;
@@ -48,6 +55,31 @@ export default class UserRouter {
             req.body.notifications,
         )
             .then((data: IUser) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private createPriceAlert = (req: express.Request, res: express.Response) => {
+        return this.userService.createPriceAlert(req.headers.token, req.body.coinID)
+            .then((data: any) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private deletePriceAlert = (req: express.Request, res: express.Response) => {
+        return this.userService.deletePriceAlert(req.headers.token, req.body.coinID)
+            .then((data: any) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private updatePriceAlert = (req: express.Request, res: express.Response) => {
+        return this.userService.updatePriceAlert(req.headers.token, req.body.coinID)
+            .then((data: any) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private createNewsAlert = (req: express.Request, res: express.Response) => {
+        return this.userService.createNewsAlert(req.headers.token, req.body.coinID)
+            .then((data: any) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
+    }
+    private deleteNewsAlert = (req: express.Request, res: express.Response) => {
+        return this.userService.deleteNewsAlert(req.headers.token, req.body.coinID)
+            .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
     private deleteFavourite = (req: express.Request, res: express.Response) => {

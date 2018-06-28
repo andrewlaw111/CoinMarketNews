@@ -26,6 +26,7 @@ export const getUser = async (OneSignal: any) => {
     try {
         const token = await AsyncStorage.getItem("@CoinMarketNews:userToken");
         if (token !== null) {
+            // console.error(token);
             return axios
                 .get<IUser>(
                     `${Config.API_SERVER}/user`,
