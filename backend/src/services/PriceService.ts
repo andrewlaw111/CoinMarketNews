@@ -67,6 +67,7 @@ export default class CoinService {
     private updatePriceList() {
         this.lastUpdated = Date.now();
         return knex('price')
+            .limit(100) // TODO: REMOVE !!!
             .then((prices: IPrice[]) => {
                 const price_array: any = [];
                 prices.map(function (price: any) {
