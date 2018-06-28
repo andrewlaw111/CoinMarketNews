@@ -21,25 +21,48 @@ interface ICoinsAlertsProps {
     darkMode: boolean;
     navigator: Navigator;
     user: IUser;
+    addNewsAlert: (coinID: number, token: string) => void;
+    removeNewsAlert: (coinID: number, token: string) => void;
     editAlert: (alert: IAlerts, token: string) => void;
     removeAlerts: (alert: IAlerts, token: string) => void;
 }
-
-class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: boolean }> {
+interface ICoinsAlertsState {
+    alerts: IAlerts[];
+    modalVisible: boolean
+    newsAlerts: boolean;
+}
+class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsState> {
     public styles: typeof styles;
 
     constructor(props: ICoinsAlertsProps) {
         super(props);
         this.state = {
+            alerts: this.props.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id),
             modalVisible: false,
+            newsAlerts: false,
         };
+    }
+    componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
+        const alerts = nextProps.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id)
+        this.setState({
+            alerts
+        })
+        if (this.props.user.news_alert.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) {
+            this.setState({
+                newsAlerts: true
+            })
+        } else {
+            this.setState({
+                newsAlerts: false
+            })
+        }
     }
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
             <View style={styles(this.props.darkMode).NewsAlertsView}>
                 <Text style={styles(this.props.darkMode).text}>{info.item.currency_symbol} {info.item.price_point}</Text>
                 <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} />
-                <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)}/>
+                <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)} />
             </View>
         )
     }
@@ -49,11 +72,11 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
                 <Container style={styles(this.props.darkMode).alertsPage}>
                     <View style={styles(this.props.darkMode).NewsAlertsView}>
                         <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
-                        <Switch />
+                        <Switch value={this.state.newsAlerts} onValueChange={this.handlenewsAlertChange} />
                     </View>
                     <ScrollView>
                         <FlatList
-                            data={this.props.alerts}
+                            data={this.state.alerts}
                             keyExtractor={this.keyExtractor}
                             renderItem={this.renderAlerts}
                         />
@@ -80,6 +103,13 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
     private handleDelete = (alert: IAlerts) => {
         return this.props.removeAlerts(alert, this.props.user.token)
     }
+    private handlenewsAlertChange = () => {
+        if (this.state.newsAlerts) {
+            return this.props.removeNewsAlert(this.props.coin.id, this.props.user.token)
+        } else {
+            return this.props.addNewsAlert(this.props.coin.id, this.props.user.token)
+        }
+    }
     private handleValueChange = (alert: IAlerts) => {
         alert.active = !alert.active
         return this.props.editAlert(alert, this.props.user.token)
@@ -93,6 +123,8 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
+        addNewsAlert: (coinID: number, token: string) => dispatch(),
+        removeNewsAlert: (coinID: number, token: string) => dispatch(),
         editAlert: (alert: IAlerts, token: string) => dispatch(editAlert(alert, token)),
         removeAlerts: (alert: IAlerts, token: string) => dispatch(removeAlerts(alert, token)),
     };

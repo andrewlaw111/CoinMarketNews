@@ -51,10 +51,10 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
 
                             <View style={style(this.props.darkMode).modalFormComponentsWrapper}>
                                 <Segment style={style(this.props.darkMode).segment}>
-                                    <Button first={true} onPress={this.changeCurrency.bind(this, "fiat")}>
+                                    <Button first={true} onPress={this.changeCurrency.bind(this, "fiat")} active={(this.state.fiatCurrency) ? true : false}>
                                         <Text style={style(this.props.darkMode).text}>{this.props.appSettings.fiatCurrency}</Text>
                                     </Button>
-                                    <Button last={true} onPress={this.changeCurrency.bind(this, "crypto")}>
+                                    <Button last={true} onPress={this.changeCurrency.bind(this, "crypto")} active={(this.state.fiatCurrency) ? false : true}>
                                         <Text style={style(this.props.darkMode).text}>{this.props.appSettings.cryptoCurrency}</Text>
                                     </Button>
                                 </Segment>

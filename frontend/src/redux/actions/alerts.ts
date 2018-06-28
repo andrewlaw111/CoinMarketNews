@@ -19,11 +19,15 @@ export type EDIT_ALERT = typeof EDIT_ALERT;
 export const REMOVE_ALERT = "REMOVE_ALERT";
 export type REMOVE_ALERT = typeof REMOVE_ALERT;
 
+export const ADD_NEWS_ALERT = "ADD_NEWS_ALERT";
+export type ADD_NEWS_ALERT = typeof ADD_NEWS_ALERT;
+
+export const REMOVE_NEWS_ALERT = "REMOVE_NEWS_ALERT";
+export type REMOVE_NEWS_ALERT = typeof REMOVE_NEWS_ALERT;
 export interface IAddAlertsAction extends Action {
     type: ADD_ALERT;
     newAlert: IAlerts;
 }
-
 export interface IEditAlertsAction extends Action {
     type: EDIT_ALERT;
     editAlert: IAlerts;
@@ -36,6 +40,14 @@ export interface ILoadAlertsAction extends Action {
 
 export interface IRemoveAlertsAction extends Action {
     type: REMOVE_ALERT;
+    removeAlert: IAlerts;
+}
+export interface IAddNewsAlertsAction extends Action {
+    type: ADD_NEWS_ALERT;
+    removeAlert: IAlerts;
+}
+export interface IRemoveNewsAlertsAction extends Action {
+    type: REMOVE_NEWS_ALERT;
     removeAlert: IAlerts;
 }
 
@@ -52,7 +64,7 @@ export const addAlertsToStore = (alerts: IAlerts):IAddAlertsAction => {
 export const addAlerts = (alerts: IAlerts, token: string) => {
     const alertToServer = {
         coinmarketcap_id: alerts.coinmarketcap_id,
-        currency_symbol: alerts.currency,
+        currency_symbol: alerts.currency_symbol,
         upper: alerts.upper,
         price_point: alerts.price_point,
         active: true
