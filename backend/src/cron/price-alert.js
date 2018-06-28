@@ -29,7 +29,7 @@ module.exports = () => {
             .join('coin', 'price.coinmarketcap_id', 'coin.coinmarketcap_id')
             .select('price_alert.id', 'price_alert.user_id', 'coin.symbol as symbol', 'price_alert.price_point', 'price.price', 'currency.symbol as currency', 'currency.fiat')
             .where('price_alert.active', '=', true)
-            .where('price_alert.upper', '=', (lower_or_higher === '>'))
+            .where('price_alert.upper', '=', (lower_or_higher === '<'))
             .andWhere('price.price', lower_or_higher, knex.raw('price_alert.price_point'))
             .then((alerts) => {
                 console.log(alerts);
