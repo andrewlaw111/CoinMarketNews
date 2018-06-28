@@ -12,11 +12,12 @@ import { IUser, ISettings } from "./models";
 registerScreens(); // this is where you register all of your app's screens
 
 import OneSignal from "react-native-onesignal";
+import { loadAlerts } from "./redux/actions/alerts";
 OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed")
 
-let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string,  };
+let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string, };
 
-let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string}
+let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string }
 function setColour(darkMode: boolean) {
   if (darkMode) {
     colours = {
@@ -47,6 +48,7 @@ function setColour(darkMode: boolean) {
 // start the app
 Promise.all([
   getUser(OneSignal).then((data) => {
+    loadAlerts()
     getCoins();
     getNews();
   }),
@@ -61,7 +63,7 @@ Promise.all([
       } else {
         setColour(false)
       }
-    })
+    }),
 ])
   .then((sources) => {
     // start the app
@@ -108,7 +110,7 @@ Promise.all([
         navBarTextColor: colours.navBarTextColor,
         screenBackgroundColor: colours.screenBackgroundColor,
         statusBarTextColorScheme: colours.statusBarTextColorScheme,
-        statusBarColor:  colours.backgroundColor,
+        statusBarColor: colours.backgroundColor,
       },
       animationType: "none"
     })

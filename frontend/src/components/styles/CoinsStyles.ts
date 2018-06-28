@@ -76,6 +76,6 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     },
     safeAreaView: {
         flex: 1,
-        backgroundColor: (darkMode) ? "#343a44" :'#fff'
+        backgroundColor: (darkMode) ? "#343a44" :'#F8F8F8'
     }
 });

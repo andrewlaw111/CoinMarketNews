@@ -40,19 +40,19 @@ export const loadCoinFavouritesToStore = (favourites: number[]) => {
 };
 
 export const removeCoinFavourite = (coinID: number, token: string) => {
-    axios
-        .delete(
-            `${Config.API_SERVER}/user/favourites`,
-            {
-                headers: {
-                    token,
-                },
-                data: {
-                    coinID,
-                }
-            },
+    // axios
+    //     .delete(
+    //         `${Config.API_SERVER}/user/favourites`,
+    //         {
+    //             headers: {
+    //                 token,
+    //             },
+    //             data: {
+    //                 coinID,
+    //             }
+    //         },
 
-    )
+    // )
     return {
         coinID,
         type: REMOVE_COIN_FAVOURITE,
@@ -69,33 +69,32 @@ export const loadFavourites = async () => {
 };
 
 export const addCoinFavourite = (coinID: number, token: string) => {
-    if (token) {
-        axios
-            .post(
-                `${Config.API_SERVER}/user/favourites`,
-                {
-                    data: {
-                        coinID,
-                    }
-                },
-                {
-                    headers: {
-                        token,
-                    },
-                }
+    // if (token) {
+    //     axios
+    //         .post(
+    //             `${Config.API_SERVER}/user/favourites`,
+    //             {
+    //                 data: {
+    //                     coinID,
+    //                 }
+    //             },
+    //             {
+    //                 headers: {
+    //                     token,
+    //                 },
+    //             }
 
-            )
-            
-        return {
-            coinID,
-            type: ADD_COIN_FAVOURITE,
-        };
-    }
-    else {
-        AsyncStorage.getItem("@CoinMarketNews:userToken").then((token) => {
-            addCoinFavourite(coinID, token);
-            return;
-        });
+    //         )
+
+    return {
+        coinID,
+        type: ADD_COIN_FAVOURITE,
     };
-
+    // }
+    // else {
+    //     AsyncStorage.getItem("@CoinMarketNews:userToken").then((token) => {
+    //         addCoinFavourite(coinID, token);
+    //         return;
+    //     });
+    // };
 };

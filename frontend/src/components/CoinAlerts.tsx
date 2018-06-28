@@ -2,21 +2,33 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, Text, StyleProvider, Icon } from "native-base";
-import { StyleSheet, View, Switch, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Switch, TouchableOpacity, TouchableOpacityBase } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
 
-import { ICoin } from "../models";
+import { ICoin, ICoinPrice, ISettings } from "../models";
 import { IRootState } from "../redux/store";
+import { Navigator } from "react-native-navigation";
+import CoinAlertsModal from "./CoinAlertsModal";
 
 interface ICoinsAlertsProps {
+    appSettings: ISettings;
     coin: ICoin;
+    coinPrice: ICoinPrice;
     darkMode: boolean;
+    navigator: Navigator;
 }
 
-class PureCoinAlerts extends React.Component<ICoinsAlertsProps> {
+class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: boolean }> {
     public styles: typeof styles;
+
+    constructor(props: ICoinsAlertsProps) {
+        super(props);
+        this.state = {
+            modalVisible: false,
+        };
+    }
 
     public render() {
         return (
@@ -28,13 +40,24 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps> {
                     </View>
                     <View style={styles(this.props.darkMode).AddAlertView}>
                         <Text style={styles(this.props.darkMode).text}>Add a new price alert</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.openModal} >
                             <Icon type="Ionicons" name="ios-add" />
                         </TouchableOpacity>
                     </View>
+                    <CoinAlertsModal appSettings={this.props.appSettings} closeModal={this.closeModal} coinPrice={this.props.coinPrice} darkMode={this.props.darkMode} modalVisible={this.state.modalVisible} />
                 </Container>
             </StyleProvider>
         );
+    }
+    private closeModal = () => {
+        this.setState({
+            modalVisible: false
+        })
+    }
+    private openModal = () => {
+        this.setState({
+            modalVisible: true
+        })
     }
 }
 

@@ -54,7 +54,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
     }
 
     public render() {
-        let iosTabs = {};
         let backgroundColour: string;
         let textColour: string;
         if (this.props.appSettings.darkMode) {
@@ -63,14 +62,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         } else {
             backgroundColour = "#F8F8F8";
             textColour = "#000"
-        }
-
-        if (Platform.OS === "ios") {
-            if (isIphoneX()) {
-                iosTabs = { paddingTop: 38, backgroundColor: backgroundColour };
-            } else {
-                iosTabs = { paddingTop: 14, backgroundColor: backgroundColour };
-            }
         }
 
         return (

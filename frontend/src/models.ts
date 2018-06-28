@@ -76,3 +76,11 @@ export interface ISettings {
     pushNotifications: boolean;
     darkMode: boolean;
 }
+
+export interface IAlerts {
+    alertID: number;
+    coinID: number;
+    currency: string;
+    amount: number;
+    active: boolean;
+}
