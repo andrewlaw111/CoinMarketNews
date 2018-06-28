@@ -33,6 +33,7 @@ interface ICoinsPageProps {
 }
 interface ICoinsPageState {
     coin?: ICoin;
+    favourite: boolean;
     priceWidget: string;
 }
 
@@ -51,6 +52,7 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
         this.state = {
             coin: undefined,
             priceWidget: "",
+            favourite: this.props.favourite,
         };
         this.getCoin();
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -64,7 +66,7 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                 ]).then((sources) => {
                     this.props.navigator.setButtons({
                         rightButtons: [{
-                            buttonColor: (!this.props.favourite) ? "gold" : "grey",
+                            buttonColor: (this.state.favourite) ? "gold" : "grey",
                             buttonFontSize: 18,
                             buttonFontWeight: "600",
                             id: "like",
@@ -73,12 +75,22 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                         }],
                     })
                 })
-                if (!this.props.favourite) {
+                if (!this.state.favourite) {
+                    this.setState({
+                        favourite: true,
+                    })
                     return this.props.addCoinFavourite(this.props.coinID, this.props.user.token);
                 } else {
+                    this.setState({
+                        favourite: false,
+                    })
                     return this.props.removeCoinFavourite(this.props.coinID, this.props.user.token);
                 }
-            }
+            } else if (event.id == "back") {
+                this.props.navigator.dismissModal({
+                    animationType: 'slide-down' // 'none' / 'slide-down' , dismiss animation for the modal (optional, default 'slide-down')
+                });
+            };
         }
     }
 

@@ -188,7 +188,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                         buttonFontWeight: "600",
                         id: "back",
                         showAsAction: "ifRoom",
-                        title: "Back",
+                        title: "back",
                         icon: (Platform.OS === "ios") ? sources[0] : null,
                     }],
                     rightButtons: [{

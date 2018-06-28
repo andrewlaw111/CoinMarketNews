@@ -75,7 +75,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
 
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <SafeAreaView style={styles(this.props.appSettings.darkMode).safeAreaView}>
                     <Container style={styles(this.props.appSettings.darkMode).coinListComponent}>
                         <Tabs initialPage={0}>
                             <Tab

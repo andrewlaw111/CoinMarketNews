@@ -23,11 +23,11 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps> {
             <StyleProvider style={getTheme(commonColour)} >
                 <Container style={styles(this.props.darkMode).alertsPage}>
                     <View style={styles(this.props.darkMode).NewsAlertsView}>
-                        <Text>Receive news alerts about {this.props.coin.name}</Text>
+                        <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
                         <Switch />
                     </View>
                     <View style={styles(this.props.darkMode).AddAlertView}>
-                        <Text>Add a new price alert</Text>
+                        <Text style={styles(this.props.darkMode).text}>Add a new price alert</Text>
                         <TouchableOpacity>
                             <Icon type="Ionicons" name="ios-add" />
                         </TouchableOpacity>
@@ -92,6 +92,8 @@ const styles = (darkMode: boolean) => StyleSheet.create({
         paddingRight: 15,
         borderBottomWidth: 1,
         borderColor: "#F8F8F8",
+    },
+    text: {
         color: (darkMode) ? "#F8F8F8" : "#000"
     }
 });
