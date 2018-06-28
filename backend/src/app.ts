@@ -26,6 +26,7 @@ import cron = require('cron');
 const CoinPriceUpdate = require("./cron/coin-price-update");
 const CoinInfosUpdate = require("./cron/coin-infos-update");
 const PriceUpdate = require("./cron/price-update");
+const PriceAlert = require("./cron/price-alert");
 const NewsUpdate = require("./cron/news-update");
 
 var CronJob = cron.CronJob;
@@ -44,6 +45,11 @@ if (process.env.CRON_PRICE === "true") {
     // new PriceUpdate();   // dev only
     // every hour
     new CronJob('0 50 * * * *', function () { new PriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
+}
+if (process.env.CRON_PRICE_ALERT === "true") {
+    // new PriceAlert();   // dev only
+    // every 5 minutes
+    new CronJob('30 */5 * * * *', function () { new PriceAlert(); }, function () { }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_NEWS === "true") {
     new NewsUpdate();   // detects new news automatically
