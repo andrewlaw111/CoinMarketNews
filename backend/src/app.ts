@@ -31,17 +31,17 @@ const NewsUpdate = require("./cron/news-update");
 var CronJob = cron.CronJob;
 
 if (process.env.CRON_COIN_PRICE === "true") {
-    new CoinPriceUpdate();   // dev only
+    // new CoinPriceUpdate();   // dev only
     // every hour
-    // new CronJob('0 10 * * * *', function () { new CoinPriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
+    new CronJob('0 10 * * * *', function () { new CoinPriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_COIN_INFOS === "true") {
-    new CoinInfosUpdate();   // dev only
+    // new CoinInfosUpdate();   // dev only
     // once a day
-    // new CronJob('0 30 0 * * *', function () { new CoinInfosUpdate(); }, function () { }, true, 'America/Los_Angeles');
+    new CronJob('0 30 0 * * *', function () { new CoinInfosUpdate(); }, function () { }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_PRICE === "true") {
-    new PriceUpdate();   // dev only
+    // new PriceUpdate();   // dev only
     // every hour
     new CronJob('0 50 * * * *', function () { new PriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
 }
