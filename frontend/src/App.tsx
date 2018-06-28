@@ -14,15 +14,16 @@ registerScreens(); // this is where you register all of your app's screens
 import OneSignal from "react-native-onesignal";
 OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed")
 
-let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string };
+let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string,  };
 
-let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, }
+let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string}
 function setColour(darkMode: boolean) {
   if (darkMode) {
     colours = {
       backgroundColor: "#343a44",
       navBarTextColor: "#FFF",
       screenBackgroundColor: "#454951",
+      statusBarTextColorScheme: "light",
     }
     tabBarColours = {
       tabBarButtonColor: "#fff",
@@ -34,6 +35,7 @@ function setColour(darkMode: boolean) {
       backgroundColor: "#F8F8F8",
       navBarTextColor: "#000",
       screenBackgroundColor: "#F8F8F8",
+      statusBarTextColorScheme: "dark",
     }
     tabBarColours = {
       tabBarButtonColor: "#343a44",
@@ -91,10 +93,12 @@ Promise.all([
       ],
       tabsStyle: {
         tabBarButtonColor: tabBarColours.tabBarButtonColor,
+        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
         navBarTextColor: colours.navBarTextColor,
         navBarBackgroundColor: colours.backgroundColor,
         screenBackgroundColor: colours.screenBackgroundColor,
+        statusBarTextColorScheme: colours.statusBarTextColorScheme,
       },
       appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
         tabBarButtonColor: tabBarColours.tabBarButtonColor,
@@ -103,7 +107,8 @@ Promise.all([
         navBarBackgroundColor: colours.backgroundColor,
         navBarTextColor: colours.navBarTextColor,
         screenBackgroundColor: colours.screenBackgroundColor,
-        statusBarColor: "translucent",
+        statusBarTextColorScheme: colours.statusBarTextColorScheme,
+        statusBarColor:  colours.backgroundColor,
       },
       animationType: "none"
     })

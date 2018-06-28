@@ -5,7 +5,7 @@ import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
 import { Container, Tab, Tabs, StyleProvider } from "native-base";
-import { Platform, } from "react-native";
+import { Platform, SafeAreaView, } from "react-native";
 
 import CoinOptions from "./CoinsOptions";
 import { ICoinPrice, IUser, ISettings } from "../models";
@@ -14,9 +14,10 @@ import { IRootState } from "../redux/store";
 import { styles } from "./styles/CoinsStyles";
 import getSettingID from "./functions/CoinsSettings";
 
-import getTheme from '../../native-base-theme/components';
-import commonColour from '../../native-base-theme/variables/commonColor';
-import IonIcons from "react-native-vector-icons/Ionicons";
+import getTheme from "../../native-base-theme/components";
+import commonColour from "../../native-base-theme/variables/commonColor";
+
+
 import CoinList from "./CoinList";
 import sortCoins from "./functions/CoinsSort";
 
@@ -74,61 +75,36 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
 
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <Container style={styles(this.props.appSettings.darkMode).coinListComponent}>
-                    <Tabs style={iosTabs} initialPage={0}>
-                        <Tab
-                            heading="Favourites"
-                            activeTabStyle={{ backgroundColor: backgroundColour }}
-                            activeTextStyle={{ color: textColour }}
-                            tabStyle={{ backgroundColor: backgroundColour }}
-                            textStyle={{ color: textColour }}
-                        >
-                            <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                            <CoinList coins={this.state.coins} favouriteTab={true} handlePress={this.handlePress} setting={this.state.setting} user={this.props.user} />
-                        </Tab>
-                        <Tab
-                            heading="Market"
-                            activeTabStyle={{ backgroundColor: backgroundColour }}
-                            activeTextStyle={{ color: textColour, }}
-                            tabStyle={{ backgroundColor: backgroundColour }}
-                            textStyle={{ color: textColour }}
-                        >
-                            <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                            <CoinList coins={this.state.coins} favouriteTab={false} handlePress={this.handlePress} setting={this.state.setting} user={this.props.user} />
-                        </Tab>
-                    </Tabs>
-                </Container >
+                <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                    <Container style={styles(this.props.appSettings.darkMode).coinListComponent}>
+                        <Tabs initialPage={0}>
+                            <Tab
+                                heading="Favourites"
+                                activeTabStyle={{ backgroundColor: backgroundColour }}
+                                activeTextStyle={{ color: textColour }}
+                                tabStyle={{ backgroundColor: backgroundColour }}
+                                textStyle={{ color: textColour }}
+                            >
+                                <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
+                                <CoinList coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                            </Tab>
+                            <Tab
+                                heading="Market"
+                                activeTabStyle={{ backgroundColor: backgroundColour }}
+                                activeTextStyle={{ color: textColour, }}
+                                tabStyle={{ backgroundColor: backgroundColour }}
+                                textStyle={{ color: textColour }}
+                            >
+                                <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
+                                <CoinList coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                            </Tab>
+                        </Tabs>
+                    </Container >
+                </SafeAreaView>
             </StyleProvider>
         );
     }
 
-    private handlePress = (info: { item: ICoinPrice, index: number }) => {
-        Promise.all([
-            // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
-            IonIcons.getImageSource("ios-star", 24, "grey"),
-        ]).then((sources) => {
-            this.props.navigator.push({
-                animated: true,
-                animationType: "fade",
-                backButtonHidden: false, // hide the back button altogether (optional)
-                navigatorButtons: {
-                    rightButtons: [{
-                        buttonColor: "blue",
-                        buttonFontSize: 14,
-                        buttonFontWeight: "600",
-                        id: "like",
-                        showAsAction: "ifRoom",
-                        icon: sources[0], // for icon button, provide the local 
-                    }],
-                },
-                navigatorStyle: {},
-                passProps: { appSettings: this.props.appSettings, coinID: info.item.id, coinPrice: info.item },
-                screen: "CoinMarketNews.CoinsPage",
-                title: info.item.name,
-                titleImage: `http://${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png`,
-            });
-        })
-    }
     private handleOptionsPress = (options: string) => {
         const setting: string = getSettingID(options, this.state.setting);
         const coins = sortCoins(setting, this.state.coins.slice());

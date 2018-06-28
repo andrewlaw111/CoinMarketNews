@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, Text, StyleProvider } from "native-base";
-import { StyleSheet, View } from "react-native";
+import { Body, Card, CardItem, Container, Text, StyleProvider, Icon } from "native-base";
+import { StyleSheet, View, Switch, TouchableOpacity } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -18,51 +18,20 @@ interface ICoinsAlertsProps {
 class PureCoinAlerts extends React.Component<ICoinsAlertsProps> {
     public styles: typeof styles;
 
-    public componentWillMount() {
-        this.styles = (this.props.darkMode) ? darkStyles : styles;
-    }
-    public componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
-        this.styles = (this.props.darkMode) ? darkStyles : styles;
-    }
-
     public render() {
         return (
             <StyleProvider style={getTheme(commonColour)} >
-                <Container style={this.styles.alertsPage}>
-                    <Card style={this.styles.card}>
-                        <CardItem style={this.styles.cardItem} header={true}>
-                            <Text style={this.styles.cardText}>{this.props.coin.name}</Text>
-                        </CardItem>
-                        <CardItem style={this.styles.cardItem}>
-                            <Body>
-                                <Text style={this.styles.cardText}>Your text here</Text>
-                            </Body>
-                        </CardItem>
-                    </Card>
-                    <Card style={this.styles.card}>
-                        <CardItem style={this.styles.cardItem} header={true}>
-                            <Text style={this.styles.cardText}>NativeBase</Text>
-                        </CardItem>
-                        <CardItem style={this.styles.cardItem}>
-                            <Body>
-                                <Text style={this.styles.cardText}>
-                                    Your text here
-                            </Text>
-                            </Body>
-                        </CardItem>
-                    </Card>
-                    <Card style={this.styles.card}>
-                        <CardItem style={this.styles.cardItem} header={true}>
-                            <Text style={this.styles.cardText}>NativeBase</Text>
-                        </CardItem>
-                        <CardItem style={this.styles.cardItem}>
-                            <Body>
-                                <Text style={this.styles.cardText}>
-                                    Your text here
-                                    </Text>
-                            </Body>
-                        </CardItem>
-                    </Card>
+                <Container style={styles(this.props.darkMode).alertsPage}>
+                    <View style={styles(this.props.darkMode).NewsAlertsView}>
+                        <Text>Receive news alerts about {this.props.coin.name}</Text>
+                        <Switch />
+                    </View>
+                    <View style={styles(this.props.darkMode).AddAlertView}>
+                        <Text>Add a new price alert</Text>
+                        <TouchableOpacity>
+                            <Icon type="Ionicons" name="ios-add" />
+                        </TouchableOpacity>
+                    </View>
                 </Container>
             </StyleProvider>
         );
@@ -79,7 +48,15 @@ const mapStateToProps = (state: IRootState) => {
 const CoinAlerts = connect(mapStateToProps)(PureCoinAlerts);
 export default CoinAlerts;
 
-const styleTemplate = (darkMode: boolean) => StyleSheet.create({
+const styles = (darkMode: boolean) => StyleSheet.create({
+    AddAlertView: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        height: 60,
+        paddingLeft: 20,
+        paddingRight: 20,
+    },
     card: {
         borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#454951" : "#FFF",
@@ -106,8 +83,15 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         flex: 1,
         paddingBottom: 20,
     },
+    NewsAlertsView: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        height: 60,
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderBottomWidth: 1,
+        borderColor: "#F8F8F8",
+        color: (darkMode) ? "#F8F8F8" : "#000"
+    }
 });
-
-
-const styles = styleTemplate(false);
-const darkStyles = styleTemplate(true);

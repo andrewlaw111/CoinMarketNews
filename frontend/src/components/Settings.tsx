@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Card, CardItem, Content, Icon, Text, StyleProvider, Button } from "native-base";
-import { Image, View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS } from "react-native";
+import { Image, View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS, StatusBar } from "react-native";
 
 
 import { connect } from "react-redux";
@@ -192,13 +192,14 @@ class PureSettings extends React.Component<ISettingsProps>{
         const settings = { ...this.props.appSettings };
         settings.darkMode = !settings.darkMode;
 
-        let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, }
+        let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string }
         let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string };
         if (settings.darkMode) {
             colours = {
                 backgroundColor: "#343a44",
                 navBarTextColor: "#FFF",
                 screenBackgroundColor: "#454951",
+                statusBarTextColorScheme: "light",
             }
             tabBarColours = {
                 tabBarButtonColor: "#FFF",
@@ -210,6 +211,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                 backgroundColor: "#F8F8F8",
                 navBarTextColor: "#000",
                 screenBackgroundColor: "#F8F8F8",
+                statusBarTextColorScheme: "dark",
             }
             tabBarColours = {
                 tabBarButtonColor: "#343a44",
@@ -249,11 +251,13 @@ class PureSettings extends React.Component<ISettingsProps>{
                     ],
                     tabsStyle: {
                         tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
                         tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
                         initialTabIndex: 2,
                         navBarTextColor: colours.navBarTextColor,
                         navBarBackgroundColor: colours.backgroundColor,
                         screenBackgroundColor: colours.screenBackgroundColor,
+                        statusBarTextColorScheme: colours.statusBarTextColorScheme,
                     },
                     appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
                         tabBarButtonColor: tabBarColours.tabBarButtonColor,
@@ -263,7 +267,8 @@ class PureSettings extends React.Component<ISettingsProps>{
                         navBarBackgroundColor: colours.backgroundColor,
                         navBarTextColor: colours.navBarTextColor,
                         screenBackgroundColor: colours.screenBackgroundColor,
-                        statusBarColor: colours.backgroundColor
+                        statusBarColor: colours.backgroundColor,
+                        statusBarTextColorScheme: colours.statusBarTextColorScheme,
                     },
                     animationType: "fade"
                 })

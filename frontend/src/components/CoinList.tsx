@@ -4,7 +4,7 @@ import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
 
 import { Icon, Text, Thumbnail, StyleProvider, Spinner } from "native-base";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, TouchableOpacity, View, RefreshControl, Platform } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -15,6 +15,10 @@ import displayCoinOptions from "./functions/CoinsRenderSettings";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
+import IonIcons from "react-native-vector-icons/Ionicons";
+
+import { getCoins } from "../redux/actions/coins";
+import { Navigator } from "react-native-navigation";
 
 interface ICoinListProps {
     coins: ICoinPrice[];
@@ -23,7 +27,7 @@ interface ICoinListProps {
     appSettings: ISettings;
     setting: string,
     user: IUser,
-    handlePress: (info: { item: ICoinPrice, index: number }) => void;
+    navigator: Navigator;
     addCoinFavourite: (coinID: number, token: string) => void;
     removeCoinFavourite: (coinID: number, token: string) => void;
 }
@@ -31,13 +35,22 @@ interface ICoinListProps {
 export interface ICoinListState {
     cryptoCurrencyName: string;
     fiatCurrencyName: string;
+    refreshing: boolean;
 }
-
 class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
+    public currencySymbols: { [key: string]: string } = {
+        USD: "$",
+        EUR: "€",
+        CAD: "$",
+        GBP: "£",
+        HKD: "$",
+        // BTC: "&#xf15a",
+        // ETH: "&#xf42e",
+    }
     public constructor(props: ICoinListProps) {
         super(props);
         this.state = {
-            // coinsToRender: [],
+            refreshing: false,
             cryptoCurrencyName: "BTC",
             fiatCurrencyName: "USD",
         };
@@ -53,8 +66,14 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
 
         const percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(info.item);
-        
-        const coinCurrency = (this.props.setting[1] === '1') ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a;</Text> : <Text style={styles(this.props.appSettings.darkMode).coinPrice}>$</Text>;
+
+        const coinCurrency = (this.props.setting[1] === '1') ?
+            (
+                // <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>{this.currencySymbols[this.props.appSettings.cryptoCurrency]}</Text>
+                (this.props.appSettings.cryptoCurrency === "BTC") ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a; </Text> : <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf42e; </Text>
+            ) : (
+                <Text style={styles(this.props.appSettings.darkMode).coinPrice}>{this.currencySymbols[this.props.appSettings.fiatCurrency]}</Text>
+            );
         // BTC : &#xf15a; / ETH : &#xf42e;
         const priceColour = (parseFloat(percentageChange) > 0) ? "green" : (parseFloat(percentageChange) === 0) ? "grey" : "red";
         return (
@@ -122,6 +141,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     keyExtractor={this.keyExtractor}
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
+                                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
                                 />
                             ) : (
                                     <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
@@ -139,6 +159,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     keyExtractor={this.keyExtractor}
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
+                                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
                                 />
                             )
                     ) : (
@@ -154,7 +175,40 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     }
 
     private handlePress = (info: { item: ICoinPrice, index: number }) => {
-        this.props.handlePress(info);
+        const favourite = (this.props.favourites.indexOf(info.item.id) > -1) ? true : false;
+        Promise.all([
+            IonIcons.getImageSource("ios-arrow-back", 20, "#FFF"),
+            IonIcons.getImageSource("ios-star", 24, "grey"),
+        ]).then((sources) => {
+            this.props.navigator.showModal({
+                navigatorButtons: {
+                    leftButtons: [{
+                        buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : (Platform.OS === "ios") ? "#   2874F0" : "#333",
+                        buttonFontSize: 18,
+                        buttonFontWeight: "600",
+                        id: "back",
+                        showAsAction: "ifRoom",
+                        title: "Back",
+                        icon: (Platform.OS === "ios") ? sources[0] : null,
+                    }],
+                    rightButtons: [{
+                        buttonColor: (favourite) ? "gold" : "grey",
+                        buttonFontSize: 18,
+                        buttonFontWeight: "600",
+                        id: "like",
+                        showAsAction: "ifRoom",
+                        icon: sources[1],
+                    }],
+
+                },
+                navigatorStyle: {},
+                passProps: { appSettings: this.props.appSettings, coinID: info.item.id, coinPrice: info.item, favourite },
+                screen: "CoinMarketNews.CoinsPage",
+                title: info.item.name,
+            });
+        }).catch((err) => {
+            console.error(err)
+        })
     }
 
     private handlePressHeart = (coinID: number, token: string) => {
@@ -166,6 +220,17 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     }
     private getItemLayout = (data: any, index: number) => ({ length: 70, offset: 70 * index, index });
     private keyExtractor = (item: ICoinPrice) => item.id.toString();
+
+    private onRefresh = () => {
+        this.setState({
+            refreshing: true
+        });
+        getCoins().then(() => {
+            this.setState({
+                refreshing: false
+            });
+        });
+    }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
