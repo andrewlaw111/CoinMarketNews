@@ -67,7 +67,6 @@ export default class CoinService {
     private updatePriceList() {
         this.lastUpdated = Date.now();
         return knex('price')
-            .limit(100) // TODO: REMOVE !!!
             .then((prices: IPrice[]) => {
                 const price_array: any = [];
                 prices.map(function (price: any) {
@@ -86,6 +85,7 @@ export default class CoinService {
                 // console.log(price_array);
                 return knex.select('id', 'coinmarketcap_id', 'name', 'symbol', 'rank')
                     .from('coin')
+                    .limit(100) // TODO: REMOVE !!!
                     .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
                         coins.map(function (coin: any) {
