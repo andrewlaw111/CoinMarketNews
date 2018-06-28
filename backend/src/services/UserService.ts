@@ -211,7 +211,7 @@ export default class UserService {
                         active
                     })
                     .where("user_id", users[0].user_id)
-                    .andWhere("price_id", priceID)
+                    .andWhere("id", priceID)
                     .then((data) => {
                         return data;
                     });
