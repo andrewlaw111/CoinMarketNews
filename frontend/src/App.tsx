@@ -47,11 +47,12 @@ function setColour(darkMode: boolean) {
 };
 // start the app
 Promise.all([
-  getUser(OneSignal).then((data) => {
-    loadAlerts()
-    getCoins();
-    getNews();
-  }),
+  getUser()
+    .then((data) => {
+      loadAlerts(data.)
+      getCoins();
+      getNews();
+    }),
   loadFavourites(),
   // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
   FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),

@@ -1,7 +1,6 @@
 
 import { IAlerts } from "../../models";
 import { AlertsActions, ADD_ALERT, REMOVE_ALERT, LOAD_ALERTS, EDIT_ALERT } from "../actions/alerts";
-import { AsyncStorage } from "react-native";
 
 export interface IAlertsState {
     alerts: IAlerts[];
@@ -16,6 +15,7 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
         case ADD_ALERT:
             const addAlerts = state.alerts.slice()
             addAlerts.push(action.newAlert);
+            console.log(addAlerts);
             return {
                 alerts: addAlerts, // Use concat to add a new link
             };

@@ -79,8 +79,10 @@ export interface ISettings {
 
 export interface IAlerts {
     alertID: number;
-    coinID: number;
+    coinmarketcap_id: number;
+    currency_id: number;
     currency: string;
+    upper: boolean;
     amount: number;
     active: boolean;
 }

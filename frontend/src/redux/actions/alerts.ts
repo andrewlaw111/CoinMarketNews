@@ -42,22 +42,25 @@ export interface IRemoveAlertsAction extends Action {
 export type AlertsActions = IAddAlertsAction | IEditAlertsAction | ILoadAlertsAction | IRemoveAlertsAction;
 
 export const addAlerts = (alerts: IAlerts, token: string) => {
+    const alertToServer = {
+        coinmarketcap_id: alerts.coinmarketcap_id,
+        currency_id: alerts.amount,
+        upper: alerts.upper,
+        price_point: alerts.amount,
+        active: true
+    }
     if (token) {
-        // axios
-        //     .post(
-        //         `${Config.API_SERVER}/user/favourites`,
-        //         {
-        //             data: {
-        //                 alerts,
-        //             }
-        //         },
-        //         {
-        //             headers: {
-        //                 token,
-        //             },
-        //         }
+        axios
+            .post(
+                `${Config.API_SERVER}/user/price_alert`, 
+                alertToServer,
+                {
+                    headers: {
+                        token,
+                    },
+                }
 
-        //     )
+            )
         return {
             newAlert: alerts,
             type: ADD_ALERT,
@@ -107,15 +110,19 @@ export const loadAlertsToStore = (alerts: IAlerts) => {
     };
 };
 
-export const loadAlerts = async () => {
+export const loadAlerts = async (token: string) => {
 
-    // const alerts = await AsyncStorage.getItem("@CoinMarketNews:AlertsStore");
-    // if (alerts !== null) {
-    //     store.dispatch(loadAlertsToStore(JSON.parse(alerts)));
-    //     return JSON.parse(alerts);
-    // } else {
-    //     return;
-    // }
+    axios
+    .post(
+        `${Config.API_SERVER}/user/price_alert`, 
+        alertToServer,
+        {
+            headers: {
+                token,
+            },
+        }
+
+    )
 };
 
 export const removeAlerts = (alerts: IAlerts, token: string) => {

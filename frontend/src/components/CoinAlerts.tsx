@@ -2,17 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, Text, StyleProvider, Icon } from "native-base";
-import { StyleSheet, View, Switch, TouchableOpacity, TouchableOpacityBase } from "react-native";
+import { StyleSheet, View, Switch, TouchableOpacity, TouchableOpacityBase, ListView, FlatList } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
 
-import { ICoin, ICoinPrice, ISettings } from "../models";
+import { ICoin, ICoinPrice, ISettings, IAlerts } from "../models";
 import { IRootState } from "../redux/store";
 import { Navigator } from "react-native-navigation";
 import CoinAlertsModal from "./CoinAlertsModal";
 
 interface ICoinsAlertsProps {
+    alerts: IAlerts[];
     appSettings: ISettings;
     coin: ICoin;
     coinPrice: ICoinPrice;
@@ -29,7 +30,15 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
             modalVisible: false,
         };
     }
+    public renderAlerts = (info: { item: IAlerts, index: number }) => {
+        return (
 
+            <View style={styles(this.props.darkMode).NewsAlertsView}>
+                <Text style={styles(this.props.darkMode).text}>{info.item.currency} {info.item.amount}</Text>
+                <Switch value={info.item.active}/>
+            </View>
+        )
+    }
     public render() {
         return (
             <StyleProvider style={getTheme(commonColour)} >
@@ -38,6 +47,12 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
                         <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
                         <Switch />
                     </View>
+
+                    <FlatList
+                        data={this.props.alerts}
+                        keyExtractor={this.keyExtractor}
+                        renderItem={this.renderAlerts}
+                    />
                     <View style={styles(this.props.darkMode).AddAlertView}>
                         <Text style={styles(this.props.darkMode).text}>Add a new price alert</Text>
                         <TouchableOpacity onPress={this.openModal} >
@@ -54,6 +69,9 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
             modalVisible: false
         })
     }
+    private keyExtractor = (item: IAlerts, index: number) => {
+        return item.alertID.toString();
+    }
     private openModal = () => {
         this.setState({
             modalVisible: true
@@ -63,6 +81,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
 
 const mapStateToProps = (state: IRootState) => {
     return {
+        alerts: state.alerts.alerts,
         coins: state.coins.coins,
         user: state.user.user,
     };
