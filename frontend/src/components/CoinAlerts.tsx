@@ -2,15 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, Text, StyleProvider, Icon } from "native-base";
-import { StyleSheet, View, Switch, TouchableOpacity, TouchableOpacityBase, ListView, FlatList } from "react-native";
+import { StyleSheet, View, Switch, TouchableOpacity, TouchableOpacityBase, ListView, FlatList, ScrollView } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
 
-import { ICoin, ICoinPrice, ISettings, IAlerts } from "../models";
+import { ICoin, ICoinPrice, ISettings, IAlerts, IUser } from "../models";
 import { IRootState } from "../redux/store";
 import { Navigator } from "react-native-navigation";
 import CoinAlertsModal from "./CoinAlertsModal";
+import { editAlert, removeAlerts } from "../redux/actions/alerts";
 
 interface ICoinsAlertsProps {
     alerts: IAlerts[];
@@ -19,6 +20,9 @@ interface ICoinsAlertsProps {
     coinPrice: ICoinPrice;
     darkMode: boolean;
     navigator: Navigator;
+    user: IUser;
+    editAlert: (alert: IAlerts, token: string) => void;
+    removeAlerts: (alert: IAlerts, token: string) => void;
 }
 
 class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: boolean }> {
@@ -32,10 +36,10 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
     }
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
-
             <View style={styles(this.props.darkMode).NewsAlertsView}>
-                <Text style={styles(this.props.darkMode).text}>{info.item.currency} {info.item.amount}</Text>
-                <Switch value={info.item.active}/>
+                <Text style={styles(this.props.darkMode).text}>{info.item.currency_symbol} {info.item.price_point}</Text>
+                <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} />
+                <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)}/>
             </View>
         )
     }
@@ -47,12 +51,13 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
                         <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
                         <Switch />
                     </View>
-
-                    <FlatList
-                        data={this.props.alerts}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={this.renderAlerts}
-                    />
+                    <ScrollView>
+                        <FlatList
+                            data={this.props.alerts}
+                            keyExtractor={this.keyExtractor}
+                            renderItem={this.renderAlerts}
+                        />
+                    </ScrollView>
                     <View style={styles(this.props.darkMode).AddAlertView}>
                         <Text style={styles(this.props.darkMode).text}>Add a new price alert</Text>
                         <TouchableOpacity onPress={this.openModal} >
@@ -70,7 +75,14 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
         })
     }
     private keyExtractor = (item: IAlerts, index: number) => {
-        return item.alertID.toString();
+        return item.id.toString();
+    }
+    private handleDelete = (alert: IAlerts) => {
+        return this.props.removeAlerts(alert, this.props.user.token)
+    }
+    private handleValueChange = (alert: IAlerts) => {
+        alert.active = !alert.active
+        return this.props.editAlert(alert, this.props.user.token)
     }
     private openModal = () => {
         this.setState({
@@ -79,6 +91,12 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, { modalVisible: 
     }
 }
 
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        editAlert: (alert: IAlerts, token: string) => dispatch(editAlert(alert, token)),
+        removeAlerts: (alert: IAlerts, token: string) => dispatch(removeAlerts(alert, token)),
+    };
+};
 const mapStateToProps = (state: IRootState) => {
     return {
         alerts: state.alerts.alerts,
@@ -87,7 +105,7 @@ const mapStateToProps = (state: IRootState) => {
     };
 };
 
-const CoinAlerts = connect(mapStateToProps)(PureCoinAlerts);
+const CoinAlerts = connect(mapStateToProps, mapDispatchToProps)(PureCoinAlerts);
 export default CoinAlerts;
 
 const styles = (darkMode: boolean) => StyleSheet.create({

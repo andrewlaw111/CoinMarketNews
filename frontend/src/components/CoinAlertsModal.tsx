@@ -14,15 +14,12 @@ interface ICoinAlertsModalProps {
     alerts: IAlerts[];
     user: IUser;
     addAlerts: (alert: IAlerts, token: string) => void;
-    editAlerts: (alert: IAlerts, token: string) => void;
-    removeAlerts: (alert: IAlerts, token: string) => void;
 }
 
 interface ICoinAlertsModalState {
     alertAmountCrypto: string;
     alertAmountFiat: string;
     fiatCurrency: boolean
-    upper: boolean,
 }
 
 class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAlertsModalState> {
@@ -118,28 +115,25 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
         return this.props.closeModal()
     }
     public handleAdd = () => {
-        const alertID = this.props.alerts.length;
         let alert: IAlerts;
         let upper: boolean;
         if (this.state.fiatCurrency) {
             upper = (parseFloat(this.state.alertAmountFiat) >= this.props.coinPrice.price_fiat.price) ? true : false;
             alert = {
-                alertID,
                 coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
-                currency_id: this.props.coinPrice.id,
+                currency_symbol: this.props.coinPrice.id,
                 currency: this.props.appSettings.fiatCurrency,
-                amount: parseFloat(this.state.alertAmountFiat),
+                price_point: parseFloat(this.state.alertAmountFiat),
                 active: true,
                 upper,
             }
         } else {
             upper = (parseFloat(this.state.alertAmountCrypto) >= this.props.coinPrice.price_crypto.price) ? true : false;
             alert = {
-                alertID,
                 coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
-                currency_id: this.props.coinPrice.id,
+                currency_symbol: this.props.coinPrice.id,
                 currency: this.props.appSettings.cryptoCurrency,
-                amount: parseFloat(this.state.alertAmountCrypto),
+                price_point: parseFloat(this.state.alertAmountCrypto),
                 active: true,
                 upper,
             }
@@ -149,14 +143,9 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
     }
 }
 
-
-
-
 const mapDispatchToProps = (dispatch: any) => {
     return {
         addAlerts: (alert: IAlerts, token: string) => dispatch(addAlerts(alert, token)),
-        editAlerts: (alert: IAlerts, token: string) => dispatch(editAlert(alert, token)),
-        removeAlerts: (alert: IAlerts, token: string) => dispatch(removeAlerts(alert, token)),
     };
 };
 

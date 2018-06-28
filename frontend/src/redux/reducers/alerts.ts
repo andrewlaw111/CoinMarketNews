@@ -15,7 +15,6 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
         case ADD_ALERT:
             const addAlerts = state.alerts.slice()
             addAlerts.push(action.newAlert);
-            console.log(addAlerts);
             return {
                 alerts: addAlerts, // Use concat to add a new link
             };
@@ -23,7 +22,7 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
         case EDIT_ALERT:
             const editAlert = state.alerts.slice()
             const editedAlerts = editAlert.map((alert) => {
-                if (alert.alertID === action.editAlert.alertID) {
+                if (alert.id === action.editAlert.id) {
                     alert = action.editAlert;
                 }
                 return alert;
@@ -38,10 +37,9 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
             };
 
         case REMOVE_ALERT:
-            const removeAlerts = state.alerts.slice();
-
-            removeAlerts.filter((alert) => alert.alertID !== action.removeAlert.alertID)
-
+            let removeAlerts = state.alerts.slice();
+            
+            removeAlerts = removeAlerts.filter((alert) => alert.id !== action.removeAlert.id)
             return {
                 alerts: removeAlerts, // Use concat to add a new link
             };

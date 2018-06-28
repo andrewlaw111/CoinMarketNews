@@ -57,6 +57,8 @@ export interface IUser {
     coin_currency_id: number;
     email: string | null;
     notifications: boolean;
+    news_alert: INewsAlert[];
+    price_alert: IPriceAlert[];
     token: string | null;
 }
 
@@ -78,11 +80,26 @@ export interface ISettings {
 }
 
 export interface IAlerts {
-    alertID: number;
+    id?: number;
     coinmarketcap_id: number;
-    currency_id: number;
+    currency_symbol: number;
     currency: string;
     upper: boolean;
-    amount: number;
+    price_point: number;
     active: boolean;
+}
+
+export interface IPriceAlert {
+    id: number;
+    coinmarketcap_id: number;
+    currency_symbol: string;
+    upper: boolean;
+    price_point: number;
+    active: boolean;
+}
+
+export interface INewsAlert {
+    id: number;
+    coin_id: number;
+    alert: boolean;
 }

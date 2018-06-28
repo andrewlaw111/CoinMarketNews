@@ -49,7 +49,7 @@ function setColour(darkMode: boolean) {
 Promise.all([
   getUser()
     .then((data: IUser) => {
-      loadAlerts(data.token)
+      loadAlerts(data)
       getCoins();
       getNews();
     }),

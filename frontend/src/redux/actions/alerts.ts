@@ -1,8 +1,8 @@
 import { AsyncStorage } from "react-native";
 
-import { Action } from "redux";
+import { Action, Dispatch } from "redux";
 import { store } from "../store";
-import { IAlerts } from "../../models";
+import { IAlerts, IUser, IPriceAlert } from "../../models";
 import axios from "axios";
 import Config from "react-native-config";
 
@@ -41,30 +41,39 @@ export interface IRemoveAlertsAction extends Action {
 
 export type AlertsActions = IAddAlertsAction | IEditAlertsAction | ILoadAlertsAction | IRemoveAlertsAction;
 
+export const addAlertsToStore = (alerts: IAlerts):IAddAlertsAction => {
+    return {
+        newAlert: alerts,
+        type: ADD_ALERT,
+    };
+
+}
+
 export const addAlerts = (alerts: IAlerts, token: string) => {
     const alertToServer = {
         coinmarketcap_id: alerts.coinmarketcap_id,
-        currency_id: alerts.amount,
+        currency_symbol: alerts.currency,
         upper: alerts.upper,
-        price_point: alerts.amount,
+        price_point: alerts.price_point,
         active: true
     }
     if (token) {
-        axios
-            .post(
-                `${Config.API_SERVER}/user/price_alert`,
-                alertToServer,
-                {
-                    headers: {
-                        token,
-                    },
-                }
+        return (dispatch: Dispatch<IAddAlertsAction>) => {
+            return axios
+                .post(
+                    `${Config.API_SERVER}/user/price_alert`,
+                    alertToServer,
+                    {
+                        headers: {
+                            token,
+                        },
+                    }
 
-            )
-        return {
-            newAlert: alerts,
-            type: ADD_ALERT,
-        };
+                ).then((response) => {
+                    alerts.id = response.data;
+                    dispatch(addAlertsToStore(alerts))
+                })
+        }
     }
     else {
         AsyncStorage.getItem("@CoinMarketNews:userToken").then((token) => {
@@ -75,21 +84,20 @@ export const addAlerts = (alerts: IAlerts, token: string) => {
 }
 export const editAlert = (alerts: IAlerts, token: string) => {
     if (token) {
-        // axios
-        //     .post(
-        //         `${Config.API_SERVER}/user/favourites`,
-        //         {
-        //             data: {
-        //                 alerts,
-        //             }
-        //         },
-        //         {
-        //             headers: {
-        //                 token,
-        //             },
-        //         }
+        axios
+            .put(
+                `${Config.API_SERVER}/user/price_alert`,
+                {
+                    priceID: alerts.id,
+                    active: alerts.active
+                },
+                {
+                    headers: {
+                        token,
+                    },
+                }
 
-        //     )
+            )
         return {
             editAlert: alerts,
             type: EDIT_ALERT,
@@ -103,47 +111,36 @@ export const editAlert = (alerts: IAlerts, token: string) => {
     };
 }
 
-export const loadAlertsToStore = (alerts: IAlerts) => {
+export const loadAlertsToStore = (alerts: IPriceAlert[]) => {
     return {
         alerts: alerts,
         type: LOAD_ALERTS,
     };
 };
 
-export const loadAlerts = async (token: string) => {
+export const loadAlerts = async (user: IUser) => {
+    if (user.price_alert) {
+        store.dispatch(loadAlertsToStore(user.price_alert));
+    }
 
-    // axios
-    //     .get(
-    //         `${Config.API_SERVER}/user/price_alert`,)
-    //         {
-    //             headers: {
-    //                 token,
-    //             },
-    //         }
-
-    //     ).then((response) => {
-    //         console.error(response.data)
-    //         // loadAlertsToStore(response.data)
-    //     })
 };
 
 export const removeAlerts = (alerts: IAlerts, token: string) => {
     if (token) {
-        // axios
-        //     .delete(
-        //         `${Config.API_SERVER}/user/favourites`,
-        //         {
-        //             headers: {
-        //                 token,
-        //             },
-        //             data: {
-        //                 alerts,
-        //             }
-        //         },
-
-        // )
+        axios
+            .delete(
+                `${Config.API_SERVER}/user/price_alert`,
+                {
+                    headers: {
+                        token,
+                    },
+                    data: {
+                        priceID: alerts.id,
+                    }
+                },
+        )
         return {
-            alerts: alerts,
+            removeAlert: alerts,
             type: REMOVE_ALERT,
         };
     } else {
