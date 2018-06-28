@@ -63,7 +63,7 @@ export default class UserService {
                                         news_alert: news_alert,
                                         token: user.token,
                                     };
-                                    console.log(userWithToken);
+                                    // console.log(userWithToken);
                                     return userWithToken;
                                 });
                         });
@@ -108,9 +108,7 @@ export default class UserService {
     }
 
     public changeNotifications(token: string, notifications: boolean) {
-        console.log(token);
         console.log(notifications);
-
         return knex
             .select("user_id")
             .from("sessions")
@@ -127,6 +125,80 @@ export default class UserService {
                     });
             })
     }
+    public createPriceAlert(token: string, coinmarketcap_id: number, currency_id: number, upper: boolean, price_point: number, active: boolean) {
+        return knex
+            .select("user_id")
+            .from("sessions")
+            .where("token", token)
+            .then((users) => {
+                return knex
+                    .insert({
+                        user_id: users[0].user_id,
+                        coinmarketcap_id,
+                        currency_id,
+                        upper,
+                        price_point,
+                        active
+                    })
+                    .into("price_alert")
+                    .then((data) => {
+                        console.log('price alert added');
+                        return data;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        return err;
+                    })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    public deletePriceAlert(token: string, priceID: number) {
+        return knex
+            .select("user_id")
+            .from("sessions")
+            .where("token", token)
+            .then((users) => {
+                return knex
+                    .delete()
+                    .where({
+                        user_id: users[0].user_id,
+                        id: priceID,
+                    })
+                    .from("price_alert")
+                    .then((data) => {
+                        console.log('price alert removed');
+                        return data;
+                    })
+                    .catch((err) => {
+                        return err;
+                    })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    public updatePriceAlert(token: string, priceID: number, active: boolean) {
+        return knex
+            .select("user_id")
+            .from("sessions")
+            .where("token", token)
+            .then((users) => {
+                return knex("price_alert")
+                    .update({
+                        active
+                    })
+                    .where("user_id", users[0].user_id)
+                    .andWhere("price_id", priceID)
+                    .then((data) => {
+                        return data;
+                    });
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     public createNewsAlert(token: string, coinID: number) {
         return knex
             .select("user_id")
@@ -141,7 +213,7 @@ export default class UserService {
                     })
                     .into("news_alert")
                     .then((data) => {
-                        console.log('alert on');
+                        console.log('news alert on');
                         return data;
                     })
                     .catch((err) => {
@@ -167,7 +239,7 @@ export default class UserService {
                     })
                     .from("news_alert")
                     .then((data) => {
-                        console.log('alert off');
+                        console.log('news alert off');
                         return data;
                     })
                     .catch((err) => {
@@ -179,82 +251,82 @@ export default class UserService {
 
             });
     }
-    public deleteFavourite(token: string, coinID: number) {
-        // return knex
-        //     .select("user_id")
-        //     .from("sessions")
-        //     .where("token", token)
-        //     .then((users) => {
-        //         return knex
-        //             .delete()
-        //             .where({
-        //                 user_id: users[0].user_id,
-        //                 coin_id: coinID,
-        //             })
-        //             .from("news_alert")
-        //             .then((data) => {
-        //                 return data;
-        //             })
-        //             .catch((err) => {
-        //                 return err;
-        //             })
-        //     })
-        //     .catch((err) => {
-        //         console.log(err)
+    // public deleteFavourite(token: string, coinID: number) {
+    //     return knex
+    //         .select("user_id")
+    //         .from("sessions")
+    //         .where("token", token)
+    //         .then((users) => {
+    //             return knex
+    //                 .delete()
+    //                 .where({
+    //                     user_id: users[0].user_id,
+    //                     coin_id: coinID,
+    //                 })
+    //                 .from("news_alert")
+    //                 .then((data) => {
+    //                     return data;
+    //                 })
+    //                 .catch((err) => {
+    //                     return err;
+    //                 })
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
 
-        //     });
-    }
-    public saveFavourite(token: string, coinID: number) {
-        // return knex
-        //     .select("user_id")
-        //     .from("sessions")
-        //     .where("token", token)
-        //     .then((users) => {
-        //         return knex
-        //             .insert({
-        //                 user_id: users[0].user_id,
-        //                 coin_id: coinID,
-        //                 favourite: true,
-        //                 subscribe_website: false,
-        //                 subscribe_medium: false,
-        //                 subscribe_reddit: false,
-        //                 subscribe_twitter: false,
-        //             })
-        //             .into("news_alert")
-        //             .then((data) => {
-        //                 console.log('added favourite');
-        //                 return data;
-        //             })
-        //             .catch((err) => {
-        //                 console.log(err);
-        //                 return err;
-        //             })
-        //     })
-        //     .catch((err) => {
-        //         console.log(err)
-        //     })
-    }
+    //         });
+    // }
+    // public saveFavourite(token: string, coinID: number) {
+    //     return knex
+    //         .select("user_id")
+    //         .from("sessions")
+    //         .where("token", token)
+    //         .then((users) => {
+    //             return knex
+    //                 .insert({
+    //                     user_id: users[0].user_id,
+    //                     coin_id: coinID,
+    //                     favourite: true,
+    //                     subscribe_website: false,
+    //                     subscribe_medium: false,
+    //                     subscribe_reddit: false,
+    //                     subscribe_twitter: false,
+    //                 })
+    //                 .into("news_alert")
+    //                 .then((data) => {
+    //                     console.log('added favourite');
+    //                     return data;
+    //                 })
+    //                 .catch((err) => {
+    //                     console.log(err);
+    //                     return err;
+    //                 })
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
 
-    public updateUser(
-        coinCurrencyId: number,
-        email: string,
-        fiatCurrencyId: number,
-        notifications: boolean,
-        password: string,
-        token: string,
-    ) {
-        return knex
-            .where("token", token)
-            .update({
-                coin_currency_id: coinCurrencyId,
-                email,
-                fiat_currency_id: fiatCurrencyId,
-                notifications,
-                password,
-                token,
-            }, ["user.id", "user.fiat_currency_id", "coin_currency_id", "email", "notifications"])
-            .then((data) => {
-                return data;
-            });
-    }
+    // public updateUser(
+    //     coinCurrencyId: number,
+    //     email: string,
+    //     fiatCurrencyId: number,
+    //     notifications: boolean,
+    //     password: string,
+    //     token: string,
+    // ) {
+    //     return knex
+    //         .where("token", token)
+    //         .update({
+    //             coin_currency_id: coinCurrencyId,
+    //             email,
+    //             fiat_currency_id: fiatCurrencyId,
+    //             notifications,
+    //             password,
+    //             token,
+    //         }, ["user.id", "user.fiat_currency_id", "coin_currency_id", "email", "notifications"])
+    //         .then((data) => {
+    //             return data;
+    //         });
+    // }
 }
