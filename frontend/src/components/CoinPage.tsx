@@ -11,20 +11,25 @@ import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { ICoin, ICoinPrice, IUser, ISettings } from "../models";
 import { IRootState } from "../redux/store";
+import IonIcons from "react-native-vector-icons/Ionicons";
 
-import { Navigator } from "react-native-navigation";
+import { Navigator, NavigatorEvent } from "react-native-navigation";
 import CoinAlerts from "./CoinAlerts";
 import CoinInfo from "./CoinInfo";
 import CoinNews from "./CoinNews";
 import CoinPrice from "./CoinPrice";
+import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 
 
 interface ICoinsPageProps {
     appSettings: ISettings;
     coinID: number;
     coinPrice: ICoinPrice;
+    favourite: boolean;
     user: IUser;
     navigator: Navigator;
+    addCoinFavourite: (coinID: number, token: string) => void;
+    removeCoinFavourite: (coinID: number, token: string) => void;
 }
 interface ICoinsPageState {
     coin?: ICoin;
@@ -34,9 +39,6 @@ interface ICoinsPageState {
 class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
     public styles: typeof styles;
 
-    public static navigatorStyle = {
-        tabBarHidden: true,
-    };
     public componentWillMount() {
         this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
     }
@@ -51,7 +53,35 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
             priceWidget: "",
         };
         this.getCoin();
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
+
+    public onNavigatorEvent(event: NavigatorEvent) {
+        if (event.type == 'NavBarButtonPress') {
+            if (event.id == 'like') {
+                Promise.all([
+                    IonIcons.getImageSource("ios-star", 24, "grey"),
+                ]).then((sources) => {
+                    this.props.navigator.setButtons({
+                        rightButtons: [{
+                            buttonColor: (!this.props.favourite) ? "gold" : "grey",
+                            buttonFontSize: 18,
+                            buttonFontWeight: "600",
+                            id: "like",
+                            showAsAction: "ifRoom",
+                            icon: sources[0],
+                        }],
+                    })
+                })
+                if (!this.props.favourite) {
+                    return this.props.addCoinFavourite(this.props.coinID, this.props.user.token);
+                } else {
+                    return this.props.removeCoinFavourite(this.props.coinID, this.props.user.token);
+                }
+            }
+        }
+    }
+
     public renderNoConnection() {
         console.log("no connection");
         return (
@@ -80,7 +110,8 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                             activeTabStyle={{ backgroundColor: backgroundColour }}
                             activeTextStyle={{ color: textColour }}
                             tabStyle={{ backgroundColor: backgroundColour }}
-                            textStyle={{ color: textColour }}>
+                            textStyle={{ color: textColour }}
+                        >
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinInfo coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
                         </Tab>
                         <Tab
@@ -88,7 +119,8 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                             activeTabStyle={{ backgroundColor: backgroundColour }}
                             activeTextStyle={{ color: textColour }}
                             tabStyle={{ backgroundColor: backgroundColour }}
-                            textStyle={{ color: textColour }}>
+                            textStyle={{ color: textColour }}
+                        >
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinNews coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
                         </Tab>
                         <Tab
@@ -96,7 +128,8 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                             activeTabStyle={{ backgroundColor: backgroundColour }}
                             activeTextStyle={{ color: textColour }}
                             tabStyle={{ backgroundColor: backgroundColour }}
-                            textStyle={{ color: textColour }}>
+                            textStyle={{ color: textColour }}
+                        >
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinPrice coin={this.state.coin} coinPrice={this.props.coinPrice} darkMode={this.props.appSettings.darkMode} priceWidget={this.state.priceWidget} />}
                         </Tab>
                         <Tab
@@ -104,7 +137,8 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                             activeTabStyle={{ backgroundColor: backgroundColour }}
                             activeTextStyle={{ color: textColour }}
                             tabStyle={{ backgroundColor: backgroundColour }}
-                            textStyle={{ color: textColour }}>
+                            textStyle={{ color: textColour }}
+                        >
                             {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinAlerts coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
                         </Tab>
                     </Tabs>
@@ -127,6 +161,13 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
     }
 }
 
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        addCoinFavourite: (coinID: number, token: string) => dispatch(addCoinFavourite(coinID, token)),
+        removeCoinFavourite: (coinID: number, token: string) => dispatch(removeCoinFavourite(coinID, token)),
+    };
+};
+
 const mapStateToProps = (state: IRootState) => {
     return {
         coins: state.coins.coins,
@@ -134,7 +175,7 @@ const mapStateToProps = (state: IRootState) => {
     };
 };
 
-const CoinsList = connect(mapStateToProps)(PureCoinsList);
+const CoinsList = connect(mapStateToProps, mapDispatchToProps)(PureCoinsList);
 export default CoinsList;
 
 const styles = StyleSheet.create({
