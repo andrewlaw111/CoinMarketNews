@@ -28,7 +28,6 @@ interface ICoinListProps {
     setting: string,
     user: IUser,
     navigator: Navigator;
-    handlePress: (info: { item: ICoinPrice, index: number }) => void;
     addCoinFavourite: (coinID: number, token: string) => void;
     removeCoinFavourite: (coinID: number, token: string) => void;
 }

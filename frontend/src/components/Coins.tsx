@@ -77,7 +77,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             <StyleProvider style={getTheme(commonColour)}>
                 <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
                     <Container style={styles(this.props.appSettings.darkMode).coinListComponent}>
-                        <Tabs style={iosTabs} initialPage={0}>
+                        <Tabs initialPage={0}>
                             <Tab
                                 heading="Favourites"
                                 activeTabStyle={{ backgroundColor: backgroundColour }}
