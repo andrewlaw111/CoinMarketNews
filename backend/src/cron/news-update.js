@@ -43,6 +43,7 @@ module.exports = () => {
                             news.title = item.title.trim();
                             news.content = sanitizeHtml(item.description, { allowedTags: [] }).trim();
                             news.link = item.link.trim();
+                            news.source_id = get_source(news.link);
                             news.created_at = item.pubDate;
                             axios.get('https://graph.facebook.com/?id=' + news.link)
                                 .then(function (json) {
@@ -90,8 +91,8 @@ module.exports = () => {
                     console.log(sources);
                     for (const source of sources) {
                         feeder.add({
-                            url: source.link,
-                            refresh: 5*60*1000  // every 5 minutes
+                            url: source.feed,
+                            refresh: 5 * 60 * 1000  // every 5 minutes
                         });
                     }
                 });
@@ -127,5 +128,18 @@ module.exports = () => {
                         });
                 }
             })
+    }
+
+    function get_source(link) {
+        knex('source')
+            .then(function (sources) {
+                console.log(sources);
+                for (const source of sources) {
+                    if (link.includes(source.feed)) {
+                        return source.id;
+                    }
+                }
+                return null;
+            });
     }
 }
