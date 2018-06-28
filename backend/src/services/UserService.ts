@@ -16,7 +16,7 @@ export interface IUser {
 export interface IPriceAlert {
     id: number;
     coinmarketcap_id: number;
-    currency_id: number;
+    currency_symbol: string;
     upper: boolean;
     price_point: number;
     active: boolean;
@@ -48,6 +48,18 @@ export default class UserService {
                         .from("price_alert")
                         .where("user_id", "=", user.user_id)
                         .then((price_alert) => {
+                            const map_id_symbol: any = [];
+                            map_id_symbol[1] = "USD";
+                            map_id_symbol[2] = "EUR";
+                            map_id_symbol[3] = "CAD";
+                            map_id_symbol[4] = "GBP";
+                            map_id_symbol[5] = "HKD";
+                            map_id_symbol[6] = "BTC";
+                            map_id_symbol[7] = "ETH";
+                            price_alert.map(function (alert: any) {
+                                alert.currency_symbol = map_id_symbol[alert.currency_id];
+                                delete alert.currency_id;
+                            })
                             return knex
                                 .select('id', 'coin_id', 'alert')
                                 .from("news_alert")
@@ -125,25 +137,34 @@ export default class UserService {
                     });
             })
     }
-    public createPriceAlert(token: string, coinmarketcap_id: number, currency_id: number, upper: boolean, price_point: number, active: boolean) {
+    public createPriceAlert(token: string, coinmarketcap_id: number, currency_symbol: string, upper: boolean, price_point: number, active: boolean) {
         return knex
             .select("user_id")
             .from("sessions")
             .where("token", token)
             .then((users) => {
+                const map_symbol_id: any = [];
+                map_symbol_id["USD"] = 1;
+                map_symbol_id["EUR"] = 2;
+                map_symbol_id["CAD"] = 3;
+                map_symbol_id["GBP"] = 4;
+                map_symbol_id["HKD"] = 5;
+                map_symbol_id["BTC"] = 6;
+                map_symbol_id["ETH"] = 7;
                 return knex
                     .insert({
                         user_id: users[0].user_id,
                         coinmarketcap_id,
-                        currency_id,
+                        currency_id: map_symbol_id[currency_symbol],
                         upper,
                         price_point,
                         active
                     })
                     .into("price_alert")
+                    .returning('id')
                     .then((data) => {
                         console.log('price alert added');
-                        return data;
+                        return data[0];
                     })
                     .catch((err) => {
                         console.log(err);

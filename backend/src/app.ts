@@ -33,7 +33,7 @@ var CronJob = cron.CronJob;
 
 if (process.env.CRON_COIN_PRICE === "true") {
     // new CoinPriceUpdate();   // dev only
-    // every hour
+    // every hour at 10 minutes
     new CronJob('0 10 * * * *', function () { new CoinPriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_COIN_INFOS === "true") {
@@ -43,12 +43,12 @@ if (process.env.CRON_COIN_INFOS === "true") {
 }
 if (process.env.CRON_PRICE === "true") {
     // new PriceUpdate();   // dev only
-    // every hour
+    // every hour at 50 minutes
     new CronJob('0 50 * * * *', function () { new PriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_PRICE_ALERT === "true") {
     // new PriceAlert();   // dev only
-    // every 5 minutes
+    // every 5 minutes at 30 sec
     new CronJob('30 */5 * * * *', function () { new PriceAlert(); }, function () { }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_NEWS === "true") {

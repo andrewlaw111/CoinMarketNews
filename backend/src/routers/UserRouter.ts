@@ -61,7 +61,7 @@ export default class UserRouter {
         return this.userService.createPriceAlert(
             req.headers.token,
             req.body.coinmarketcap_id,
-            req.body.currency_id,
+            req.body.currency_symbol,
             req.body.upper,
             req.body.price_point,
             req.body.active
