@@ -161,9 +161,10 @@ export default class UserService {
                         active
                     })
                     .into("price_alert")
+                    .returning('id')
                     .then((data) => {
                         console.log('price alert added');
-                        return data;
+                        return data[0];
                     })
                     .catch((err) => {
                         console.log(err);
