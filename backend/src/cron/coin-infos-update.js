@@ -8,7 +8,7 @@ module.exports = () => {
         rateLimit: 10000, // 1 query every 10 seconds
         userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
         referer: 'https://coinlib.io/',
-        retries: 0,
+        retries: 1,
         // This will be called for each crawled page
         callback: function (error, res, done) {
             if (error) {
@@ -29,6 +29,11 @@ module.exports = () => {
                     const about = $('.coin-description').clone().children('strong, a').remove().end().text().trim();
                     if (about != '') {
                         update_coin.about = about;
+                    } else {
+                        const about2 = $('.coin-description').text().trim();
+                        if (about2 != '') {
+                            update_coin.about = about2;
+                        }
                     }
 
                     // infos
@@ -74,13 +79,18 @@ module.exports = () => {
 
                     console.log(update_coin);
 
-                    knex('coin')
-                        .where('id', '=', res.options.coin.id)
-                        .update(update_coin).then((data) => {
-                            if (data) {
-                                console.log(res.options.coin.name + ' infos updated');
-                            }
-                        });
+                    if (Object.keys(update_coin).length !== 0) {
+                        knex('coin')
+                            .where('id', '=', res.options.coin.id)
+                            .update(update_coin).then((data) => {
+                                if (data) {
+                                    console.log(res.options.coin.name + ' infos updated');
+                                }
+                            });
+                    } else {
+                        console.log('NO INFO for ' + res.options.coin.name + ' !!!');
+                    }
+
                 }
             }
             done();
@@ -89,16 +99,22 @@ module.exports = () => {
 
     knex.select()
         .from("coin")
-        .whereNotNull('type')
+        .whereNull('type')
         .orderBy('rank', 'asc')
         .then((coins) => {
             console.log(coins);
+
+            const coin_fix = [];    // manually fix URL problems
+            coin_fix['MIOTA'] = 'IOT';
+            coin_fix['VEN'] = 'VET';
+            coin_fix['WICC'] = 'WICEXT';
+
             for (let coin of coins) {
-                if (coin.symbol == 'MIOTA') {
-                    coin.symbol = 'IOT';
+                if (coin.symbol in coin_fix) {
+                    coin.symbol = coin_fix[coin.symbol];
                 }
                 const url = 'https://coinlib.io/coin/' + coin.symbol + '/';
-                // console.log(url);
+                console.log(url);
                 c.queue({
                     uri: url,
                     coin: coin

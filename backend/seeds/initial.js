@@ -34,23 +34,28 @@ const currency_list = [
 const news_source = [
     {
         name: 'Cointelegraph',
-        link: 'https://cointelegraph.com/rss',
+        link: 'https://cointelegraph.com',
+        feed: 'https://cointelegraph.com/rss',
     },
     {
         name: 'NewsBTC',
-        link: 'https://www.newsbtc.com/feed/',
+        link: 'https://www.newsbtc.com',
+        feed: 'https://www.newsbtc.com/feed/',
     },
     {
         name: 'CoinDesk',
-        link: 'https://feeds.feedburner.com/CoinDesk',
+        link: 'https://www.coindesk.com',
+        feed: 'https://feeds.feedburner.com/CoinDesk',
     },
     {
         name: 'CCN',
-        link: 'https://www.ccn.com/feed',
+        link: 'https://www.ccn.com',
+        feed: 'https://www.ccn.com/feed',
     },
     {
         name: 'Toshi Times',
-        link: 'https://toshitimes.com/feed/',
+        link: 'https://toshitimes.com',
+        feed: 'https://toshitimes.com/feed/',
     }
 ];
 

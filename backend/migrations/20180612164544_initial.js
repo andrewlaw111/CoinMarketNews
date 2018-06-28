@@ -3,6 +3,7 @@ exports.up = function (knex, Promise) {
         sources.increments();
         sources.string("name");
         sources.string("link");
+        sources.string("feed");
     }).then(() => {
         return knex.schema.createTable("news", (news) => {
             news.increments();
