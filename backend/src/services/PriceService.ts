@@ -88,8 +88,8 @@ export default class CoinService {
                     .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
                         coins.map(function (coin: any) {
-                            coin.price_fiat = price_array[coin.coinmarketcap_id][1];
-                            coin.price_crypto = price_array[coin.coinmarketcap_id][3];
+                            coin.price_fiat = price_array[coin.coinmarketcap_id][1];    // TODO: dyn id
+                            coin.price_crypto = price_array[coin.coinmarketcap_id][6];    // TODO: dyn id
                         })
                         return this.priceList = coins;
                     });
