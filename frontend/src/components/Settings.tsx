@@ -17,6 +17,8 @@ import Config from "react-native-config";
 import axios from "axios";
 import { Navigator, Navigation } from "react-native-navigation";
 
+import OneSignal from "react-native-onesignal";
+
 interface ISettingsProps {
     coins: ICoinPrice[];
     appSettings: ISettings;
@@ -285,6 +287,10 @@ class PureSettings extends React.Component<ISettingsProps>{
     private handleNotificationChange = (token: string) => {
         const settings = { ...this.props.appSettings };
         settings.pushNotifications = !settings.pushNotifications;
+        if (settings.pushNotifications === true) {
+            OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
+            OneSignal.sendTag("user_id", this.props.user.id.toString());
+        }
         this.props.changeSettings(settings)
         axios
             .patch(

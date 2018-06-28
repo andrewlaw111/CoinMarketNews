@@ -22,7 +22,7 @@ export function loginSuccess(user: IUser): ILoginSuccessAction {
     };
 }
 
-export const getUser = async (OneSignal: any) => {
+export const getUser = async () => {
     try {
         const token = await AsyncStorage.getItem("@CoinMarketNews:userToken");
         if (token !== null) {
@@ -51,7 +51,7 @@ export const getUser = async (OneSignal: any) => {
                     `${Config.API_SERVER}/user`,
             ).then((result) => {
                 store.dispatch(loginSuccess(result.data));
-                OneSignal.sendTag("user_id", result.data.id)
+                // OneSignal.sendTag("user_id", result.data.id)
             }).catch((err) => {
                 console.log(err)
                 // tslint:disable-next-line:no-console

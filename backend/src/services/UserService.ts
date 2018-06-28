@@ -63,7 +63,7 @@ export default class UserService {
                                         news_alert: news_alert,
                                         token: user.token,
                                     };
-                                    // console.log(userWithToken);
+                                    console.log(userWithToken);
                                     return userWithToken;
                                 });
                         });
