@@ -121,8 +121,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             upper = (parseFloat(this.state.alertAmountFiat) >= this.props.coinPrice.price_fiat.price) ? true : false;
             alert = {
                 coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
-                currency_symbol: this.props.coinPrice.id,
-                currency: this.props.appSettings.fiatCurrency,
+                currency_symbol: this.props.appSettings.fiatCurrency,
                 price_point: parseFloat(this.state.alertAmountFiat),
                 active: true,
                 upper,
@@ -131,8 +130,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             upper = (parseFloat(this.state.alertAmountCrypto) >= this.props.coinPrice.price_crypto.price) ? true : false;
             alert = {
                 coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
-                currency_symbol: this.props.coinPrice.id,
-                currency: this.props.appSettings.cryptoCurrency,
+                currency_symbol: this.props.appSettings.cryptoCurrency,
                 price_point: parseFloat(this.state.alertAmountCrypto),
                 active: true,
                 upper,
