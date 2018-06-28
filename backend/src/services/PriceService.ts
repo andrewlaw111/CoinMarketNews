@@ -85,6 +85,7 @@ export default class CoinService {
                 // console.log(price_array);
                 return knex.select('id', 'coinmarketcap_id', 'name', 'symbol', 'rank')
                     .from('coin')
+                    .limit(100) // TODO: REMOVE !!!
                     .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
                         coins.map(function (coin: any) {

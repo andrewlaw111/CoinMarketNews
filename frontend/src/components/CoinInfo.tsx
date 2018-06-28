@@ -101,31 +101,37 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         interface ILinks {
             linkIcon: string;
             linkType: string;
-            link?: { id: number, link: string, name: string };
+            link?: string;
+            name?: string;
         }
         const links: ILinks[] = [
             {
-                link: this.props.coin.medium,
+                link: this.props.coin.medium_link,
+                name: this.props.coin.medium_name,
                 linkIcon: "medium",
                 linkType: "Medium",
             },
             {
-                link: this.props.coin.reddit,
+                link: this.props.coin.reddit_link,
+                name: this.props.coin.reddit_name,
                 linkIcon: "reddit",
                 linkType: "Reddit",
             },
             {
-                link: this.props.coin.telegram,
+                link: this.props.coin.telegram_link,
+                name: this.props.coin.telegram_name,
                 linkIcon: "telegram",
                 linkType: "Telegram",
             },
             {
-                link: this.props.coin.twitter,
+                link: this.props.coin.twitter_link,
+                name: this.props.coin.twitter_name,
                 linkIcon: "twitter",
                 linkType: "Twitter",
             },
             {
-                link: this.props.coin.official_website,
+                link: this.props.coin.website_link,
+                name: this.props.coin.website_name,
                 linkIcon: "link",
                 linkType: "Website",
             },
@@ -139,8 +145,8 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                             {link.linkType}
                         </Text>
                         <Right>
-                            <Text style={[this.styles.cardText, this.styles.link]} onPress={this.handleLinkPress.bind(this, link.link.link)}>
-                                {link.link.name}
+                            <Text style={[this.styles.cardText, this.styles.link]} onPress={this.handleLinkPress.bind(this, link.link)}>
+                                {link.name}
                             </Text>
                         </Right>
                     </CardItem>
@@ -173,7 +179,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                                 null
                             )}
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                        {(this.props.coin.official_website || this.props.coin.medium || this.props.coin.telegram || this.props.coin.twitter || this.props.coin.reddit) ? (
+                        {(this.props.coin.website_link || this.props.coin.medium_link || this.props.coin.telegram_link || this.props.coin.twitter_link || this.props.coin.reddit_link) ? (
                             <Card style={this.styles.Card}>
                                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
                                     <Text>Links</Text>
