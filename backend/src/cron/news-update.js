@@ -43,43 +43,51 @@ module.exports = () => {
                             news.title = item.title.trim();
                             news.content = sanitizeHtml(item.description, { allowedTags: [] }).trim();
                             news.link = item.link.trim();
-                            news.source_id = get_source(news.link);
                             news.created_at = item.pubDate;
-                            axios.get('https://graph.facebook.com/?id=' + news.link)
-                                .then(function (json) {
-                                    console.log(json.data);
-                                    if (json) {
-                                        news.counter = json.data.share.share_count;
+                            knex('source')
+                                .then(function (sources) {
+                                    // console.log(sources);
+                                    for (const source of sources) {
+                                        if (news.link.includes(source.link)) {
+                                            news.source_id = source.id;
+                                        }
                                     }
-                                    knex("news")
-                                        .insert(news)
-                                        .returning('id')
-                                        .then((insert_news_ok) => {
-                                            if (insert_news_ok) {
-                                                console.log('news added to DB');
-                                                console.log(insert_news_ok);
-                                                const coin_news = []
-                                                coins.map(function (coin) {
-                                                    if (news.title.includes(coin.name) || news.title.includes(coin.symbol)) {
-                                                        coin_news.push({ coin_id: coin.id, news_id: insert_news_ok[0] });
-                                                        // send push notif
-                                                        // news_alert(news, coin);
-                                                    }
-                                                    // TODO: same for content ?
-                                                });
-                                                console.log(coin_news);
-                                                if (coin_news.length > 0) {
-                                                    knex("coin_news")
-                                                        .insert(coin_news)
-                                                        .returning('id')
-                                                        .then((insert_coin_news_ok) => {
-                                                            if (insert_coin_news_ok) {
-                                                                console.log('coin news added to DB');
-                                                                console.log(insert_coin_news_ok[0]);
-                                                            }
-                                                        });
-                                                }
+                                    axios.get('https://graph.facebook.com/?id=' + news.link)
+                                        .then(function (json) {
+                                            console.log(json.data);
+                                            if (json) {
+                                                news.counter = json.data.share.share_count;
                                             }
+                                            knex("news")
+                                                .insert(news)
+                                                .returning('id')
+                                                .then((insert_news_ok) => {
+                                                    if (insert_news_ok) {
+                                                        console.log('news added to DB');
+                                                        console.log(insert_news_ok);
+                                                        const coin_news = []
+                                                        coins.map(function (coin) {
+                                                            if (news.title.includes(coin.name) || news.title.includes(coin.symbol)) {
+                                                                coin_news.push({ coin_id: coin.id, news_id: insert_news_ok[0] });
+                                                                // send push notif
+                                                                // news_alert(news, coin);
+                                                            }
+                                                            // TODO: same for content ?
+                                                        });
+                                                        console.log(coin_news);
+                                                        if (coin_news.length > 0) {
+                                                            knex("coin_news")
+                                                                .insert(coin_news)
+                                                                .returning('id')
+                                                                .then((insert_coin_news_ok) => {
+                                                                    if (insert_coin_news_ok) {
+                                                                        console.log('coin news added to DB');
+                                                                        console.log(insert_coin_news_ok[0]);
+                                                                    }
+                                                                });
+                                                        }
+                                                    }
+                                                });
                                         });
                                 });
                         }
@@ -128,18 +136,5 @@ module.exports = () => {
                         });
                 }
             })
-    }
-
-    function get_source(link) {
-        knex('source')
-            .then(function (sources) {
-                console.log(sources);
-                for (const source of sources) {
-                    if (link.includes(source.feed)) {
-                        return source.id;
-                    }
-                }
-                return null;
-            });
     }
 }
