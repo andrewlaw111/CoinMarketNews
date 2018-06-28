@@ -15,11 +15,16 @@ export interface ICoin {
     proof: string;
     mineable: string;
     premined: string;
-    official_website?: { id: number, link: string, name: string };
-    medium?: { id: number, link: string, name: string };
-    reddit?: { id: number, link: string, name: string };
-    twitter?: { id: number, link: string, name: string };
-    telegram?: { id: number, link: string, name: string };
+    website_name?: string;
+    website_link?: string;
+    medium_name?: string;
+    medium_link?: string;
+    reddit_name?: string;
+    reddit_link?: string;
+    twitter_name?: string;
+    twitter_link?: string;
+    telegram_name?: string;
+    telegram_link?: string;
 }
 export interface ICoinPrice {
     id: number;
