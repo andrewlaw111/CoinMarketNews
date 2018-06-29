@@ -12,16 +12,18 @@ interface IPrice {
 
 interface ICoin {
     id: number;
+    coinmarketcap_id: number;
     name: string;
     symbol: string;
     rank: number;
-    price_fiat: IPrice[];
-    price_crypto: IPrice[];
+    price_fiat: IPrice;
+    price_crypto: IPrice;
 }
 
 export default class CoinService {
     public lastUpdated: number;
-    private priceList: ICoin[];
+    public priceList: ICoin[];
+    public prices: IPrice[][] = [];
 
     public constructor() {
         this.lastUpdated = Date.now();
@@ -30,16 +32,15 @@ export default class CoinService {
     public checkTimer() {
         return Date.now() - this.lastUpdated;
     }
-    public getPrice(token: string) {
+    public getPrice(token: string, fiat: string = 'USD', crypto: string = 'BTC') {
         return new Promise((resolve, reject) => {
-            // Make a query to the database if the list has not been updated for 20 seconds
-            if (Date.now() - this.lastUpdated < 20000) {
-                resolve(this.priceList);
+            // Make a query to the database if the list has not been updated for 5 minutes
+            if (Date.now() - this.lastUpdated < 300000) {
+                resolve(this.selectCurrency(fiat, crypto));
             } else {
                 this.updatePriceList()
                     .then(() => {
-                        // console.log(this.priceList)
-                        resolve(this.priceList);
+                        resolve(this.selectCurrency(fiat, crypto));
                     })
                     .catch((err: any) => {
                         reject(err);
@@ -47,16 +48,16 @@ export default class CoinService {
             }
         });
     }
-    public getSpecificCoin(token: string, coinID: string) {
+    public getSpecificCoin(token: string, coinID: string, fiat: string = 'USD', crypto: string = 'BTC') {
         return new Promise((resolve, reject) => {
-            // Make a query to the database if the list has not been updated for 20 seconds
-            if (Date.now() - this.lastUpdated < 20000) {
-                const findcoin = this.priceList.find((coin) => coin.id === parseInt(coinID, undefined));
+            // Make a query to the database if the list has not been updated for 5 minutes
+            if (Date.now() - this.lastUpdated < 300000) {
+                const findcoin = this.selectCurrency(fiat, crypto).find((coin) => coin.id === parseInt(coinID, undefined));
                 resolve(findcoin);
             } else {
                 this.updatePriceList()
                     .then(() => {
-                        resolve(this.priceList.find((coin) => coin.id === parseInt(coinID, undefined)));
+                        resolve(this.selectCurrency(fiat, crypto).find((coin) => coin.id === parseInt(coinID, undefined)));
                     })
                     .catch((err: any) => {
                         reject(err);
@@ -67,33 +68,44 @@ export default class CoinService {
     private updatePriceList() {
         this.lastUpdated = Date.now();
         return knex('price')
-            .then((prices: IPrice[]) => {
-                const price_array: any = [];
-                prices.map(function (price: any) {
-                    if (!(price.coinmarketcap_id in price_array)) {
-                        price_array[price.coinmarketcap_id] = [];
+            .then((prices: any[]) => {
+                for (const price of prices) {
+                    if (!(price.coinmarketcap_id in this.prices)) {
+                        this.prices[price.coinmarketcap_id] = [];
                     }
                     // TODO: adapt decimals for each currency ( 3 = BTC ) => 8 decimals
-                    price.price = (price.currency_id == 3) ? parseFloat(price.price).toFixed(8) : parseFloat(price.price);
+                    price.price = (price.currency_id == 6) ? parseFloat(price.price).toFixed(8) : parseFloat(price.price);
                     price.volume_24h = parseFloat(price.volume_24h);
                     price.market_cap = parseFloat(price.market_cap);
                     price.percent_change_1h = parseFloat(price.percent_change_1h);
                     price.percent_change_24h = parseFloat(price.percent_change_24h);
                     price.percent_change_7d = parseFloat(price.percent_change_7d);
-                    price_array[price.coinmarketcap_id][price.currency_id] = price;
-                });
+                    this.prices[price.coinmarketcap_id][price.currency_id] = price;
+                }
                 // console.log(price_array);
                 return knex.select('id', 'coinmarketcap_id', 'name', 'symbol', 'rank')
                     .from('coin')
                     .limit(100) // TODO: REMOVE !!!
                     .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
-                        coins.map(function (coin: any) {
-                            coin.price_fiat = price_array[coin.coinmarketcap_id][1];    // TODO: dyn id
-                            coin.price_crypto = price_array[coin.coinmarketcap_id][6];    // TODO: dyn id
-                        })
                         return this.priceList = coins;
                     });
             });
+    }
+
+    private selectCurrency(fiat: string = 'USD', crypto: string = 'BTC') {
+        const map_symbol_id: any = [];  // TODO: get from DB
+        map_symbol_id["USD"] = 1;
+        map_symbol_id["EUR"] = 2;
+        map_symbol_id["CAD"] = 3;
+        map_symbol_id["GBP"] = 4;
+        map_symbol_id["HKD"] = 5;
+        map_symbol_id["BTC"] = 6;
+        map_symbol_id["ETH"] = 7;
+        for (const coin of this.priceList) {
+            coin.price_fiat = this.prices[coin.coinmarketcap_id][map_symbol_id[fiat]];
+            coin.price_crypto = this.prices[coin.coinmarketcap_id][map_symbol_id[crypto]];
+        };
+        return this.priceList;
     }
 }
