@@ -7,11 +7,11 @@ import { StyleSheet, View, Switch, TouchableOpacity, TouchableOpacityBase, ListV
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
 
-import { ICoin, ICoinPrice, ISettings, IAlerts, IUser } from "../models";
+import { ICoin, ICoinPrice, ISettings, IAlerts, IUser, INewsAlert } from "../models";
 import { IRootState } from "../redux/store";
 import { Navigator } from "react-native-navigation";
 import CoinAlertsModal from "./CoinAlertsModal";
-import { editAlert, removeAlerts } from "../redux/actions/alerts";
+import { editAlert, removeAlerts, addNewsAlert, removeNewsAlert } from "../redux/actions/alerts";
 
 interface ICoinsAlertsProps {
     alerts: IAlerts[];
@@ -20,6 +20,7 @@ interface ICoinsAlertsProps {
     coinPrice: ICoinPrice;
     darkMode: boolean;
     navigator: Navigator;
+    newsAlerts: INewsAlert[];
     user: IUser;
     addNewsAlert: (coinID: number, token: string) => void;
     removeNewsAlert: (coinID: number, token: string) => void;
@@ -39,7 +40,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
         this.state = {
             alerts: this.props.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id),
             modalVisible: false,
-            newsAlerts: false,
+            newsAlerts: (this.props.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) ? true : false,
         };
     }
     componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
@@ -47,15 +48,15 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
         this.setState({
             alerts
         })
-        if (this.props.user.news_alert.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) {
-            this.setState({
-                newsAlerts: true
-            })
-        } else {
-            this.setState({
-                newsAlerts: false
-            })
-        }
+        // if (this.props.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) {
+        //     this.setState({
+        //         newsAlerts: true
+        //     })
+        // } else {
+        //     this.setState({
+        //         newsAlerts: false
+        //     })
+        // }
     }
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
@@ -123,16 +124,17 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        addNewsAlert: (coinID: number, token: string) => dispatch(),
-        removeNewsAlert: (coinID: number, token: string) => dispatch(),
+        addNewsAlert: (coinID: number, token: string) => dispatch(addNewsAlert(coinID, token)),
+        removeNewsAlert: (coinID: number, token: string) => dispatch(removeNewsAlert(coinID, token)),
         editAlert: (alert: IAlerts, token: string) => dispatch(editAlert(alert, token)),
         removeAlerts: (alert: IAlerts, token: string) => dispatch(removeAlerts(alert, token)),
     };
 };
 const mapStateToProps = (state: IRootState) => {
     return {
-        alerts: state.alerts.alerts,
+        alerts: state.alerts.priceAlerts,
         coins: state.coins.coins,
+        newsAlerts: state.alerts.newsAlerts,
         user: state.user.user,
     };
 };

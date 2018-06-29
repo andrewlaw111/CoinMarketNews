@@ -2,7 +2,7 @@ import { AsyncStorage } from "react-native";
 
 import { Action, Dispatch } from "redux";
 import { store } from "../store";
-import { IAlerts, IUser, IPriceAlert } from "../../models";
+import { IAlerts, IUser, IPriceAlert, INewsAlert } from "../../models";
 import axios from "axios";
 import Config from "react-native-config";
 
@@ -36,6 +36,7 @@ export interface IEditAlertsAction extends Action {
 export interface ILoadAlertsAction extends Action {
     type: LOAD_ALERTS;
     alerts: IAlerts;
+    newsAlerts: INewsAlert;
 }
 
 export interface IRemoveAlertsAction extends Action {
@@ -44,16 +45,16 @@ export interface IRemoveAlertsAction extends Action {
 }
 export interface IAddNewsAlertsAction extends Action {
     type: ADD_NEWS_ALERT;
-    removeAlert: IAlerts;
+    newsAlert: INewsAlert;
 }
 export interface IRemoveNewsAlertsAction extends Action {
     type: REMOVE_NEWS_ALERT;
-    removeAlert: IAlerts;
+    removeNewsAlert: number;
 }
 
-export type AlertsActions = IAddAlertsAction | IEditAlertsAction | ILoadAlertsAction | IRemoveAlertsAction;
+export type AlertsActions = IAddAlertsAction | IEditAlertsAction | ILoadAlertsAction | IRemoveAlertsAction | IAddNewsAlertsAction | IRemoveNewsAlertsAction;
 
-export const addAlertsToStore = (alerts: IAlerts):IAddAlertsAction => {
+export const addAlertsToStore = (alerts: IAlerts): IAddAlertsAction => {
     return {
         newAlert: alerts,
         type: ADD_ALERT,
@@ -83,7 +84,7 @@ export const addAlerts = (alerts: IAlerts, token: string) => {
 
                 ).then((response) => {
                     alerts.id = response.data;
-                    dispatch(addAlertsToStore(alerts))
+                    return dispatch(addAlertsToStore(alerts))
                 })
         }
     }
@@ -123,19 +124,82 @@ export const editAlert = (alerts: IAlerts, token: string) => {
     };
 }
 
-export const loadAlertsToStore = (alerts: IPriceAlert[]) => {
+export const loadAlertsToStore = (alerts: IPriceAlert[], newsAlert: INewsAlert[]) => {
     return {
         alerts: alerts,
+        newsAlerts: newsAlert,
         type: LOAD_ALERTS,
     };
 };
 
 export const loadAlerts = async (user: IUser) => {
-    if (user.price_alert) {
-        store.dispatch(loadAlertsToStore(user.price_alert));
+    if (user.price_alert || user.news_alert) {
+        store.dispatch(loadAlertsToStore(user.price_alert, user.news_alert));
+    }
+};
+export const addNewsAlertToStore = (newsAlert: INewsAlert): IAddNewsAlertsAction => {
+    return {
+        newsAlert: newsAlert,
+        type: ADD_NEWS_ALERT,
+    };
+}
+export const removeNewsAlertFromStore = (coinID: number): IRemoveNewsAlertsAction => {
+    return {
+        removeNewsAlert: coinID,
+        type: REMOVE_NEWS_ALERT,
+    };
+}
+export const addNewsAlert = (coinID: number, token: string) => {
+    return (dispatch: Dispatch<IAddNewsAlertsAction>) => {
+        return axios
+            .post(
+                `${Config.API_SERVER}/user/news_alert`,
+                {
+                    coinID: coinID
+                },
+                {
+                    headers: {
+                        token,
+                    },
+                }
+
+            ).then((response) => {
+                console.error("add", response.data)
+                const alert = {
+                    id: response.data,
+                    coin_id: coinID,
+                    alert: true,
+                }
+                return dispatch(addNewsAlertToStore(alert))
+            }).catch((err) => {
+                console.error(err);
+            })
+    }
+};
+
+export const removeNewsAlert = (coinID: number, token: string) => {
+    return (dispatch: Dispatch<IRemoveNewsAlertsAction>) => {
+        return axios
+            .delete(
+                `${Config.API_SERVER}/user/news_alert`,
+                {
+                    headers: {
+                        token,
+                    },
+                    data: {
+                        coinID: coinID
+                    }
+                },
+        ).then((response) => {
+            console.error("remove", response.data)
+            return dispatch(removeNewsAlertFromStore(coinID))
+        }).catch((err) => {
+            console.error(err);
+        })
     }
 
 };
+
 
 export const removeAlerts = (alerts: IAlerts, token: string) => {
     if (token) {
