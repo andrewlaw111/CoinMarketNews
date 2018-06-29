@@ -45,7 +45,6 @@ export const getCoins = async () => {
         axios
             .get<ICoinPrice[]>(
                 `${Config.API_SERVER}/price`,
-                // `http://10.0.0.22:8000/coin`,
                 {
                     headers: {
                         token,
