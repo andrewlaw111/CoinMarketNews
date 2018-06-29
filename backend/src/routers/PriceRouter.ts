@@ -15,12 +15,14 @@ export default class PriceRouter {
         return router;
     }
     private getPrice = (req: express.Request, res: express.Response) => {
-        return this.priceService.getPrice(req.headers.token, req.body.fiat, req.body.crypto)
+        console.log('price');
+        console.log(req.headers);
+        return this.priceService.getPrice(req.headers.token, req.headers.fiat, req.headers.crypto)
             .then((data: ICoin[]) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
     private getSpecificCoin = (req: express.Request, res: express.Response) => {
-        return this.priceService.getSpecificCoin(req.headers.token, req.params.coinID, req.body.fiat, req.body.crypto)
+        return this.priceService.getSpecificCoin(req.headers.token, req.params.coinID, req.headers.fiat, req.headers.crypto)
             .then((data: ICoin) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
