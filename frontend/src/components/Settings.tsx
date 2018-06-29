@@ -162,7 +162,8 @@ class PureSettings extends React.Component<ISettingsProps>{
                             </CardItem>
                         </TouchableOpacity>
                     </Card>
-                    <Card style={this.styles.Card}>
+                    {/*tslint:disable-next-line:jsx-no-multiline-js*/}
+                    {/* <Card style={this.styles.Card}>
                         <TouchableOpacity>
                             <CardItem style={this.styles.CardItem}>
                                 <View style={this.styles.CardLeft}>
@@ -171,7 +172,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                                 </View>
                             </CardItem>
                         </TouchableOpacity>
-                    </Card>
+                    </Card> */}
                     <Card style={this.styles.Card}>
                         <TouchableOpacity>
                             <CardItem style={this.styles.CardItem}>
