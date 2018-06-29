@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text, TouchableHighlight, View, TextInput, StyleSheet } from 'react-native';
+import { Modal, Text, TouchableHighlight, View, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { ICoinPrice, ISettings, IAlerts, IUser } from '../models';
 import { Segment, Button } from 'native-base';
 import { IRootState } from '../redux/store';
@@ -60,16 +60,17 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                                 </Segment>
 
                                 {/* <View style={style(this.props.darkMode).modalForm}> */}
-                                <View style={{ flexDirection: "row" }} >
+                                <KeyboardAvoidingView  style={{ flexDirection: "row" }} >
                                     <TextInput
                                         keyboardType="numeric"
                                         style={style(this.props.darkMode).textInput}
                                         onChangeText={this.changeAlertAmount}
+                                        onFocus={this.shiftUp}
                                         returnKeyType="done"
                                         underlineColorAndroid="transparent"
                                         value={(this.state.fiatCurrency) ? this.state.alertAmountFiat : this.state.alertAmountCrypto}
                                     />
-                                </View>
+                                </KeyboardAvoidingView>
                                 <View style={style(this.props.darkMode).buttonsView}>
                                     <Button style={style(this.props.darkMode).buttons} onPress={this.handleAdd}>
                                         <Text style={style(this.props.darkMode).text}>Add Alert</Text>
@@ -112,6 +113,10 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
         }
     }
     public closeModal = () => {
+        this.setState({
+            alertAmountCrypto: this.props.coinPrice.price_crypto.price.toString(),
+            alertAmountFiat: this.props.coinPrice.price_fiat.price.toString(),
+        })
         return this.props.closeModal()
     }
     public handleAdd = () => {
@@ -136,8 +141,8 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                 upper,
             }
         }
-        this.props.closeModal()
-        return this.props.addAlerts(alert, this.props.user.token)
+        this.props.addAlerts(alert, this.props.user.token)
+        this.closeModal()
     }
 }
 
@@ -149,7 +154,7 @@ const mapDispatchToProps = (dispatch: any) => {
 
 const mapStateToProps = (state: IRootState) => {
     return {
-        alerts: state.alerts.alerts,
+        alerts: state.alerts.priceAlerts,
         user: state.user.user,
     };
 };

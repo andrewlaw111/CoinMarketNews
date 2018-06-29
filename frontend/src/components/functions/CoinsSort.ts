@@ -31,7 +31,6 @@ export const cacheSorts = (coins: ICoinPrice[]) => {
 }
 
 const sortCoins = (setting: string, coins: ICoinPrice[]) => {
-    console.log('sort');
     if (coinCache[setting]) {
         return coinCache[setting];
     } else {
