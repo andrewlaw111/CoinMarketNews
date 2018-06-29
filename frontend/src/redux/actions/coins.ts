@@ -41,9 +41,8 @@ export const loadCoinFailure = (): ILoadCoinFailureAction => {
 
 export const getCoins = async (settings: ISettings) => {
     try {
-        console.error(settings);
         const token = store.getState().user.user.token;
-        axios
+        return axios
             .get<ICoinPrice[]>(
                 `${Config.API_SERVER}/price`,
                 {

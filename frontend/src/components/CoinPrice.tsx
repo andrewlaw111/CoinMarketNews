@@ -102,7 +102,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                                 </Body>
                             </CardItem>
                         </Card>
-                        <Card style={styles(this.props.darkMode).card}>
+                        <Card style={styles(this.props.darkMode).priceWidgetCard}>
                             <WebView
                                 source={{ uri: this.props.priceWidget }}
                                 style={styles(this.props.darkMode).webView}
@@ -158,6 +158,9 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     price: {
         backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         flex: 1,
+    },
+    priceWidgetCard: {
+        height: 300,
     },
     webView: {
         borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
