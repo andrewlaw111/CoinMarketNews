@@ -49,11 +49,9 @@ export const getCoins = async (settings: ISettings) => {
                 {
                     headers: {
                         token,
-                    },
-                    data: {
                         fiat: settings.fiatCurrency,
                         crypto: settings.cryptoCurrency
-                    }
+                    },
                 },
         ).then((result) => {
             AsyncStorage.setItem("@CoinMarketNews:coinsStore", JSON.stringify(result.data));
