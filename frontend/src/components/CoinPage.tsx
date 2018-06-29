@@ -142,7 +142,7 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                             tabStyle={{ backgroundColor: backgroundColour }}
                             textStyle={{ color: textColour }}
                         >
-                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinPrice appSettings={this.props.appSettings} coin={this.state.coin} coinPrice={this.props.coinPrice} darkMode={this.props.appSettings.darkMode} priceWidget={this.state.priceWidget} />}
+                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinPrice coin={this.state.coin} coinPrice={this.props.coinPrice} darkMode={this.props.appSettings.darkMode} priceWidget={this.state.priceWidget} />}
                         </Tab>
                         <Tab
                             heading="Alerts"

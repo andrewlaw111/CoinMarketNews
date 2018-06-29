@@ -58,7 +58,8 @@ export const getCoins = async (settings: ISettings) => {
 
             store.dispatch(loadCoinSuccess(coins));
             cacheSorts(coins);
-        }).catch(async () => {
+        }).catch(async (err) => {
+            console.error(err);
             try {
                 const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
                 if (coins !== null) {

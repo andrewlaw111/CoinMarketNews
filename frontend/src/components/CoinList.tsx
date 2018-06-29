@@ -127,7 +127,6 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
 
     public render() {
         const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1)
-
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>

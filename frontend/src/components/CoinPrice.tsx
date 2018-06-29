@@ -42,7 +42,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
             style: [styles(this.props.darkMode).coinInfoStatsText,]
         },
         {
-            stat: `${this.props.coinPrice.price_crypto.price.toFixed(8)}`,
+            stat: `${this.props.coinPrice.price_crypto.price}`,
             statType: `Price in ${this.props.appSettings.cryptoCurrency}`,
             style: [styles(this.props.darkMode).coinInfoStatsText, { fontFamily: "Font Awesome 5 Brands" }, ]
         },
@@ -84,6 +84,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
         {
             stat: `${this.props.coinPrice.price_fiat.volume_24h.toFixed(2)}`,
             statType: `${this.props.appSettings.fiatCurrency} 24 hour volume`,
+            style: [styles(this.props.darkMode).coinInfoStatsText]
         }
     ];
 
@@ -100,23 +101,27 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                                 <View style={styles(this.props.darkMode).coinInfoStats}>
                                     {/*tslint:disable-next-line:jsx-no-multiline-js*/}
                                     {this.stats.map((stat, index) => {
-                                        return (
-                                            <View key={index} style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
-                                                <Text style={styles(this.props.darkMode).coinInfoStatsText} >
-                                                    {stat.statType}
-                                                </Text>
-                                                {/*tslint:disable-next-line:jsx-no-multiline-js*/}
-                                                {(index === 1) ? (
-                                                    (this.props.appSettings.cryptoCurrency === "BTC") ? (
-                                                        <Text style={stat.style}> &#xf15a;{stat.stat}</Text>
+                                        if (stat.stat) {
+                                            return (
+                                                <View key={index} style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
+                                                    <Text style={styles(this.props.darkMode).coinInfoStatsText} >
+                                                        {stat.statType}
+                                                    </Text>
+                                                    {/*tslint:disable-next-line:jsx-no-multiline-js*/}
+                                                    {(index === 1) ? (
+                                                        (this.props.appSettings.cryptoCurrency === "BTC") ? (
+                                                            <Text style={stat.style}> &#xf15a;{stat.stat}</Text>
+                                                        ) : (
+                                                                <Text style={stat.style}> &#xf42e;{stat.stat}</Text>
+                                                            )
                                                     ) : (
-                                                            <Text style={stat.style}> &#xf42e;{stat.stat}</Text>
-                                                        )
-                                                ) : (
-                                                        <Text style={stat.style}> {stat.stat}</Text>
-                                                    )}
-                                            </View>
-                                        )
+                                                            <Text style={stat.style}> {stat.stat}</Text>
+                                                        )}
+                                                </View>
+                                            )
+                                        } else {
+                                            return null
+                                        }
                                     })}
                                 </View>
                             </CardItem>
@@ -136,6 +141,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
 
 const mapStateToProps = (state: IRootState) => {
     return {
+        appSettings: state.settings.settings,
         coins: state.coins.coins,
         user: state.user.user,
     };
