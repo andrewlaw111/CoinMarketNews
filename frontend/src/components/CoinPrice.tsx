@@ -8,10 +8,11 @@ import { ScrollView, StyleSheet, View, WebView } from "react-native";
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
 
-import { ICoin, ICoinPrice } from "../models";
+import { ICoin, ICoinPrice, ISettings } from "../models";
 import { IRootState } from "../redux/store";
 
 interface ICoinPriceProps {
+    appSettings: ISettings;
     coin: ICoin;
     coinPrice: ICoinPrice;
     darkMode: boolean;
@@ -19,63 +20,93 @@ interface ICoinPriceProps {
 }
 
 class PureCoinPrice extends React.Component<ICoinPriceProps> {
-    public styles: typeof styles;
 
-    public componentWillMount() {
-        this.styles = (this.props.darkMode) ? darkStyles : styles;
-    }
-    public componentWillReceiveProps(nextProps: ICoinPriceProps) {
-        this.styles = (this.props.darkMode) ? darkStyles : styles;
+    public renderCoinPrice() {
+        return <Text>TEST</Text>
+        // interface ICoinStats {
+        //     statType: string;
+        //     stat?: string | number;
+        // }
+        // const stats: ICoinStats[] = [
+        //     {
+        //         stat: this.props.coinPrice.price_fiat.price,
+        //         statType: `Price in ${this.props.appSettings.fiatCurrency}`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_crypto.price,
+        //         statType: `Price in ${this.props.appSettings.cryptoCurrency}`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_fiat.percent_change_1h,
+        //         statType: `${this.props.appSettings.fiatCurrency} 1 hour percentage change`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_fiat.percent_change_24h,
+        //         statType: `${this.props.appSettings.fiatCurrency} 24 hour percentage change`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_fiat.percent_change_7d,
+        //         statType: `${this.props.appSettings.fiatCurrency} 7 day percentage change`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_crypto.percent_change_1h,
+        //         statType: `${this.props.appSettings.cryptoCurrency} 1 hour percentage change`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_crypto.percent_change_24h,
+        //         statType: `${this.props.appSettings.cryptoCurrency} 24 hour percentage change`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_crypto.percent_change_7d,
+        //         statType: `${this.props.appSettings.cryptoCurrency} 7 day percentage change`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_fiat.market_cap,
+        //         statType: `${this.props.appSettings.fiatCurrency} market capitalization`,
+        //     },
+        //     {
+        //         stat: this.props.coinPrice.price_fiat.volume_24h,
+        //         statType: `${this.props.appSettings.fiatCurrency} 24 hour volume`,
+        //     }
+        // ];
+        // stats.map((stat, index) => {
+        //     if (stat.stat) {
+        //         return (
+        //             <View key={index} style={styles(this.props.darkMode).coinInfoStatsLine}>
+        //                 <Text style={styles(this.props.darkMode).coinInfoStatsText}>
+        //                     {stat.statType}
+        //                 </Text>
+        //                 <Text style={styles(this.props.darkMode).coinInfoStatsText}>
+        //                     {stat.stat}
+        //                 </Text>
+        //             </View>
+
+        //         );
+        //     } else {
+        //         return null
+        //     }
+        // });
     }
     public render() {
         return (
             <StyleProvider style={getTheme(commonColour)} >
-                <ScrollView style={this.styles.price}>
+                <ScrollView style={styles(this.props.darkMode).price}>
                     <Container>
-                        <Card style={this.styles.card}>
-                            <CardItem style={this.styles.cardItem} header={true}>
-                                <Text style={this.styles.cardText}>Price</Text>
+                        <Card style={styles(this.props.darkMode).card}>
+                            <CardItem style={styles(this.props.darkMode).cardItem} header={true}>
+                                <Text style={styles(this.props.darkMode).cardText}>Price</Text>
                             </CardItem>
-                            <CardItem style={this.styles.cardItem}>
+                            <CardItem style={styles(this.props.darkMode).cardItem}>
                                 <Body>
-                                    <Text style={this.styles.cardText}>
-                                        {this.props.coinPrice.price_fiat.price}
-                                    </Text>
-                                    <Text style={this.styles.cardText}>
-                                        {this.props.coinPrice.price_fiat.percent_change_24h}
-                                    </Text>
-                                    <Text style={this.styles.cardText}>
-                                        {this.props.coinPrice.price_fiat.price / (100 + this.props.coinPrice.price_fiat.percent_change_24h)}
-                                    </Text>
+                                    {this.renderCoinPrice()}
                                 </Body>
                             </CardItem>
                         </Card>
-                        <Card style={this.styles.card}>
+                        <Card style={styles(this.props.darkMode).card}>
                             <WebView
                                 source={{ uri: this.props.priceWidget }}
-                                style={this.styles.webView}
+                                style={styles(this.props.darkMode).webView}
                             />
-                        </Card>
-                        <Card style={this.styles.cardMarketData}>
-                            <CardItem style={this.styles.cardItem} header={true}>
-                                <Text style={this.styles.cardText}>Market Data</Text>
-                            </CardItem>
-                            <CardItem style={this.styles.cardItem}>
-                                <Body>
-                                    <Text style={this.styles.cardText}>
-                                        Market Capitalization
-                                    </Text>
-                                    <Text style={this.styles.cardText}>
-                                        {this.props.coinPrice.price_fiat.market_cap}
-                                    </Text>
-                                    <Text style={this.styles.cardText}>
-                                        24 Hour Volume
-                                    </Text>
-                                    <Text style={this.styles.cardText}>
-                                        {this.props.coinPrice.price_fiat.volume_24h}
-                                    </Text>
-                                </Body>
-                            </CardItem>
                         </Card>
                     </Container>
                 </ScrollView>
@@ -94,7 +125,10 @@ const mapStateToProps = (state: IRootState) => {
 const CoinPrice = connect(mapStateToProps)(PureCoinPrice);
 export default CoinPrice;
 
-const styleTemplate = (darkMode: boolean) => StyleSheet.create({
+const styles = (darkMode: boolean) => StyleSheet.create({
+    bold: {
+        fontWeight: 'bold',
+    },
     card: {
         borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#454951" : "#FFF",
@@ -119,7 +153,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         justifyContent: "space-between",
     },
     coinInfoStatsText: {
-        flex: 1,
+        color: (darkMode) ? "#F8F8F8" : "#000",
     },
     price: {
         backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
@@ -131,6 +165,3 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         height: 300,
     },
 })
-
-const styles = styleTemplate(false);
-const darkStyles = styleTemplate(true);

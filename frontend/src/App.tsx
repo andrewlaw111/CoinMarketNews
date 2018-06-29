@@ -49,8 +49,7 @@ function setColour(darkMode: boolean) {
 Promise.all([
   getUser()
     .then((data: IUser) => {
-      loadAlerts(data)
-      getCoins();
+      loadAlerts(data);
       getNews();
     }),
   loadFavourites(),
@@ -60,6 +59,7 @@ Promise.all([
   loadSettings()
     .then((settings: ISettings) => {
       if (settings) {
+        getCoins(settings);
         setColour(settings.darkMode)
       } else {
         setColour(false)

@@ -227,7 +227,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         this.setState({
             refreshing: true
         });
-        getCoins().then(() => {
+        getCoins(this.props.appSettings).then(() => {
             this.setState({
                 refreshing: false
             });

@@ -18,6 +18,7 @@ import axios from "axios";
 import { Navigator, Navigation } from "react-native-navigation";
 
 import OneSignal from "react-native-onesignal";
+import { getCoins } from "../redux/actions/coins";
 
 interface ISettingsProps {
     coins: ICoinPrice[];
@@ -188,7 +189,8 @@ class PureSettings extends React.Component<ISettingsProps>{
     private handleCryptoCurrencyValueChange = (itemValue: string, itemIndex: number) => {
         const settings = { ...this.props.appSettings };
         settings.cryptoCurrency = itemValue;
-        this.props.changeSettings(settings)
+        this.props.changeSettings(settings);
+        getCoins(settings);
     }
     private handleDarkModeValueChange = () => {
         const settings = { ...this.props.appSettings };
@@ -283,6 +285,7 @@ class PureSettings extends React.Component<ISettingsProps>{
         const settings = { ...this.props.appSettings };
         settings.fiatCurrency = itemValue;
         this.props.changeSettings(settings)
+        getCoins(settings);
     }
     private handleNotificationChange = (token: string) => {
         const settings = { ...this.props.appSettings };

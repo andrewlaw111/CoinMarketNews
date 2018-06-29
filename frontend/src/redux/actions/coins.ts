@@ -3,7 +3,7 @@ import { AsyncStorage } from "react-native";
 import Config from "react-native-config";
 
 import { Action } from "redux";
-import { ICoinPrice } from "../../models";
+import { ICoinPrice, IUser, ISettings } from "../../models";
 import { store } from "../store";
 import { cacheSorts } from "../../components/functions/CoinsSort";
 
@@ -39,8 +39,9 @@ export const loadCoinFailure = (): ILoadCoinFailureAction => {
     };
 };
 
-export const getCoins = async () => {
+export const getCoins = async (settings: ISettings) => {
     try {
+        console.error(settings);
         const token = store.getState().user.user.token;
         axios
             .get<ICoinPrice[]>(
@@ -49,9 +50,12 @@ export const getCoins = async () => {
                     headers: {
                         token,
                     },
+                    data: {
+                        fiat: settings.fiatCurrency,
+                        crypto: settings.cryptoCurrency
+                    }
                 },
         ).then((result) => {
-
             AsyncStorage.setItem("@CoinMarketNews:coinsStore", JSON.stringify(result.data));
             const coins = result.data.filter((coin) => coin.price_crypto.market_cap !== null && coin.price_fiat.market_cap !== null && coin.rank !== null);
 
