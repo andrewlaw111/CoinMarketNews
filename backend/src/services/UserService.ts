@@ -40,14 +40,14 @@ export default class UserService {
             .from("users")
             .innerJoin("sessions", "user_id", "users.id")
             .where("token", token)
-            .then((users) => {
+            .then((users: any) => {
                 if (users.length > 0) {
                     const user = users[0];
                     return knex
                         .select('id', 'coinmarketcap_id', 'currency_id', 'upper', 'price_point', 'active')
                         .from("price_alert")
                         .where("user_id", "=", user.user_id)
-                        .then((price_alert) => {
+                        .then((price_alert: any) => {
                             const map_id_symbol: any = [];
                             map_id_symbol[1] = "USD";
                             map_id_symbol[2] = "EUR";
@@ -64,7 +64,7 @@ export default class UserService {
                                 .select('id', 'coin_id', 'alert')
                                 .from("news_alert")
                                 .where("user_id", "=", user.user_id)
-                                .then((news_alert) => {
+                                .then((news_alert: any) => {
                                     const userWithToken: IUserToken = {
                                         coin_currency_id: user.coin_currency_id,
                                         email: user.email,
@@ -83,7 +83,7 @@ export default class UserService {
                     return this.createUser();
                 }
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.log(err);
                 return this.createUser();
             })
@@ -125,14 +125,14 @@ export default class UserService {
             .select("user_id")
             .from("sessions")
             .where("token", token)
-            .then((users) => {
+            .then((users: any) => {
                 console.log(users);
                 return knex("users")
                     .update({
                         notifications
                     })
                     .where("id", users[0].user_id)
-                    .then((data) => {
+                    .then((data: any) => {
                         return data;
                     });
             })
@@ -142,7 +142,7 @@ export default class UserService {
             .select("user_id")
             .from("sessions")
             .where("token", token)
-            .then((users) => {
+            .then((users: any) => {
                 const map_symbol_id: any = [];
                 map_symbol_id["USD"] = 1;
                 map_symbol_id["EUR"] = 2;
@@ -162,16 +162,16 @@ export default class UserService {
                     })
                     .into("price_alert")
                     .returning('id')
-                    .then((data) => {
+                    .then((data: any) => {
                         console.log('price alert added');
                         return data[0];
                     })
-                    .catch((err) => {
+                    .catch((err: any) => {
                         console.log(err);
                         return err;
                     })
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.log(err)
             })
     }
@@ -180,7 +180,7 @@ export default class UserService {
             .select("user_id")
             .from("sessions")
             .where("token", token)
-            .then((users) => {
+            .then((users: any) => {
                 return knex
                     .delete()
                     .where({
@@ -188,15 +188,15 @@ export default class UserService {
                         id: priceID,
                     })
                     .from("price_alert")
-                    .then((data) => {
+                    .then((data: any) => {
                         console.log('price alert removed');
                         return data;
                     })
-                    .catch((err) => {
+                    .catch((err: any) => {
                         return err;
                     })
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.log(err)
             })
     }
@@ -205,18 +205,18 @@ export default class UserService {
             .select("user_id")
             .from("sessions")
             .where("token", token)
-            .then((users) => {
+            .then((users: any) => {
                 return knex("price_alert")
                     .update({
                         active
                     })
                     .where("user_id", users[0].user_id)
                     .andWhere("id", priceID)
-                    .then((data) => {
+                    .then((data: any) => {
                         return data;
                     });
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.log(err)
             })
     }
@@ -225,7 +225,7 @@ export default class UserService {
             .select("user_id")
             .from("sessions")
             .where("token", token)
-            .then((users) => {
+            .then((users: any) => {
                 return knex
                     .insert({
                         user_id: users[0].user_id,
@@ -233,16 +233,17 @@ export default class UserService {
                         alert: true,
                     })
                     .into("news_alert")
-                    .then((data) => {
+                    .returning("id")
+                    .then((data: any) => {
                         console.log('news alert on');
                         return data;
                     })
-                    .catch((err) => {
+                    .catch((err: any) => {
                         console.log(err);
                         return err;
                     })
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.log(err)
             })
     }
@@ -251,7 +252,7 @@ export default class UserService {
             .select("user_id")
             .from("sessions")
             .where("token", token)
-            .then((users) => {
+            .then((users: any) => {
                 return knex
                     .delete()
                     .where({
@@ -259,15 +260,15 @@ export default class UserService {
                         coin_id: coinID,
                     })
                     .from("news_alert")
-                    .then((data) => {
+                    .then((data: any) => {
                         console.log('news alert off');
                         return data;
                     })
-                    .catch((err) => {
+                    .catch((err: any) => {
                         return err;
                     })
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.log(err)
 
             });
