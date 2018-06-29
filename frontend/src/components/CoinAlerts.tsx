@@ -48,15 +48,15 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
         this.setState({
             alerts
         })
-        // if (this.props.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) {
-        //     this.setState({
-        //         newsAlerts: true
-        //     })
-        // } else {
-        //     this.setState({
-        //         newsAlerts: false
-        //     })
-        // }
+        if (nextProps.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) {
+            this.setState({
+                newsAlerts: true
+            })
+        } else {
+            this.setState({
+                newsAlerts: false
+            })
+        }
     }
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
@@ -106,9 +106,16 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
     }
     private handlenewsAlertChange = () => {
         if (this.state.newsAlerts) {
-            return this.props.removeNewsAlert(this.props.coin.id, this.props.user.token)
+            this.props.removeNewsAlert(this.props.coin.id, this.props.user.token)
+            this.setState({
+                newsAlerts: false
+            })
         } else {
-            return this.props.addNewsAlert(this.props.coin.id, this.props.user.token)
+
+            this.props.addNewsAlert(this.props.coin.id, this.props.user.token)
+            this.setState({
+                newsAlerts: true
+            })
         }
     }
     private handleValueChange = (alert: IAlerts) => {

@@ -19,11 +19,13 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
             addAlerts.push(action.newAlert);
             return {
                 priceAlerts: addAlerts, // Use concat to add a new link
+                newsAlerts: state.newsAlerts
             };
         case ADD_NEWS_ALERT:
             const addNewsAlerts = state.newsAlerts.slice()
             addNewsAlerts.push(action.newsAlert);
             return {
+                priceAlerts: state.priceAlerts,
                 newsAlerts: addNewsAlerts, // Use concat to add a new link
             };
         case EDIT_ALERT:
@@ -37,12 +39,26 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
 
             return {
                 priceAlerts: editedAlerts, // Use concat to add a new link 87
+                newsAlerts: state.newsAlerts
             };
         case LOAD_ALERTS:
-            return {
-                newsAlerts: action.newsAlerts,
-                priceAlerts: action.alerts, // Use concat to add a new link
-            };
+
+            if (typeof action.newsAlerts === "undefined") {
+                return {
+                    priceAlerts: action.alerts, // Use concat to add a new link
+                    newsAlerts: action.newsAlerts,
+                }
+            } else if (typeof action.alerts === "undefined") {
+                return {
+                    priceAlerts: state.priceAlerts,
+                    newsAlerts: action.newsAlerts,
+                };
+            } else {
+                return {
+                    newsAlerts: action.newsAlerts,
+                    priceAlerts: action.alerts, // Use concat to add a new link
+                };
+            }
 
         case REMOVE_ALERT:
             let removeAlerts = state.priceAlerts.slice();
@@ -50,6 +66,7 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
             removeAlerts = removeAlerts.filter((alert) => alert.id !== action.removeAlert.id)
             return {
                 priceAlerts: removeAlerts, // Use concat to add a new link
+                newsAlerts: state.newsAlerts
             };
 
         case REMOVE_NEWS_ALERT:
@@ -57,6 +74,7 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
 
             removeNewsAlerts = removeNewsAlerts.filter((alert) => alert.coin_id !== action.removeNewsAlert)
             return {
+                priceAlerts: state.priceAlerts,
                 newsAlerts: removeNewsAlerts, // Use concat to add a new link
             };
         default:

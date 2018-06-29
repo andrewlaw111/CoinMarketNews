@@ -164,9 +164,8 @@ export const addNewsAlert = (coinID: number, token: string) => {
                 }
 
             ).then((response) => {
-                console.error("add", response.data)
                 const alert = {
-                    id: response.data,
+                    id: response.data[0],
                     coin_id: coinID,
                     alert: true,
                 }
@@ -191,7 +190,7 @@ export const removeNewsAlert = (coinID: number, token: string) => {
                     }
                 },
         ).then((response) => {
-            console.error("remove", response.data)
+            // console.error("remove", response.data)
             return dispatch(removeNewsAlertFromStore(coinID))
         }).catch((err) => {
             console.error(err);
