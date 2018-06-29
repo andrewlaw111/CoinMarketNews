@@ -48,7 +48,7 @@ export default class UserService {
                         .from("price_alert")
                         .where("user_id", "=", user.user_id)
                         .then((price_alert: any) => {
-                            const map_id_symbol: any = [];
+                            const map_id_symbol: any = [];  // TODO: get from DB
                             map_id_symbol[1] = "USD";
                             map_id_symbol[2] = "EUR";
                             map_id_symbol[3] = "CAD";
@@ -143,7 +143,7 @@ export default class UserService {
             .from("sessions")
             .where("token", token)
             .then((users: any) => {
-                const map_symbol_id: any = [];
+                const map_symbol_id: any = [];  // TODO: get from DB
                 map_symbol_id["USD"] = 1;
                 map_symbol_id["EUR"] = 2;
                 map_symbol_id["CAD"] = 3;
