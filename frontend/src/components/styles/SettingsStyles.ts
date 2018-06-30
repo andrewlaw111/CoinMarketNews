@@ -11,7 +11,7 @@ const styles = (darkMode: boolean) => StyleSheet.create({
         paddingLeft: 10,
     },
     CoinIcon: {
-        // olor: "#FFFFFF"
+        tintColor: (darkMode) ? "#FFFFFF" : "#000000",
     },
     picker: {
         color: (darkMode) ? darkFont : lightFont,
