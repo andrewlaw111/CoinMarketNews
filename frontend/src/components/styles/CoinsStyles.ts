@@ -1,16 +1,17 @@
 import { StyleSheet } from "react-native";
+import { darkBackground, lightBackground, darkFont, lightFont, darkItems, lightItems, darkItemsBorder, lightItemsBorder } from "./colours";
 
 export const styles = (darkMode: boolean) => StyleSheet.create({
     coinList: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
+        backgroundColor: (darkMode) ? darkBackground : lightBackground,
         flex: 1,
     },
     coinListComponent: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
+        backgroundColor: (darkMode) ? darkBackground : lightBackground,
         flex: 1,
     },
     coinName: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
+        color: (darkMode) ? darkFont : lightFont,
         fontSize: 18,
         fontWeight: "bold",
         marginRight: 10,
@@ -24,7 +25,7 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
         color: (darkMode) ? "#D8D8D8" : "#666",
     },
     coinText: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
+        color: (darkMode) ? darkFont : lightFont,
         textAlign: "center",
         width: 37,
     },
@@ -33,7 +34,7 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
         margin: 0,
     },
     listCoin: {
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+        backgroundColor: (darkMode) ? darkItems : lightItems,
         flex: 1,
         flexDirection: "row",
     },
@@ -63,8 +64,8 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     listCoinRightText: {
     },
     listItem: {
-        borderColor: (darkMode) ? "#5d626d" : "#d6d7da",
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+        borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
+        backgroundColor: (darkMode) ? darkItems : lightItems,
         borderWidth: 0.5,
     },
     listStyle: {
@@ -72,10 +73,10 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     },
     NoFavourites: {
         textAlign: "center",
-        color: (darkMode) ? "#F8F8F8" : "#000"
+        color: (darkMode) ? darkFont : lightFont
     },
     safeAreaView: {
         flex: 1,
-        backgroundColor: (darkMode) ? "#343a44" :'#F8F8F8'
+        backgroundColor: (darkMode) ? "#343a44" : '#F8F8F8'
     }
 });
