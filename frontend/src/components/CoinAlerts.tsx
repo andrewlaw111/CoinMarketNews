@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, Text, StyleProvider, Icon } from "native-base";
-import { StyleSheet, View, Switch, TouchableOpacity, TouchableOpacityBase, ListView, FlatList, ScrollView } from "react-native";
+import { Container, Text, StyleProvider, Icon } from "native-base";
+import { View, Switch, FlatList, ScrollView, PanResponder, TouchableOpacity } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -12,6 +12,7 @@ import { IRootState } from "../redux/store";
 import { Navigator } from "react-native-navigation";
 import CoinAlertsModal from "./CoinAlertsModal";
 import { editAlert, removeAlerts, addNewsAlert, removeNewsAlert } from "../redux/actions/alerts";
+import styles from "./styles/CoinAlertsStyles";
 
 interface ICoinsAlertsProps {
     alerts: IAlerts[];
@@ -33,7 +34,6 @@ interface ICoinsAlertsState {
     newsAlerts: boolean;
 }
 class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsState> {
-    public styles: typeof styles;
 
     constructor(props: ICoinsAlertsProps) {
         super(props);
@@ -82,12 +82,6 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
                             renderItem={this.renderAlerts}
                         />
                     </ScrollView>
-                    <View style={styles(this.props.darkMode).AddAlertView}>
-                        <Text style={styles(this.props.darkMode).text}>Add a new price alert</Text>
-                        <TouchableOpacity onPress={this.openModal} >
-                            <Icon type="Ionicons" name="ios-add" />
-                        </TouchableOpacity>
-                    </View>
                     <CoinAlertsModal appSettings={this.props.appSettings} closeModal={this.closeModal} coinPrice={this.props.coinPrice} darkMode={this.props.darkMode} modalVisible={this.state.modalVisible} />
                 </Container>
             </StyleProvider>
@@ -122,11 +116,6 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
         alert.active = !alert.active
         return this.props.editAlert(alert, this.props.user.token)
     }
-    private openModal = () => {
-        this.setState({
-            modalVisible: true
-        })
-    }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -148,53 +137,3 @@ const mapStateToProps = (state: IRootState) => {
 
 const CoinAlerts = connect(mapStateToProps, mapDispatchToProps)(PureCoinAlerts);
 export default CoinAlerts;
-
-const styles = (darkMode: boolean) => StyleSheet.create({
-    AddAlertView: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        height: 60,
-        paddingLeft: 20,
-        paddingRight: 20,
-    },
-    card: {
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
-    },
-    cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
-    },
-    cardText: {
-        color: (darkMode) ? "#F8F8F8" : "#000"
-    },
-    coinInfoStats: {
-        flex: 1,
-    },
-    coinInfoStatsLine: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    coinInfoStatsText: {
-        flex: 1,
-    },
-    alertsPage: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
-        flex: 1,
-        paddingBottom: 20,
-    },
-    NewsAlertsView: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        height: 60,
-        paddingLeft: 15,
-        paddingRight: 15,
-        borderBottomWidth: 1,
-        borderColor: "#F8F8F8",
-    },
-    text: {
-        color: (darkMode) ? "#F8F8F8" : "#000"
-    }
-});
