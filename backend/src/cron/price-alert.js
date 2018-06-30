@@ -22,14 +22,16 @@ module.exports = () => {
 
     function price_alert(lower_or_higher) {
         knex('price_alert')
+            .join('users', 'price_alert.user_id', 'users.id')
             .join('price', function () {
                 this.on('price_alert.coinmarketcap_id', '=', 'price.coinmarketcap_id').andOn('price_alert.currency_id', '=', 'price.currency_id')
             })
             .join('currency', 'price.currency_id', 'currency.id')
             .join('coin', 'price.coinmarketcap_id', 'coin.coinmarketcap_id')
             .select('price_alert.id', 'price_alert.user_id', 'coin.symbol as symbol', 'price_alert.price_point', 'price.price', 'currency.symbol as currency', 'currency.fiat')
-            .where('price_alert.active', '=', true)
-            .where('price_alert.upper', '=', (lower_or_higher === '>'))
+            .where('users.notifications', '=', true)
+            .andWhere('price_alert.active', '=', true)
+            .andWhere('price_alert.upper', '=', (lower_or_higher === '>'))
             .andWhere('price.price', lower_or_higher, knex.raw('price_alert.price_point'))
             .then((alerts) => {
                 console.log(alerts);

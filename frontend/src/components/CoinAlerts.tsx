@@ -61,7 +61,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
             <View style={styles(this.props.darkMode).NewsAlertsView}>
-                <Text style={styles(this.props.darkMode).text}>{info.item.currency_symbol} {info.item.price_point}</Text>
+                <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper)?'>':'<'} {info.item.price_point} {info.item.currency_symbol}</Text>
                 <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} />
                 <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)} />
             </View>

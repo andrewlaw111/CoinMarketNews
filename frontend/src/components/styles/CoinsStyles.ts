@@ -32,6 +32,9 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     coinThumbnail: {
         backgroundColor: "grey",
         margin: 0,
+        width: 50,
+        height: 50,
+        borderRadius:50,
     },
     listCoin: {
         backgroundColor: (darkMode) ? darkItems : lightItems,

@@ -1,6 +1,5 @@
 import React from "react";
 import Config from "react-native-config";
-import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
 
 import { Icon, Text, Thumbnail, StyleProvider, Spinner } from "native-base";
@@ -19,6 +18,8 @@ import IonIcons from "react-native-vector-icons/Ionicons";
 
 import { getCoins } from "../redux/actions/coins";
 import { Navigator } from "react-native-navigation";
+
+import FastImage from "react-native-fast-image";
 
 interface ICoinListProps {
     coins: ICoinPrice[];
@@ -90,12 +91,11 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
 
                         <View style={styles(this.props.appSettings.darkMode).listCoinLeft}>
                             <Text style={styles(this.props.appSettings.darkMode).coinText}>{info.item.rank}</Text>
-                            <View style={{ backgroundColor: "#fff", borderRadius: 50, overflow: "hidden", }}>
-                                <Thumbnail
-                                    style={styles(this.props.appSettings.darkMode).coinThumbnail}
-                                    source={{ uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }}
-                                />
-                            </View>
+                            <FastImage
+                                style={styles(this.props.appSettings.darkMode).coinThumbnail}
+                                source={{ uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }}
+                                resizeMode={FastImage.resizeMode.contain}
+                            />
                         </View>
 
                         <View style={styles(this.props.appSettings.darkMode).listCoinBody}>

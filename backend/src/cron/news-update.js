@@ -88,6 +88,9 @@ module.exports = () => {
                                                         }
                                                     }
                                                 });
+                                        })
+                                        .catch(function (error) {
+                                            console.log('error: ' + error);
                                         });
                                 });
                         }
@@ -110,8 +113,10 @@ module.exports = () => {
         knex
             .select('user_id')
             .from('news_alert')
+            .join('users', 'news_alert.user_id', 'users.id')
             .where('coin_id', '=', coin.id)
             .andWhere('alert', '=', true)
+            .andWhere('users.notifications', '=', true)
             .then(function (ids) {
                 console.log(ids);
                 if (ids.length > 0) {

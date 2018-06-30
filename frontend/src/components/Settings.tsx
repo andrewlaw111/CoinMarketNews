@@ -46,10 +46,11 @@ class PureSettings extends React.Component<ISettingsProps>{
             });
         if (Platform.OS === "ios") {
             return (
-                <TouchableOpacity onPress={IOSPicker}>
+                <TouchableOpacity onPress={IOSPicker} style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
                     <Text style={{ color: "#0076FF" }}>
                         {this.props.appSettings.cryptoCurrency}
                     </Text>
+                    <Icon style={{ fontSize: 24, marginLeft:6, marginTop:2 }} name="ios-arrow-down-outline" />
                 </TouchableOpacity>
 
             )
@@ -77,11 +78,12 @@ class PureSettings extends React.Component<ISettingsProps>{
             });
         if (Platform.OS === "ios") {
             return (
-                <Button onPress={IOSPicker}>
-                    <Text>
+                <TouchableOpacity onPress={IOSPicker} style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                    <Text style={{ color: "#0076FF" }}>
                         {this.props.appSettings.fiatCurrency}
                     </Text>
-                </Button>
+                    <Icon style={{ fontSize: 24, marginLeft:6, marginTop:2 }} name="ios-arrow-down-outline" />
+                </TouchableOpacity>
             )
         }
         else {
@@ -102,6 +104,7 @@ class PureSettings extends React.Component<ISettingsProps>{
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <Content style={styles(this.props.appSettings.darkMode).Settings}>
+
                     <View style={styles(this.props.appSettings.darkMode).settingsItem}>
                         <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
                             <Icon type="FontAwesome" name="dollar" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
