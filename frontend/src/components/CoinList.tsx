@@ -38,6 +38,9 @@ export interface ICoinListState {
     refreshing: boolean;
 }
 class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
+    public cryptoCurrency = <Text>&#xf15a;</Text>;
+    public fiatCurrency = <Text>$</Text>;
+
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
         EUR: "€",
@@ -55,7 +58,12 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
             fiatCurrencyName: "USD",
         };
     }
+    public componentWillReceiveProps() {
+        this.cryptoCurrency = (this.props.appSettings.cryptoCurrency === "BTC") ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a; </Text> : <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf42e; </Text>;
 
+        this.fiatCurrency = < Text style={styles(this.props.appSettings.darkMode).coinPrice} >{this.currencySymbols[this.props.appSettings.fiatCurrency]}</Text>;
+
+    }
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
         let heartColour: string;
         if (this.props.favourites.indexOf(info.item.id) > -1) {
@@ -63,20 +71,12 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         } else {
             heartColour = "grey";
         }
-        if (info.item.price_crypto.percent_change_1h === null || info.item.price_crypto.percent_change_24h === null || info.item.price_crypto.percent_change_7d === null || info.item.price_fiat.percent_change_1h === null || info.item.price_fiat.percent_change_24h === null || info.item.price_fiat.percent_change_7d === null ) {
+        if (info.item.price_crypto.percent_change_1h === null || info.item.price_crypto.percent_change_24h === null || info.item.price_crypto.percent_change_7d === null || info.item.price_fiat.percent_change_1h === null || info.item.price_fiat.percent_change_24h === null || info.item.price_fiat.percent_change_7d === null) {
             return
         };
         const percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(info.item);
         const coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(info.item);
 
-        const coinCurrency = (this.props.setting[1] === '1') ?
-            (
-                // <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>{this.currencySymbols[this.props.appSettings.cryptoCurrency]}</Text>
-                (this.props.appSettings.cryptoCurrency === "BTC") ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a; </Text> : <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf42e; </Text>
-            ) : (
-                <Text style={styles(this.props.appSettings.darkMode).coinPrice}>{this.currencySymbols[this.props.appSettings.fiatCurrency]}</Text>
-            );
-        // BTC : &#xf15a; / ETH : &#xf42e;
         const priceColour = (parseFloat(percentageChange) > 0) ? "green" : (parseFloat(percentageChange) === 0) ? "grey" : "red";
         return (
             <View style={styles(this.props.appSettings.darkMode).listItem}>
@@ -99,7 +99,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                 <Text style={styles(this.props.appSettings.darkMode).coinSymbol}>{info.item.symbol}</Text>
                             </View>
                             <View style={styles(this.props.appSettings.darkMode).listCoinName}>
-                                {coinCurrency}
+                                {(this.props.setting[1] === '1') ? this.cryptoCurrency : this.fiatCurrency}
                                 <Text note={true} style={styles(this.props.appSettings.darkMode).coinPrice}>{coinPrice} </Text>
                             </View>
                         </View>
@@ -126,31 +126,43 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     }
 
     public render() {
-        const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1)
+        const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
+        const spinner = () => {
+            return (
+                <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
+                    <Spinner />
+                </View>
+            )
+        }
+        const noFavourites = () => {
+            if (this.props.coins.length > 0) {
+                return (
+                    <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
+                        <Text style={styles(this.props.appSettings.darkMode).NoFavourites}>
+                            You have no favourite coins! Click on the ❤️ to add some favourites!
+                        </Text>
+                    </View>
+                )
+            } else {
+                return spinner()
+            }
+        }
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                     {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                    {(this.props.coins.length > 0) ? (
-                        /* tslint:disable-next-line:jsx-no-multiline-js */
+                    {
                         (this.props.favouriteTab) ? (
-                            (favouriteCoins.length > 0) ? (
-                                <FlatList
-                                    data={favouriteCoins}
-                                    extraData={this.props.favourites}
-                                    renderItem={this.renderCoinList}
-                                    keyExtractor={this.keyExtractor}
-                                    style={styles(this.props.appSettings.darkMode).coinList}
-                                    getItemLayout={this.getItemLayout}
-                                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
-                                />
-                            ) : (
-                                    <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
-                                        <Text style={styles(this.props.appSettings.darkMode).NoFavourites}>
-                                            You have no favourite coins! Click on the ❤️ to add some favourites!
-                                            </Text>
-                                    </View>
-                                )
+                            <FlatList
+                                data={favouriteCoins}
+                                extraData={this.props.favourites}
+                                renderItem={this.renderCoinList}
+                                keyExtractor={this.keyExtractor}
+                                style={styles(this.props.appSettings.darkMode).coinList}
+                                getItemLayout={this.getItemLayout}
+                                refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                                ListEmptyComponent={noFavourites()}
+                            />
                         ) : (
                                 <FlatList
                                     data={this.props.coins}
@@ -161,13 +173,9 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
                                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                                    ListEmptyComponent={spinner()}
                                 />
                             )
-                    ) : (
-                            <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
-                                <Spinner />
-                            </View>
-                        )
                     }
                 </View>
             </StyleProvider>

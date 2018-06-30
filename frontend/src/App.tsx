@@ -58,12 +58,13 @@ Promise.all([
   FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
   loadSettings()
     .then((settings: ISettings) => {
+      console.log(settings);
       if (settings) {
-        getCoins(settings);
         setColour(settings.darkMode)
       } else {
         setColour(false)
       }
+      getCoins(settings);
     }),
 ])
   .then((sources) => {

@@ -42,14 +42,24 @@ export const loadCoinFailure = (): ILoadCoinFailureAction => {
 export const getCoins = async (settings: ISettings) => {
     try {
         const token = store.getState().user.user.token;
+        let fiatCurrency: string;
+        let cryptoCurrency: string;
+
+        if (typeof settings !== "undefined") {
+            fiatCurrency = settings.fiatCurrency;
+            cryptoCurrency = settings.cryptoCurrency;
+        } else {
+            fiatCurrency = "USD"
+            cryptoCurrency = "BTC"
+        }
         return axios
             .get<ICoinPrice[]>(
                 `${Config.API_SERVER}/price`,
                 {
                     headers: {
                         token,
-                        fiat: settings.fiatCurrency,
-                        crypto: settings.cryptoCurrency
+                        fiat: fiatCurrency,
+                        crypto: cryptoCurrency
                     },
                 },
         ).then((result) => {
@@ -71,6 +81,7 @@ export const getCoins = async (settings: ISettings) => {
         });
 
     } catch (error) {
+        console.error(error)
         try {
             const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
             if (coins !== null) {

@@ -60,31 +60,28 @@ class PureNewsList extends React.Component<INewsListProps> {
     )
     public render() {
         this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
-        if (this.props.news.length > 0) {
+        const listEmptyComponent = () => {
             return (
-                <StyleProvider style={getTheme(commonColour)}>
-                    <View style={this.styles.news}>
-                        <FlatList
-                            data={this.props.news}
-                            renderItem={this.renderNewsList}
-                            keyExtractor={this.keyExtractor}
-                            style={this.styles.newsList}
-                        />
-                    </View>
-                </StyleProvider>
-            );
-        } else {
-            return (
-                <StyleProvider style={getTheme(commonColour)}>
-                    <View style={this.styles.news}>
-                        <Content>
-                            <Spinner />
-                            <Text>CoinMarketNews is fetching news.</Text>
-                        </Content>
-                    </View>
-                </StyleProvider>
-            );
+                <Content>
+                    <Spinner />
+                    <Text>CoinMarketNews is fetching news.</Text>
+                </Content>
+            )
         }
+        return (
+            <StyleProvider style={getTheme(commonColour)}>
+                <View style={this.styles.news}>
+                    <FlatList
+                        data={this.props.news}
+                        renderItem={this.renderNewsList}
+                        keyExtractor={this.keyExtractor}
+                        style={this.styles.newsList}
+                        ListEmptyComponent={listEmptyComponent()}
+                    />
+                </View>
+            </StyleProvider>
+        );
+
     }
 
     private handleLinkPress = (link: string) => {

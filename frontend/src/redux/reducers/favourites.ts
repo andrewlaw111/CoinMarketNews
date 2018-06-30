@@ -11,7 +11,7 @@ export interface IFavouritesState {
 }
 
 const defaultFavouriteState: IFavouritesState = {
-    favourites: [],
+    favourites: [1, 296, ],
 };
 
 export const favouritesReducer = (state: IFavouritesState = defaultFavouriteState, action: FavouriteActions) => {

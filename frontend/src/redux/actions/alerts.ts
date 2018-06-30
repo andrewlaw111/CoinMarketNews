@@ -133,7 +133,7 @@ export const loadAlertsToStore = (alerts: IPriceAlert[], newsAlert: INewsAlert[]
 };
 
 export const loadAlerts = async (user: IUser) => {
-    if (user.price_alert || user.news_alert) {
+    if (typeof user !== "undefined") {
         store.dispatch(loadAlertsToStore(user.price_alert, user.news_alert));
     }
 };

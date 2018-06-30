@@ -97,6 +97,7 @@ class PureSettings extends React.Component<ISettingsProps>{
     }
 
     public render() {
+
         this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
         return (
             <StyleProvider style={getTheme(commonColour)}>
