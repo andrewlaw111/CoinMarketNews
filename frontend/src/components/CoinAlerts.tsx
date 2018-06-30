@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Container, Text, StyleProvider, Icon } from "native-base";
+import { Container, Text, StyleProvider, Icon, Left } from "native-base";
 import { View, Switch, FlatList, ScrollView, PanResponder, TouchableOpacity } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
@@ -35,6 +35,16 @@ interface ICoinsAlertsState {
 }
 class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsState> {
 
+    public currencySymbols: { [key: string]: string } = {
+        USD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
+        EUR: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>€</Text>,
+        CAD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
+        GBP: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>£</Text>,
+        HKD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
+        BTC: <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>&#xf15a;</Text>,
+        ETH: <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>&#xf42e;</Text>,
+    }
+
     constructor(props: ICoinsAlertsProps) {
         super(props);
         this.state = {
@@ -61,7 +71,10 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
             <View style={styles(this.props.darkMode).NewsAlertsView}>
-                <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper)?'>':'<'} {info.item.price_point} {info.item.currency_symbol}</Text>
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper) ? '>' : '<'} {info.item.price_point} </Text>
+                    {this.currencySymbols[info.item.currency_symbol]}
+                </View>
                 <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} />
                 <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)} />
             </View>
