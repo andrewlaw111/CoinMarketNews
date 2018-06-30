@@ -15,9 +15,9 @@ export default class PriceRouter {
         return router;
     }
     private getPrice = (req: express.Request, res: express.Response) => {
-        console.log('price');
-        console.log(req.headers);
-        return this.priceService.getPrice(req.headers.token, req.headers.fiat, req.headers.crypto)
+        // console.log('price');
+        // console.log(req.headers);
+        return this.priceService.getPrice(req.headers.token, req.headers.fiat, req.headers.crypto, req.headers.start, req.headers.limit)
             .then((data: ICoin[]) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
