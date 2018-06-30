@@ -19,6 +19,7 @@ import { Navigator, Navigation } from "react-native-navigation";
 
 import OneSignal from "react-native-onesignal";
 import { getCoins } from "../redux/actions/coins";
+import styles from "./styles/SettingsStyles";
 
 interface ISettingsProps {
     coins: ICoinPrice[];
@@ -34,23 +35,22 @@ class PureSettings extends React.Component<ISettingsProps>{
         statusBarBlur: true,
     };
 
-    public styles: typeof styles;
-
     public renderCryptoPicker() {
-        const options = ["BTC", "ETH"]
+        const options = ["BTC", "ETH", "Cancel"]
         const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
             options: options,
+            cancelButtonIndex: 2,
         },
             (buttonIndex) => {
                 this.handleCryptoCurrencyValueChange(options[buttonIndex], buttonIndex);
             });
         if (Platform.OS === "ios") {
             return (
-                <Button onPress={IOSPicker}>
-                    <Text>
+                <TouchableOpacity onPress={IOSPicker}>
+                    <Text style={{ color: "#0076FF" }}>
                         {this.props.appSettings.cryptoCurrency}
                     </Text>
-                </Button>
+                </TouchableOpacity>
 
             )
         }
@@ -58,7 +58,7 @@ class PureSettings extends React.Component<ISettingsProps>{
             return (
                 <Picker
                     selectedValue={this.props.appSettings.cryptoCurrency}
-                    style={this.styles.picker}
+                    style={styles(this.props.appSettings.darkMode).picker}
                     onValueChange={this.handleCryptoCurrencyValueChange}
                 >
                     {options.map((option: string, index: number) => <Picker.Item key={index} label={option} value={option} />)}
@@ -67,9 +67,10 @@ class PureSettings extends React.Component<ISettingsProps>{
         }
     }
     public renderFiatPicker() {
-        const options = ["USD", "EUR", "CAD", "GBP", "HKD"]
+        const options = ["USD", "EUR", "CAD", "GBP", "HKD", "Cancel"]
         const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
             options: options,
+            cancelButtonIndex: 5,
         },
             (buttonIndex) => {
                 this.handleFiatCurrencyValueChange(options[buttonIndex], buttonIndex);
@@ -87,7 +88,7 @@ class PureSettings extends React.Component<ISettingsProps>{
             return (
                 <Picker
                     selectedValue={this.props.appSettings.fiatCurrency}
-                    style={this.styles.picker}
+                    style={styles(this.props.appSettings.darkMode).picker}
                     onValueChange={this.handleFiatCurrencyValueChange}
                 >
                     {options.map((option: string, index: number) => <Picker.Item key={index} label={option} value={option} />)}
@@ -98,101 +99,98 @@ class PureSettings extends React.Component<ISettingsProps>{
 
     public render() {
 
-        this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <Content style={this.styles.Settings}>
-                    <Card style={this.styles.Card}>
-                        <TouchableOpacity>
-                            <CardItem style={this.styles.CardItem}>
-                                <View style={this.styles.CardLeft}>
-                                    <Icon type="FontAwesome" name="dollar" style={this.styles.CardLeftIcon} />
-                                    <Text style={this.styles.settingsText}>Preferred  Fiat Currency</Text>
-                                </View>
-                                {this.renderFiatPicker()}
+                <Content style={styles(this.props.appSettings.darkMode).Settings}>
+                    <View style={styles(this.props.appSettings.darkMode).settingsItem}>
+                        <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
+                            <Icon type="FontAwesome" name="dollar" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                        </View>
+                        <View style={styles(this.props.appSettings.darkMode).settingsRight}>
+                            <Text style={styles(this.props.appSettings.darkMode).settingsText}>Preferred  Fiat Currency</Text>
 
-                            </CardItem>
-                        </TouchableOpacity>
-                    </Card>
-                    <Card style={this.styles.Card}>
-                        <TouchableOpacity>
-                            <CardItem style={this.styles.CardItem}>
-                                <View style={this.styles.CardLeft}>
-                                    <Image source={require("../coin.png")} style={this.styles.CoinIcon} />
-                                    <Text style={this.styles.settingsText}>Preferred Crypto Currency</Text>
-                                </View>
-                                {this.renderCryptoPicker()}
-                            </CardItem>
-                        </TouchableOpacity>
-                    </Card>
-                    <Card style={this.styles.Card}>
-                        <TouchableOpacity>
-                            <CardItem style={this.styles.CardItem}>
-                                <View style={this.styles.CardLeft}>
-                                    <Icon type="FontAwesome" name="bell" style={this.styles.CardLeftIcon} />
-                                    <Text style={this.styles.settingsText}>Push notifications</Text>
-                                </View>
-                                <View >
-                                    {/* tslint:disable-next-line:jsx-no-multiline-js*/}
-                                    {(Platform.OS === "ios") ?
-                                        (
-                                            <Switch value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
-                                        ) : (
-                                            <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
-                                        )}
-                                </View>
-                            </CardItem>
-                        </TouchableOpacity>
-                    </Card>
-                    <Card style={this.styles.Card}>
-                        <TouchableOpacity>
-                            <CardItem style={this.styles.CardItem}>
-                                <View style={this.styles.CardLeft}>
-                                    <Icon type="FontAwesome" name="moon-o" style={this.styles.CardLeftIcon} />
-                                    <Text style={this.styles.settingsText}>Dark Mode</Text>
-                                </View>
-                                <View >
-                                    {/* tslint:disable-next-line:jsx-no-multiline-js*/}
-                                    {(Platform.OS === "ios") ?
-                                        (
-                                            <Switch value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
-                                        ) : (
-                                            <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
-                                        )}
-                                </View>
-                            </CardItem>
-                        </TouchableOpacity>
-                    </Card>
+                            {this.renderFiatPicker()}
+                        </View>
+
+                    </View>
+
+                    <View style={styles(this.props.appSettings.darkMode).settingsItem}>
+                        <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
+                            <Image source={require("../coin.png")} style={styles(this.props.appSettings.darkMode).CoinIcon} />
+                        </View>
+                        <View style={styles(this.props.appSettings.darkMode).settingsRight}>
+                            <Text style={styles(this.props.appSettings.darkMode).settingsText}>Preferred Crypto Currency</Text>
+
+                            {this.renderCryptoPicker()}
+                        </View>
+                    </View>
+
+                    <View style={styles(this.props.appSettings.darkMode).settingsItem}>
+                        <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
+                            <Icon type="FontAwesome" name="bell" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                        </View>
+                        <View style={styles(this.props.appSettings.darkMode).settingsRight}>
+                            <Text style={styles(this.props.appSettings.darkMode).settingsText}>Push notifications</Text>
+                            <View >
+                                {/* tslint:disable-next-line:jsx-no-multiline-js*/}
+                                {(Platform.OS === "ios") ?
+                                    (
+                                        <Switch value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
+                                    ) : (
+                                        <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
+                                    )}
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={styles(this.props.appSettings.darkMode).settingsItem}>
+                        <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
+                            <Icon type="FontAwesome" name="moon-o" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                        </View>
+                        <View style={styles(this.props.appSettings.darkMode).settingsRight}>
+                            <Text style={styles(this.props.appSettings.darkMode).settingsText}>Dark Mode</Text>
+                            <View >
+                                {/* tslint:disable-next-line:jsx-no-multiline-js*/}
+                                {(Platform.OS === "ios") ?
+                                    (
+                                        <Switch value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
+                                    ) : (
+                                        <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
+                                    )}
+                            </View>
+                        </View>
+                    </View>
                     {/*tslint:disable-next-line:jsx-no-multiline-js*/}
-                    {/* <Card style={this.styles.Card}>
-                        <TouchableOpacity>
-                            <CardItem style={this.styles.CardItem}>
-                                <View style={this.styles.CardLeft}>
-                                    <Icon type="FontAwesome" name="user" style={this.styles.CardLeftIcon} />
-                                    <Text style={this.styles.settingsText}>Account</Text>
+                    {/* <Card style={styles(this.props.appSettings.darkMode).Card}>
+                        <TouchableOpacity  style={styles(this.props.appSettings.darkMode).settingsItem}>
+                                <View style={styles(this.props.appSettings.darkMode).CardLeft}>
+                                    <View>
+                                    <Icon type="FontAwesome" name="user" style={styles</View>(this.props.appSettings.darkMode).SettingsIcon} />
+
+                                    <Text style={styles(this.props.appSettings.darkMode).settingsText}>Account</Text>
                                 </View>
-                            </CardItem>
                         </TouchableOpacity>
                     </Card> */}
-                    <Card style={this.styles.Card}>
-                        <TouchableOpacity>
-                            <CardItem style={this.styles.CardItem}>
-                                <View style={this.styles.CardLeft}>
-                                    <Icon type="FontAwesome" name="info" style={this.styles.CardLeftIcon} />
-                                    <Text style={this.styles.settingsText}>About</Text>
-                                </View>
-                            </CardItem>
-                        </TouchableOpacity>
-                    </Card>
+                    <TouchableOpacity style={[styles(this.props.appSettings.darkMode).settingsItem, { justifyContent: "flex-start", height: 50, }]}>
+                        <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
+                            <Icon type="FontAwesome" name="info" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                        </View>
+                        <Text style={styles(this.props.appSettings.darkMode).settingsText}>About</Text>
+
+                    </TouchableOpacity>
                 </Content>
             </StyleProvider>
         );
     }
     private handleCryptoCurrencyValueChange = (itemValue: string, itemIndex: number) => {
-        const settings = { ...this.props.appSettings };
-        settings.cryptoCurrency = itemValue;
-        this.props.changeSettings(settings);
-        getCoins(settings);
+        if (itemIndex === 2) {
+            return
+        } else {
+            const settings = { ...this.props.appSettings };
+            settings.cryptoCurrency = itemValue;
+            this.props.changeSettings(settings);
+            getCoins(settings);
+        }
     }
     private handleDarkModeValueChange = () => {
         const settings = { ...this.props.appSettings };
@@ -284,10 +282,14 @@ class PureSettings extends React.Component<ISettingsProps>{
             });
     }
     private handleFiatCurrencyValueChange = (itemValue: string, itemIndex: number) => {
-        const settings = { ...this.props.appSettings };
-        settings.fiatCurrency = itemValue;
-        this.props.changeSettings(settings)
-        getCoins(settings);
+        if (itemIndex === 5) {
+            return
+        } else {
+            const settings = { ...this.props.appSettings };
+            settings.fiatCurrency = itemValue;
+            this.props.changeSettings(settings)
+            getCoins(settings);
+        }
     }
     private handleNotificationChange = (token: string) => {
         const settings = { ...this.props.appSettings };
@@ -330,47 +332,3 @@ const mapStateToProps = (state: IRootState) => {
 
 const Settings = connect(mapStateToProps, mapDispatchToProps)(PureSettings);
 export default Settings;
-
-const styleTemplate = (darkMode: boolean) => StyleSheet.create({
-    Card: {
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        margin: 10,
-    },
-    CardItem: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        minHeight: 70,
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    CardLeft: {
-        // flex: 0.9,
-        flexDirection: "row",
-        justifyContent: "flex-start"
-    },
-    CardLeftIcon: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
-        marginRight: 15,
-    },
-    CoinIcon: {
-        marginRight: 20,
-        left: -4,
-    },
-    picker: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
-        height: 50,
-        width: 100
-    },
-    Settings: {
-        paddingTop: 10,
-        paddingBottom: 20,
-        backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
-    },
-    settingsText: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
-    }
-})
-
-const styles = styleTemplate(false);
-const darkStyles = styleTemplate(true);

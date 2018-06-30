@@ -38,8 +38,8 @@ export interface ICoinListState {
     refreshing: boolean;
 }
 class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
-    public cryptoCurrency = <Text>&#xf15a;</Text>;
-    public fiatCurrency = <Text>$</Text>;
+    public cryptoCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>&#xf15a; </Text>;
+    public fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>$ </Text>;
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
@@ -59,9 +59,14 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         };
     }
     public componentWillReceiveProps() {
-        this.cryptoCurrency = (this.props.appSettings.cryptoCurrency === "BTC") ? <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf15a; </Text> : <Text style={{ fontFamily: "Font Awesome 5 Brands" }}>&#xf42e; </Text>;
+        this.cryptoCurrency = (this.props.appSettings.cryptoCurrency === "BTC") ?
+            (
+                <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }}>&#xf15a; </Text>
+            ) : (
+                < Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }} >&#xf42e; </Text >
+            );
 
-        this.fiatCurrency = < Text style={styles(this.props.appSettings.darkMode).coinPrice} >{this.currencySymbols[this.props.appSettings.fiatCurrency]}</Text>;
+        this.fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice} >{this.currencySymbols[this.props.appSettings.fiatCurrency]} </Text>;
 
     }
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
