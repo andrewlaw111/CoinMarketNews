@@ -45,7 +45,7 @@ if (process.env.CRON_COIN_PRICE === "true") {
     }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_COIN_INFOS === "true") {
-    // new CoinInfosUpdate();   // dev only
+    new CoinInfosUpdate();   // dev only || one shot
     // once a day
     let CRON_COIN_PRICE = true;
     new CronJob('0 30 0 * * *', function () {
