@@ -25,6 +25,8 @@ export interface ICoin {
     twitter_link?: string;
     telegram_name?: string;
     telegram_link?: string;
+    whitepaper_name?: string;
+    whitepaper_link?: string;
 }
 export interface ICoinPrice {
     id: number;

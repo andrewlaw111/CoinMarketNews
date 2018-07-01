@@ -135,9 +135,15 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                 linkIcon: "link",
                 linkType: "Website",
             },
+            {
+                link: this.props.coin.whitepaper_link,
+                name: this.props.coin.whitepaper_name,
+                linkIcon: "file",
+                linkType: "Whitepaper",
+            }
         ];
         return links.map((link, index) => {
-            if (link.link) {
+            if (link.link && link.link != 'n/a') {
                 return (
                     <CardItem key={index} style={this.styles.cardItem}>
                         <Icon style={[this.styles.cardText, this.styles.linkIcon]} active={true} type="FontAwesome" name={link.linkIcon} />
