@@ -34,6 +34,7 @@ interface ICoinListProps {
 }
 
 export interface ICoinListState {
+    numberOfCoins: number
     cryptoCurrencyName: string;
     fiatCurrencyName: string;
     refreshing: boolean;
@@ -57,6 +58,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
             refreshing: false,
             cryptoCurrencyName: "BTC",
             fiatCurrencyName: "USD",
+            numberOfCoins: 100,
         };
     }
     public componentWillReceiveProps() {
@@ -179,6 +181,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     getItemLayout={this.getItemLayout}
                                     refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                     ListEmptyComponent={spinner()}
+                                    ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
                                 />
                             )
                     }
@@ -187,7 +190,14 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         );
 
     }
-
+    private endReached = () => {
+        // const newNumberOfCoins = this.state.numberOfCoins + 100;
+        // getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
+        //     this.setState({
+        //         numberOfCoins: newNumberOfCoins,
+        //     })
+        // })
+    }
     private handlePress = (info: { item: ICoinPrice, index: number }) => {
         const favourite = (this.props.favourites.indexOf(info.item.id) > -1) ? true : false;
         Promise.all([
@@ -236,11 +246,13 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     private keyExtractor = (item: ICoinPrice) => item.id.toString();
 
     private onRefresh = () => {
+        const newNumberOfCoins = this.state.numberOfCoins + 100;
         this.setState({
             refreshing: true
         });
-        getCoins(this.props.appSettings).then(() => {
+        getCoins(this.props.appSettings, this.state.numberOfCoins, newNumberOfCoins).then(() => {
             this.setState({
+                numberOfCoins: newNumberOfCoins,
                 refreshing: false
             });
         });

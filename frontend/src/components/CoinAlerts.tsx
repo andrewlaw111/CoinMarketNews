@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { Container, Text, StyleProvider, Icon, } from "native-base";
-import { View, Switch, FlatList, ScrollView, } from "react-native";
+import { View, Switch, FlatList, ScrollView, ToastAndroid, } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
