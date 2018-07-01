@@ -21,6 +21,8 @@ module.exports = () => {
 
     knex.select('id', 'name', 'symbol')
         .from('coin')
+        .where('symbol', '!=', 'CRYPT')     // exeptions
+        .andWhere('name', '!=', 'Crypto')
         .orderBy('rank')
         .then((coins) => {
             let feeder = new RssFeedEmitter();
@@ -67,7 +69,7 @@ module.exports = () => {
                                                         console.log(insert_news_ok);
                                                         const coin_news = []
                                                         coins.map(function (coin) {
-                                                            if (news.title.includes(coin.name) || news.title.includes(coin.symbol)) {
+                                                            if (news.title.includes(coin.name) || (coin.symbol.length > 2 && news.title.includes(coin.symbol))) {
                                                                 coin_news.push({ coin_id: coin.id, news_id: insert_news_ok[0] });
                                                                 // send push notif
                                                                 news_alert(news, coin);
@@ -128,10 +130,10 @@ module.exports = () => {
                     const filters = [];
 
                     ids.map(function (value, index) {
-                        if(index===0) {
+                        if (index === 0) {
                             filters.push({ "field": "tag", "key": "user_id", "relation": "=", "value": value.user_id });
                         } else {
-                            filters.push({"operator": "OR"}, { "field": "tag", "key": "user_id", "relation": "=", "value": value.user_id });
+                            filters.push({ "operator": "OR" }, { "field": "tag", "key": "user_id", "relation": "=", "value": value.user_id });
                         }
                     })
 

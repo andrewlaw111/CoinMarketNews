@@ -167,6 +167,8 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         width: 20,
         height: 20,
         marginLeft: 8,
+        backgroundColor: "grey",
+        borderRadius:50,
     }
 });
 
