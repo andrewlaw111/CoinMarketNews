@@ -122,22 +122,25 @@ exports.down = function (knex, Promise) {
                 .then(() => {
                     return knex.schema.dropTable('price')
                         .then(() => {
-                            return knex.schema.dropTable('users')
+                            return knex.schema.dropTable('sessions')
                                 .then(() => {
-                                    return knex.schema.dropTable('currency')
+                                    return knex.schema.dropTable('users')
                                         .then(() => {
-                                            return knex.schema.dropTable('coin_news')
+                                            return knex.schema.dropTable('currency')
                                                 .then(() => {
-                                                    return knex.schema.dropTable('coin')
+                                                    return knex.schema.dropTable('coin_news')
                                                         .then(() => {
-                                                            return knex.schema.dropTable('news')
+                                                            return knex.schema.dropTable('coin')
                                                                 .then(() => {
-                                                                    return knex.schema.dropTable('source')
+                                                                    return knex.schema.dropTable('news')
+                                                                        .then(() => {
+                                                                            return knex.schema.dropTable('source')
+                                                                        });
                                                                 });
                                                         });
                                                 });
-                                        });
-                                })
+                                        })
+                                });
                         });
                 });
         });
