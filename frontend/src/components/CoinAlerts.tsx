@@ -1,8 +1,8 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { connect } from "react-redux";
 
 import { Container, Text, StyleProvider, Icon } from "native-base";
-import { View, Switch, FlatList, ScrollView, PanResponder, TouchableOpacity } from "react-native";
+import { View, Switch, FlatList, ScrollView, findNodeHandle } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -30,18 +30,25 @@ interface ICoinsAlertsProps {
 }
 interface ICoinsAlertsState {
     alerts: IAlerts[];
-    modalVisible: boolean
     newsAlerts: boolean;
+    viewRef: number | null
 }
 class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsState> {
-
+    private view: RefObject<View>;
     constructor(props: ICoinsAlertsProps) {
         super(props);
         this.state = {
             alerts: this.props.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id),
-            modalVisible: false,
             newsAlerts: (this.props.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) ? true : false,
+            viewRef: null,
         };
+        this.view = React.createRef()
+    }
+    componentDidMount() {
+
+        this.setState({
+            viewRef: findNodeHandle(this.view.current)
+        });
     }
     componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
         const alerts = nextProps.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id)
@@ -61,7 +68,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
             <View style={styles(this.props.darkMode).NewsAlertsView}>
-                <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper)?'>':'<'} {info.item.price_point} {info.item.currency_symbol}</Text>
+                <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper) ? '>' : '<'} {info.item.price_point} {info.item.currency_symbol}</Text>
                 <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} />
                 <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)} />
             </View>
@@ -71,26 +78,24 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
         return (
             <StyleProvider style={getTheme(commonColour)} >
                 <Container style={styles(this.props.darkMode).alertsPage}>
-                    <View style={styles(this.props.darkMode).NewsAlertsView}>
-                        <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
-                        <Switch value={this.state.newsAlerts} onValueChange={this.handlenewsAlertChange} />
+
+                    <View ref={this.view}>
+                        <View style={styles(this.props.darkMode).NewsAlertsView}>
+                            <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
+                            <Switch value={this.state.newsAlerts} onValueChange={this.handlenewsAlertChange} />
+                        </View>
+                        <ScrollView style={{ marginBottom: 40 }}>
+                            <FlatList
+                                data={this.state.alerts}
+                                keyExtractor={this.keyExtractor}
+                                renderItem={this.renderAlerts}
+                            />
+                        </ScrollView>
                     </View>
-                    <ScrollView>
-                        <FlatList
-                            data={this.state.alerts}
-                            keyExtractor={this.keyExtractor}
-                            renderItem={this.renderAlerts}
-                        />
-                    </ScrollView>
-                    <CoinAlertsModal appSettings={this.props.appSettings} closeModal={this.closeModal} coinPrice={this.props.coinPrice} darkMode={this.props.darkMode} modalVisible={this.state.modalVisible} />
+                    <CoinAlertsModal appSettings={this.props.appSettings} coinPrice={this.props.coinPrice} darkMode={this.props.darkMode} viewRef={this.state.viewRef} />
                 </Container>
             </StyleProvider>
         );
-    }
-    private closeModal = () => {
-        this.setState({
-            modalVisible: false
-        })
     }
     private keyExtractor = (item: IAlerts, index: number) => {
         return item.id.toString();

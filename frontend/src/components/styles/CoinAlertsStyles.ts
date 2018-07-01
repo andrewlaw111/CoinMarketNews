@@ -10,8 +10,6 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     },
     alertsPage: {
         backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
-        flex: 1,
-        paddingBottom: 20,
     },
     NewsAlertsView: {
         flexDirection: "row",
