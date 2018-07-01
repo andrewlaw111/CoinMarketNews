@@ -1,5 +1,5 @@
-import {  ICoinPrice } from "../../models";
-import { CoinActions, LOAD_COIN_FAILURE, LOAD_COIN_SUCCESS } from "../actions/coins";
+import { ICoinPrice } from "../../models";
+import { CoinActions, LOAD_COIN_FAILURE, LOAD_COIN_SUCCESS, UPDATE_COIN_SUCCESS } from "../actions/coins";
 
 export interface ICoinState {
   coins: ICoinPrice[];
@@ -18,6 +18,11 @@ export const coinReducer = (state: ICoinState = defaultCoinState, action: CoinAc
       };
     case LOAD_COIN_FAILURE:
       return {
+      };
+    case UPDATE_COIN_SUCCESS:
+
+      return {
+        coins: state.coins.concat(action.coins)
       };
     default:
       return state; // Do not change the state in case of any other actions

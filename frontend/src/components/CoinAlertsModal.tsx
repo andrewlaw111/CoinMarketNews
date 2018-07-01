@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text, TouchableHighlight, View, TextInput, StyleSheet, KeyboardAvoidingView, PanResponder, PanResponderInstance, Animated, Dimensions, Platform } from 'react-native';
+import { Text, View, TextInput, StyleSheet, KeyboardAvoidingView, PanResponder, PanResponderInstance, Animated, Dimensions, Platform } from 'react-native';
 import { ICoinPrice, ISettings, IAlerts, IUser } from '../models';
 import { Segment, Button, Icon } from 'native-base';
 import { IRootState } from '../redux/store';
@@ -26,7 +26,6 @@ interface ICoinAlertsModalState {
 
 class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAlertsModalState> {
     private panResponder: PanResponderInstance;
-    private gestureStart: number;
 
     constructor(props: ICoinAlertsModalProps) {
         super(props);
@@ -100,13 +99,13 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                     (this.state.modalOpen) ? (
                         <View style={{ bottom: -20, height: Dimensions.get("window").height, }} />
                     ) : null}
-                <Animated.View style={[style(this.props.darkMode).modalForm, { bottom: -Dimensions.get("window").height + 100, transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
-                    <View style={style(this.props.darkMode).alertArrow} {...this.panResponder.panHandlers}>
+                <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
+                    <Animated.View style={style(this.props.darkMode).alertArrow} {...this.panResponder.panHandlers}>
                         {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
-                    </View>
-                    <View style={style(this.props.darkMode).modalHeading} {...this.panResponder.panHandlers}>
+                    </Animated.View>
+                    <Animated.View style={style(this.props.darkMode).modalHeading} {...this.panResponder.panHandlers}>
                         <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
-                    </View>
+                    </Animated.View>
 
                     <View style={style(this.props.darkMode).modalFormComponentsWrapper}>
                         <Segment style={style(this.props.darkMode).segment}>
@@ -186,7 +185,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             // Animate value over time
             this.state.pan.y, // The value to drive
             {
-                toValue: -Dimensions.get("window").height + 460, // Animate to final value of 1
+                toValue: -320, // Animate to final value of 1
             }
         ).start(); // Start the animation
         this.setState({
@@ -254,7 +253,8 @@ const style = (darkMode: boolean) => StyleSheet.create({
     alertArrow: {
         height: 40,
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+        // backgroundColor: "green",
     },
     buttons: {
         backgroundColor: "#2874F0",
@@ -275,9 +275,10 @@ const style = (darkMode: boolean) => StyleSheet.create({
         alignItems: "center",
     },
     modalForm: {
-        height: Dimensions.get("window").height,
+        height: Dimensions.get("window").height + 150,
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        paddingBottom: Dimensions.get("window").height - 400,
+        bottom: -Dimensions.get("window").height -50, 
+        paddingBottom: Dimensions.get("window").height - 250,
         elevation: 20,
         borderWidth: 1,
         borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
@@ -300,6 +301,7 @@ const style = (darkMode: boolean) => StyleSheet.create({
         flex: 0.2,
         flexDirection: "row",
         justifyContent: 'center',
+        // backgroundColor: "green",
     },
     segment: {
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8"
