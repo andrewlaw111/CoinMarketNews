@@ -3,7 +3,7 @@ import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 import Moment from 'react-moment';
 
-import { Body, Card, CardItem, StyleProvider, Text, Content, Spinner } from "native-base";
+import { Body, Card, CardItem, StyleProvider, Text, Content, Spinner, Icon } from "native-base";
 import { FlatList, Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import getTheme from "../../native-base-theme/components";
@@ -12,6 +12,8 @@ import commonColour from '../../native-base-theme/variables/commonColor';
 import { INews, IUser, ISettings } from "../models";
 import { IRootState } from "../redux/store";
 import { BlockOverflowProperty } from "csstype";
+import FastImage from "react-native-fast-image";
+import Config from "react-native-config";
 
 interface INewsListProps {
     appSettings: ISettings,
@@ -34,6 +36,11 @@ class PureNewsList extends React.Component<INewsListProps> {
                     onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)}
                 >
                     <CardItem header={true} bordered={true} style={this.styles.cardItem}>
+                        <FastImage
+                            style={this.styles.newsSourceIcon}
+                            source={{ uri: `${Config.API_SERVER}/source-icons/${this.props.news[info.index].source_id}.png` }}
+                            resizeMode={FastImage.resizeMode.contain}
+                        />
                         <Text
                             style={this.styles.headingText}
                         >
@@ -50,9 +57,21 @@ class PureNewsList extends React.Component<INewsListProps> {
                     <CardItem
                         button={true}
                         footer={true}
-                        style={this.styles.cardItem}
+                        style={[this.styles.cardItem, { paddingTop: 0 }]}
                     >
-                        <Moment style={this.styles.newsText} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                        {(this.props.news[info.index].counter > 1) ? <View style={{ flexDirection: "row", marginRight: 3 }}><Text style={this.styles.newsCounter}>{this.props.news[info.index].counter} </Text><Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" /></View> : ''}
+                        <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
+                        {this.props.news[info.index].coins && this.props.news[info.index].coins.map((coin: string, key: number) => {
+                            return (
+                                <FastImage
+                                    style={this.styles.newsIcons}
+                                    source={{ uri: `${Config.API_SERVER}/icon/${coin.toLocaleLowerCase()}.png` }}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                    key={key}
+                                />
+                            )
+                        })}
                     </CardItem>
                 </TouchableOpacity>
             </Card>
@@ -108,10 +127,17 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     },
     cardItem: {
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        paddingRight: 10,
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
     },
     headingText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
-        textDecorationLine: "underline",
+        fontWeight: 'bold',
+        fontSize: 14,
+        paddingRight: 25,
+        // textDecorationLine: "underline",
     },
     news: {
         backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
@@ -120,8 +146,28 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         // paddingBottom: 20,
     },
     newsText: {
-        color: (darkMode) ? "#F8F8F8" : "#000"
+        color: (darkMode) ? "#F8F8F8" : "#a3a3a2",
+        fontSize: 14,
     },
+    newsCounter: {
+        color: "#ffa236",
+        fontSize: 14,
+    },
+    newsCounterIcon: {
+        width: 13,
+        color: "#ffa236",
+        fontSize: 17,
+    },
+    newsSourceIcon: {
+        width: 30,
+        height: 30,
+        marginRight: 6,
+    },
+    newsIcons: {
+        width: 20,
+        height: 20,
+        marginLeft: 8,
+    }
 });
 
 const styles = styleTemplate(false);

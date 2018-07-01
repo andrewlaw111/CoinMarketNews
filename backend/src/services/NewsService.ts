@@ -40,7 +40,7 @@ export default class NewsService {
                         // console.log(news_source);
                         data.map(function (news: INews) {
                             news.coins = news_source[news.id];
-                            news.content = news.content.substr(0, 200);
+                            news.content = news.content.replace(/(\r\n\t|\n|\r\t)/gm," ").substr(0, 200);
                             return news;
                         });
                         return data;
@@ -60,7 +60,7 @@ export default class NewsService {
             .orderBy("created_at", "desc")
             .then((data: INews[]) => {
                 data.map(function (news: INews) {
-                    news.content = news.content.substr(0, 200);
+                    news.content = news.content.replace(/(\r\n\t|\n|\r\t)/gm," ").substr(0, 200);
                     return news;
                 });
                 return data;
