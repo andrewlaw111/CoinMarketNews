@@ -1,8 +1,8 @@
-import React, { RefObject } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
-import { Container, Text, StyleProvider, Icon } from "native-base";
-import { View, Switch, FlatList, ScrollView, findNodeHandle } from "react-native";
+import { Container, Text, StyleProvider, Icon, } from "native-base";
+import { View, Switch, FlatList, ScrollView, } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -31,24 +31,24 @@ interface ICoinsAlertsProps {
 interface ICoinsAlertsState {
     alerts: IAlerts[];
     newsAlerts: boolean;
-    viewRef: number | null
 }
 class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsState> {
-    private view: RefObject<View>;
+    public currencySymbols: { [key: string]: JSX.Element } = {
+        USD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
+        EUR: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>€</Text>,
+        CAD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
+        GBP: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>£</Text>,
+        HKD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
+        BTC: <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>&#xf15a;</Text>,
+        ETH: <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>&#xf42e;</Text>,
+    }
+
     constructor(props: ICoinsAlertsProps) {
         super(props);
         this.state = {
             alerts: this.props.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id),
             newsAlerts: (this.props.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) ? true : false,
-            viewRef: null,
         };
-        this.view = React.createRef()
-    }
-    componentDidMount() {
-
-        this.setState({
-            viewRef: findNodeHandle(this.view.current)
-        });
     }
     componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
         const alerts = nextProps.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id)
@@ -68,9 +68,14 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
             <View style={styles(this.props.darkMode).NewsAlertsView}>
-                <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper) ? '>' : '<'} {info.item.price_point} {info.item.currency_symbol}</Text>
-                <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} />
-                <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)} />
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper) ? '>' : '<'} {this.currencySymbols[info.item.currency_symbol]} {info.item.price_point} </Text>
+
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                    <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} style={{ marginRight: 15 }} />
+                    <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)} />
+                </View>
             </View>
         )
     }
@@ -79,7 +84,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
             <StyleProvider style={getTheme(commonColour)} >
                 <Container style={styles(this.props.darkMode).alertsPage}>
 
-                    <View ref={this.view}>
+                    <View >
                         <View style={styles(this.props.darkMode).NewsAlertsView}>
                             <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
                             <Switch value={this.state.newsAlerts} onValueChange={this.handlenewsAlertChange} />
@@ -92,7 +97,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
                             />
                         </ScrollView>
                     </View>
-                    <CoinAlertsModal appSettings={this.props.appSettings} coinPrice={this.props.coinPrice} darkMode={this.props.darkMode} viewRef={this.state.viewRef} />
+                    <CoinAlertsModal appSettings={this.props.appSettings} coinPrice={this.props.coinPrice} darkMode={this.props.darkMode} />
                 </Container>
             </StyleProvider>
         );

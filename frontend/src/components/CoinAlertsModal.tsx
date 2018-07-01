@@ -21,7 +21,7 @@ interface ICoinAlertsModalState {
     alertAmountFiat: string;
     fiatCurrency: boolean;
     modalOpen: boolean;
-    pan: Animated.ValueXY
+    pan: any;
 }
 
 class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAlertsModalState> {

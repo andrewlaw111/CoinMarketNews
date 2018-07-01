@@ -32,15 +32,15 @@ export default class CoinService {
     public checkTimer() {
         return Date.now() - this.lastUpdated;
     }
-    public getPrice(token: string, fiat: string = 'USD', crypto: string = 'BTC') {
+    public getPrice(token: string, fiat: string = 'USD', crypto: string = 'BTC', start: number = 0, limit: number = 100) {
         return new Promise((resolve, reject) => {
             // Make a query to the database if the list has not been updated for 5 minutes
             if (Date.now() - this.lastUpdated < 300000) {
-                resolve(this.selectCurrency(fiat, crypto));
+                resolve(this.selectCurrency(fiat, crypto, start, limit));
             } else {
                 this.updatePriceList()
                     .then(() => {
-                        resolve(this.selectCurrency(fiat, crypto));
+                        resolve(this.selectCurrency(fiat, crypto, start, limit));
                     })
                     .catch((err: any) => {
                         reject(err);
@@ -85,7 +85,6 @@ export default class CoinService {
                 // console.log(price_array);
                 return knex.select('id', 'coinmarketcap_id', 'name', 'symbol', 'rank')
                     .from('coin')
-                    .limit(100) // TODO: REMOVE !!!
                     .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
                         return this.priceList = coins;
@@ -93,7 +92,7 @@ export default class CoinService {
             });
     }
 
-    private selectCurrency(fiat: string = 'USD', crypto: string = 'BTC') {
+    private selectCurrency(fiat: string = 'USD', crypto: string = 'BTC', start: number = 0, limit: number = 100) {
         const map_symbol_id: any = [];  // TODO: get from DB
         map_symbol_id["USD"] = 1;
         map_symbol_id["EUR"] = 2;
@@ -102,10 +101,11 @@ export default class CoinService {
         map_symbol_id["HKD"] = 5;
         map_symbol_id["BTC"] = 6;
         map_symbol_id["ETH"] = 7;
-        for (const coin of this.priceList) {
+        const priceList = this.priceList.slice(start, start + limit);
+        for (const coin of priceList) {
             coin.price_fiat = this.prices[coin.coinmarketcap_id][map_symbol_id[fiat]];
             coin.price_crypto = this.prices[coin.coinmarketcap_id][map_symbol_id[crypto]];
         };
-        return this.priceList;
+        return priceList;
     }
 }

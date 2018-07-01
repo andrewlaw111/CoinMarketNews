@@ -227,9 +227,8 @@ class PureSettings extends React.Component<ISettingsProps>{
             }
         }
         Promise.all([
-            // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
-            FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
-            FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
+            FontAwesomeIcon.getImageSource("newspaper-o", 26, "#3db9f7"),
+            FontAwesomeIcon.getImageSource("cog", 30, "#3db9f7"),
         ])
             .then((sources) => {
                 // start the app

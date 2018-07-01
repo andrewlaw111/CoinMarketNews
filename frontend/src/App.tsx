@@ -19,103 +19,99 @@ let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: strin
 
 let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string }
 function setColour(darkMode: boolean) {
-  if (darkMode) {
-    colours = {
-      backgroundColor: "#343a44",
-      navBarTextColor: "#FFF",
-      screenBackgroundColor: "#454951",
-      statusBarTextColorScheme: "light",
+    if (darkMode) {
+        colours = {
+            backgroundColor: "#343a44",
+            navBarTextColor: "#FFF",
+            screenBackgroundColor: "#454951",
+            statusBarTextColorScheme: "light",
+        }
+        tabBarColours = {
+            tabBarButtonColor: "#fff",
+            tabBarSelectedButtonColor: "#2874F0",
+            tabBarBackgroundColor: "#343a44"
+        }
+    } else {
+        colours = {
+            backgroundColor: "#F8F8F8",
+            navBarTextColor: "#000",
+            screenBackgroundColor: "#F8F8F8",
+            statusBarTextColorScheme: "dark",
+        }
+        tabBarColours = {
+            tabBarButtonColor: "#343a44",
+            tabBarSelectedButtonColor: "#2874F0",
+            tabBarBackgroundColor: "#F8F8F8"
+        }
     }
-    tabBarColours = {
-      tabBarButtonColor: "#fff",
-      tabBarSelectedButtonColor: "#2874F0",
-      tabBarBackgroundColor: "#343a44"
-    }
-  } else {
-    colours = {
-      backgroundColor: "#F8F8F8",
-      navBarTextColor: "#000",
-      screenBackgroundColor: "#F8F8F8",
-      statusBarTextColorScheme: "dark",
-    }
-    tabBarColours = {
-      tabBarButtonColor: "#343a44",
-      tabBarSelectedButtonColor: "#2874F0",
-      tabBarBackgroundColor: "#F8F8F8"
-    }
-  }
 };
 // start the app
 Promise.all([
-  getUser()
-    .then((data: IUser) => {
-      loadAlerts(data);
-      getNews();
-    }),
-  loadFavourites(),
-  // FontAwesomeIcon.getImageSource("star", 20, "#3db9f7"),
-  FontAwesomeIcon.getImageSource("newspaper-o", 20, "#3db9f7"),
-  FontAwesomeIcon.getImageSource("cog", 20, "#3db9f7"),
-  loadSettings()
-    .then((settings: ISettings) => {
-      console.log(settings);
-      if (settings) {
-        setColour(settings.darkMode)
-      } else {
-        setColour(false)
-      }
-      getCoins(settings);
-    }),
+    getUser()
+        .then((data: IUser) => {
+            loadAlerts(data);
+            getNews();
+        }),
+    loadFavourites(),
+    FontAwesomeIcon.getImageSource("newspaper-o", 26, "#3db9f7"),
+    FontAwesomeIcon.getImageSource("cog", 30, "#3db9f7"),
+    loadSettings()
+        .then((settings: ISettings) => {
+            console.log(settings);
+            if (settings) {
+                setColour(settings.darkMode)
+            } else {
+                setColour(false)
+            }
+            getCoins(settings);
+        }),
 ])
-  .then((sources) => {
-    // start the app
-    Navigation.startTabBasedApp({
-      tabs: [
-        {
-          icon: require("./coin.png"),
-          // icon: sources[2],
-          label: "Coins",
-          screen: "CoinMarketNews.Coins", // this is a registered name for a screen
-          selectedIcon: require("./coin.png"), // iOS only
-          // selectedIcon: sources[2], // iOS only
-
-        },
-        {
-          icon: sources[2],
-          label: "News",
-          screen: "CoinMarketNews.News",
-          selectedIcon: sources[2], // iOS only
-          title: "Coin Market News",
-        },
-        {
-          icon: sources[3],
-          label: "Settings",
-          screen: "CoinMarketNews.Settings",
-          selectedIcon: sources[3], // iOS only
-          title: "Settings",
-        },
-      ],
-      tabsStyle: {
-        tabBarButtonColor: tabBarColours.tabBarButtonColor,
-        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
-        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
-        navBarTextColor: colours.navBarTextColor,
-        navBarBackgroundColor: colours.backgroundColor,
-        screenBackgroundColor: colours.screenBackgroundColor,
-        statusBarTextColorScheme: colours.statusBarTextColorScheme,
-      },
-      appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
-        tabBarButtonColor: tabBarColours.tabBarButtonColor,
-        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
-        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
-        navBarBackgroundColor: colours.backgroundColor,
-        navBarTextColor: colours.navBarTextColor,
-        screenBackgroundColor: colours.screenBackgroundColor,
-        statusBarTextColorScheme: colours.statusBarTextColorScheme,
-        statusBarColor: colours.backgroundColor,
-      },
-      animationType: "none"
-    })
-  }).catch((err) => {
-    console.log("error", err);
-  });
+    .then((sources) => {
+        // start the app
+        Navigation.startTabBasedApp({
+            tabs: [
+                {
+                    icon: require("./coin.png"),
+                    label: "Coins",
+                    screen: "CoinMarketNews.Coins", // this is a registered name for a screen
+                    selectedIcon: require("./coin.png"), // iOS only
+                },
+                {
+                    icon: sources[2],
+                    label: "News",
+                    screen: "CoinMarketNews.News",
+                    selectedIcon: sources[2], // iOS only
+                    title: "Coin Market News",
+                },
+                {
+                    icon: sources[3],
+                    label: "Settings",
+                    screen: "CoinMarketNews.Settings",
+                    selectedIcon: sources[3], // iOS only
+                    title: "Settings",
+                },
+            ],
+            tabsStyle: {
+                tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
+                tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                navBarTextColor: colours.navBarTextColor,
+                navBarBackgroundColor: colours.backgroundColor,
+                screenBackgroundColor: colours.screenBackgroundColor,
+                statusBarTextColorScheme: colours.statusBarTextColorScheme,
+            },
+            appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
+                tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
+                tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                navBarBackgroundColor: colours.backgroundColor,
+                navBarTextColor: colours.navBarTextColor,
+                screenBackgroundColor: colours.screenBackgroundColor,
+                statusBarTextColorScheme: colours.statusBarTextColorScheme,
+                statusBarColor: colours.backgroundColor,
+            },
+            animationType: "none"
+        })
+    }).catch((err) => {
+        console.log("error", err);
+    });

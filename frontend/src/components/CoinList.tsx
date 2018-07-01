@@ -165,7 +165,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                 keyExtractor={this.keyExtractor}
                                 style={styles(this.props.appSettings.darkMode).coinList}
                                 getItemLayout={this.getItemLayout}
-                                refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                                refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                 ListEmptyComponent={noFavourites()}
                             />
                         ) : (
@@ -177,7 +177,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     keyExtractor={this.keyExtractor}
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
-                                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                                    refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                     ListEmptyComponent={spinner()}
                                 />
                             )

@@ -5,7 +5,7 @@ import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
 import { Container, Tab, Tabs, StyleProvider } from "native-base";
-import { Platform, SafeAreaView, } from "react-native";
+import { Platform, SafeAreaView, ScrollView, RefreshControl, } from "react-native";
 
 import CoinOptions from "./CoinsOptions";
 import { ICoinPrice, IUser, ISettings } from "../models";
@@ -20,6 +20,7 @@ import commonColour from "../../native-base-theme/variables/commonColor";
 
 import CoinList from "./CoinList";
 import sortCoins from "./functions/CoinsSort";
+import { getCoins } from "../redux/actions/coins";
 
 interface ICoinsListProps {
     appSettings: ISettings;
@@ -31,6 +32,7 @@ interface ICoinsListProps {
 export interface ICoinsListState {
     coins: ICoinPrice[];
     setting: string,
+    refreshing: boolean;
 }
 
 class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
@@ -44,6 +46,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         this.state = {
             coins: this.props.coins.slice(),
             setting: "000",
+            refreshing: false
         };
     }
     public componentWillReceiveProps(nextProps: ICoinsListProps) {
@@ -67,32 +70,32 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <SafeAreaView style={styles(this.props.appSettings.darkMode).safeAreaView}>
-                    <Container style={styles(this.props.appSettings.darkMode).coinListComponent}>
-                        <Tabs initialPage={0}>
-                            <Tab
-                                heading="Favourites"
-                                activeTabStyle={{ backgroundColor: backgroundColour }}
-                                activeTextStyle={{ color: textColour }}
-                                tabStyle={{ backgroundColor: backgroundColour }}
-                                textStyle={{ color: textColour }}
-                            >
-                                <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                                <CoinList coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
-                            </Tab>
-                            <Tab
-                                heading="Market"
-                                activeTabStyle={{ backgroundColor: backgroundColour }}
-                                activeTextStyle={{ color: textColour, }}
-                                tabStyle={{ backgroundColor: backgroundColour }}
-                                textStyle={{ color: textColour }}
-                            >
-                                <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                                <CoinList coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
-                            </Tab>
-                        </Tabs>
-                    </Container >
+                    <ScrollView style={styles(this.props.appSettings.darkMode).coinListComponent} refreshControl={(Platform.OS === "android") ? <RefreshControl refreshing={this.state.refreshing} progressViewOffset={150} onRefresh={this.onRefresh} /> : null} >
+                        <Tabs initialPage={0} >
+                        <Tab
+                            heading="Favourites"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}
+                        >
+                            <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
+                            <CoinList coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                        </Tab>
+                        <Tab
+                            heading="Market"
+                            activeTabStyle={{ backgroundColor: backgroundColour }}
+                            activeTextStyle={{ color: textColour, }}
+                            tabStyle={{ backgroundColor: backgroundColour }}
+                            textStyle={{ color: textColour }}
+                        >
+                            <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
+                            <CoinList coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                        </Tab>
+                    </Tabs>
+                    </ScrollView >
                 </SafeAreaView>
-            </StyleProvider>
+            </StyleProvider >
         );
     }
 
@@ -106,6 +109,16 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
 
     }
 
+    private onRefresh = () => {
+        this.setState({
+            refreshing: true
+        });
+        getCoins(this.props.appSettings).then(() => {
+            this.setState({
+                refreshing: false
+            });
+        });
+    }
 }
 
 const mapStateToProps = (state: IRootState) => {
