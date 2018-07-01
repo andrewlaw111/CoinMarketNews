@@ -93,7 +93,6 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                             <Text style={styles(this.props.appSettings.darkMode).coinText}>{info.item.rank}</Text>
                             <FastImage
                                 style={styles(this.props.appSettings.darkMode).coinThumbnail}
-                                // OPTIM: FastImage.priority.web to handle cash refresh via server headers || change url via API to force cache refresh
                                 source={{ uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }}
                                 resizeMode={FastImage.resizeMode.contain}
                             />
@@ -166,7 +165,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                 keyExtractor={this.keyExtractor}
                                 style={styles(this.props.appSettings.darkMode).coinList}
                                 getItemLayout={this.getItemLayout}
-                                refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                                refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                 ListEmptyComponent={noFavourites()}
                             />
                         ) : (
@@ -178,7 +177,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     keyExtractor={this.keyExtractor}
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
-                                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                                    refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                     ListEmptyComponent={spinner()}
                                 />
                             )
