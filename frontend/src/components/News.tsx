@@ -59,7 +59,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                         footer={true}
                         style={[this.styles.cardItem, { paddingTop: 0 }]}
                     >
-                        {(this.props.news[info.index].counter > 1) ? <View style={{ flexDirection: "row", marginRight: 3 }}><Text style={this.styles.newsCounter}>{this.props.news[info.index].counter} </Text><Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" /></View> : ''}
+                        {(this.props.news[info.index].counter > 1) ? <View style={{ flexDirection: "row", marginRight: 3 }}><Text style={this.styles.newsCounter}>{this.props.news[info.index].counter} </Text><Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" /></View> : <Text/>}
                         <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {this.props.news[info.index].coins && this.props.news[info.index].coins.map((coin: string, key: number) => {
