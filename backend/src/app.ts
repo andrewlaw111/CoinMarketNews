@@ -24,7 +24,7 @@ const userService = new UserService();
 
 import cron = require('cron');
 const CoinPriceUpdate = require("./cron/coin-price-update");
-const CoinInfosUpdate = require("./cron/coin-infos-update");
+const CoinInfosUpdate = require("./cron/coin-infos-update2");
 const PriceUpdate = require("./cron/price-update");
 const PriceAlert = require("./cron/price-alert");
 const NewsUpdate = require("./cron/news-update");
@@ -34,22 +34,54 @@ var CronJob = cron.CronJob;
 if (process.env.CRON_COIN_PRICE === "true") {
     // new CoinPriceUpdate();   // dev only
     // every hour at 10 minutes
-    new CronJob('0 10 * * * *', function () { new CoinPriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
+    let CRON_COIN_PRICE = true;
+    new CronJob('0 10 * * * *', function () {
+        if (CRON_COIN_PRICE) {
+            new CoinPriceUpdate();
+            CRON_COIN_PRICE = false;
+        }
+    }, function () {
+        CRON_COIN_PRICE = true;
+    }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_COIN_INFOS === "true") {
     // new CoinInfosUpdate();   // dev only
     // once a day
-    new CronJob('0 30 0 * * *', function () { new CoinInfosUpdate(); }, function () { }, true, 'America/Los_Angeles');
+    let CRON_COIN_PRICE = true;
+    new CronJob('0 30 0 * * *', function () {
+        if (CRON_COIN_PRICE) {
+            new CoinInfosUpdate();
+            CRON_COIN_PRICE = false;
+        }
+    }, function () {
+        CRON_COIN_PRICE = true;
+    }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_PRICE === "true") {
     // new PriceUpdate();   // dev only
     // every hour at 50 minutes
-    new CronJob('0 50 * * * *', function () { new PriceUpdate(); }, function () { }, true, 'America/Los_Angeles');
+    let CRON_COIN_PRICE = true;
+    new CronJob('0 50 * * * *', function () {
+        if (CRON_COIN_PRICE) {
+            new PriceUpdate();
+            CRON_COIN_PRICE = false;
+        }
+    }, function () {
+        CRON_COIN_PRICE = true;
+    }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_PRICE_ALERT === "true") {
     // new PriceAlert();   // dev only
     // every 5 minutes at 30 sec
-    new CronJob('30 */5 * * * *', function () { new PriceAlert(); }, function () { }, true, 'America/Los_Angeles');
+    let CRON_COIN_PRICE = true;
+    new CronJob('30 */5 * * * *', function () {
+        if (CRON_COIN_PRICE) {
+            new PriceAlert();
+            CRON_COIN_PRICE = false;
+        }
+    }, function () {
+        CRON_COIN_PRICE = true;
+    }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_NEWS === "true") {
     new NewsUpdate();   // detects new news automatically
