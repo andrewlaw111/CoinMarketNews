@@ -60,11 +60,21 @@ const news_source = [
 ];
 
 exports.seed = function (knex, Promise) {
-    return knex('currency').del()
-        .then(() => {
+    return knex('currency')
+        .select('symbol')
+        .then((currencies) => {
+            currencies = currencies.map(row => row.symbol);
+            const currency_list_insert = currency_list.filter(function (currency) {
+                return !currencies.includes(currency.symbol);
+            });
+            console.log(currency_list_insert);
             return knex("currency")
-                .insert(currency_list)
-                .returning('id');
+                .insert(currency_list_insert)
+                .then(() => {
+                    return knex("currency")
+                        .select('id')
+                })
+
         })
         .then((currencies) => {
             return axios.get('https://api.coinmarketcap.com/v2/listings/')
@@ -101,7 +111,8 @@ exports.seed = function (knex, Promise) {
                                 .insert(coins)
                                 .returning('coinmarketcap_id')
                                 .then(function (new_coins) {
-                                    console.log(new_coins);
+                                    if (coins.length>0)
+                                        console.log(new_coins);
                                     const insert_price = [];
                                     for (const currency of currencies) {
                                         console.log('currency');
@@ -126,13 +137,19 @@ exports.seed = function (knex, Promise) {
                 });
         })
         .then(function () {
-            return knex('source').del()
-                .then(() => {
+            return knex('source')
+                .select('feed')
+                .then((sources) => {
+                    sources = sources.map(row => row.feed);
+                    const news_source_insert = news_source.filter(function (source) {
+                        return !sources.includes(source.feed);
+                    });
                     return knex("source")
-                        .insert(news_source)
+                        .insert(news_source_insert)
                         .then(function (data) {
                             if (data) {
                                 console.log('source inserted');
+                                console.log(news_source_insert);
                             }
                         });
                 });

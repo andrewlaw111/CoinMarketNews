@@ -48,6 +48,9 @@ module.exports = () => {
                         });
                 }
                 callback();
+            })
+            .catch(function (error) {
+                console.log(error);
             });
     }, { afterProcessDelay: 10000 });   // delay 10 sec between tasks
 
