@@ -24,6 +24,7 @@ module.exports = () => {
         .where('symbol', '!=', 'CRYPT')     // exeptions
         .andWhere('name', '!=', 'Crypto')
         .orderBy('rank')
+        .limit(500)
         .then((coins) => {
             let feeder = new RssFeedEmitter();
 
