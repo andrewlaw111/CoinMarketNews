@@ -28,10 +28,6 @@ const currency_list = [
     {
         fiat: false,
         symbol: "ETH",
-    },
-    {
-        fiat: false,
-        symbol: "GGG",
     }
 ];
 
@@ -60,11 +56,6 @@ const news_source = [
         name: 'Toshi Times',
         link: 'https://toshitimes.com',
         feed: 'https://toshitimes.com/feed/',
-    },
-    {
-        name: 'new Times',
-        link: 'https://new.com',
-        feed: 'https://new.com/feed/',
     }
 ];
 
