@@ -22,7 +22,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="playstore-icon.png" id="kId-c2-rCX">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="coinmarketnews.png" id="kId-c2-rCX">
                     <rect key="frame" x="140" y="233" width="200" height="200"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                 </imageView>
@@ -34,6 +34,6 @@
         </view>
     </objects>
     <resources>
-        <image name="playstore-icon.png" width="512" height="512"/>
+        <image name="coinmarketnews.png" width="512" height="512"/>
     </resources>
 </document>
