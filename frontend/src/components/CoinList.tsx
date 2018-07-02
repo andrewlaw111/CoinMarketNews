@@ -146,7 +146,7 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                 return (
                     <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                         <Text style={styles(this.props.appSettings.darkMode).NoFavourites}>
-                            You have no favourite coins! Click on the ❤️ to add some favourites!
+                            You have no favourite coins! Click on the ⭐️ to add some favourites!
                         </Text>
                     </View>
                 )

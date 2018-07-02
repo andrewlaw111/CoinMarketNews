@@ -16,7 +16,7 @@ export default class NewsService {
         return knex
             .select('*')
             .from('news')
-            .limit(20)
+            .limit(50)
             .orderBy("created_at", "desc")
             .then((data: INews[]) => {
                 const ids = data.map(function (news: INews) {
@@ -56,7 +56,7 @@ export default class NewsService {
             .join('news', 'coin_news.news_id', '=', 'news.id')
             .select('*')
             .where('coin_news.coin_id', '=', coinID)
-            .limit(20)
+            .limit(50)
             .orderBy("created_at", "desc")
             .then((data: INews[]) => {
                 data.map(function (news: INews) {

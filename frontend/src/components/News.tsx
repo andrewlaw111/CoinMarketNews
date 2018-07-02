@@ -4,13 +4,14 @@ import { connect } from "react-redux";
 import Moment from 'react-moment';
 
 import { Body, Card, CardItem, StyleProvider, Text, Content, Spinner, Icon } from "native-base";
-import { FlatList, Linking, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, Linking, StyleSheet, TouchableOpacity, View, RefreshControl, Platform } from "react-native";
 
 import getTheme from "../../native-base-theme/components";
 import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { INews, IUser, ISettings } from "../models";
 import { IRootState } from "../redux/store";
+import { getNews } from "../redux/actions/news";
 import { BlockOverflowProperty } from "csstype";
 import FastImage from "react-native-fast-image";
 import Config from "react-native-config";
@@ -22,13 +23,23 @@ interface INewsListProps {
     navigator: Navigator;
 }
 
-class PureNewsList extends React.Component<INewsListProps> {
+export interface INewsListState {
+    refreshing: boolean;
+}
+
+class PureNewsList extends React.Component<INewsListProps, INewsListState> {
     public styles: typeof styles;
 
     public static navigatorStyle = {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
     };
+    public constructor(props: INewsListProps) {
+        super(props);
+        this.state = {
+            refreshing: false,
+        };
+    }
     public renderNewsList = (info: { item: INews, index: number }) => (
         <View>
             <Card style={this.styles.card}>
@@ -95,6 +106,7 @@ class PureNewsList extends React.Component<INewsListProps> {
                         renderItem={this.renderNewsList}
                         keyExtractor={this.keyExtractor}
                         style={this.styles.newsList}
+                        refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                         ListEmptyComponent={listEmptyComponent()}
                     />
                 </View>
@@ -107,6 +119,17 @@ class PureNewsList extends React.Component<INewsListProps> {
         Linking.openURL(link);
     }
     private keyExtractor = (item: INews) => item.id.toString();
+
+    private onRefresh = () => {
+        this.setState({
+            refreshing: true
+        });
+        getNews().then(() => {
+            this.setState({
+                refreshing: false
+            });
+        });
+    }
 }
 
 const mapStateToProps = (state: IRootState) => {
