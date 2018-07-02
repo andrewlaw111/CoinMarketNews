@@ -38,7 +38,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         return (
             <Card style={this.styles.Card}>
                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                    <Text style={this.styles.cardText}>What is {this.props.coin.name}?</Text>
+                    <Text>What is {this.props.coin.name}?</Text>
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
                     <Body>
@@ -137,7 +137,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
             },
             {
                 link: this.props.coin.whitepaper_link,
-                name: this.props.coin.whitepaper_name,
+                name: 'Whitepaper',   // this.props.coin.whitepaper_name,
                 linkIcon: "file",
                 linkType: "Whitepaper",
             }
@@ -145,17 +145,19 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         return links.map((link, index) => {
             if (link.link && link.link != 'n/a') {
                 return (
-                    <CardItem key={index} style={this.styles.cardItem}>
+                    <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
                         <Icon style={[this.styles.cardText, this.styles.linkIcon]} active={true} type="FontAwesome" name={link.linkIcon} />
-                        <Text style={this.styles.cardText} >
+                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
+                        {/* <Text style={this.styles.cardText} >
                             {link.linkType}
                         </Text>
                         <Right>
-                            <Text style={[this.styles.cardText, this.styles.link]} onPress={this.handleLinkPress.bind(this, link.link)}>
-                                {link.name}
-                            </Text>
                         </Right>
-                    </CardItem>
+                        */}
+                        <Text style={[this.styles.cardText, this.styles.link]} onPress={this.handleLinkPress.bind(this, link.link)}>
+                            {link.name}
+                        </Text>
+                    </View>
                 );
             } else {
                 return null;
@@ -228,9 +230,11 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     },
     linkIcon: {
         color: (darkMode) ? "#2a6496" : "#000",
+        fontSize: 25,
     },
     link: {
         color: (darkMode) ? "#2a6496" : "#000",
+        marginLeft: 10,
     },
     cardText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
