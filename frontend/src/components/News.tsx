@@ -70,7 +70,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                         footer={true}
                         style={[this.styles.cardItem, { paddingTop: 0 }]}
                     >
-                        {(this.props.news[info.index].counter > 1) ? <View style={{ flexDirection: "row", marginRight: 3 }}><Text style={this.styles.newsCounter}>{this.props.news[info.index].counter} </Text><Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" /></View> : <Text/>}
+                        {(this.props.news[info.index].counter > 1) ? <View style={{ flexDirection: "row", marginRight: 3 }}><Text style={this.styles.newsCounter}>{this.props.news[info.index].counter} </Text><Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" /></View> : <Text />}
                         <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {this.props.news[info.index].coins && this.props.news[info.index].coins.map((coin: string, key: number) => {
@@ -106,7 +106,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                         renderItem={this.renderNewsList}
                         keyExtractor={this.keyExtractor}
                         style={this.styles.newsList}
-                        refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
+                        refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
                         ListEmptyComponent={listEmptyComponent()}
                     />
                 </View>
@@ -191,7 +191,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         height: 20,
         marginLeft: 8,
         backgroundColor: "grey",
-        borderRadius:50,
+        borderRadius: 50,
     }
 });
 
