@@ -1,4 +1,5 @@
 import React from "react";
+import Config from "react-native-config";
 
 import { Body, Card, CardItem, Icon, Right, StyleProvider, Text, Container } from "native-base";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
@@ -7,6 +8,8 @@ import getTheme from "../../native-base-theme/components"
 import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { ICoin } from "../models";
+
+import FastImage from "react-native-fast-image";
 
 interface ICoinsPageProps {
     coin: ICoin;
@@ -106,6 +109,24 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         }
         const links: ILinks[] = [
             {
+                link: this.props.coin.whitepaper_link,
+                name: 'Whitepaper',   // this.props.coin.whitepaper_name,
+                linkIcon: "whitepaper",
+                linkType: "Whitepaper",
+            },
+            {
+                link: this.props.coin.website_link,
+                name: this.props.coin.website_name,
+                linkIcon: "website",
+                linkType: "Website",
+            },
+            {
+                link: this.props.coin.twitter_link,
+                name: this.props.coin.twitter_name,
+                linkIcon: "twitter",
+                linkType: "Twitter",
+            },
+            {
                 link: this.props.coin.medium_link,
                 name: this.props.coin.medium_name,
                 linkIcon: "medium",
@@ -122,32 +143,18 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                 name: this.props.coin.telegram_name,
                 linkIcon: "telegram",
                 linkType: "Telegram",
-            },
-            {
-                link: this.props.coin.twitter_link,
-                name: this.props.coin.twitter_name,
-                linkIcon: "twitter",
-                linkType: "Twitter",
-            },
-            {
-                link: this.props.coin.website_link,
-                name: this.props.coin.website_name,
-                linkIcon: "link",
-                linkType: "Website",
-            },
-            {
-                link: this.props.coin.whitepaper_link,
-                name: 'Whitepaper',   // this.props.coin.whitepaper_name,
-                linkIcon: "file",
-                linkType: "Whitepaper",
             }
+            
         ];
         return links.map((link, index) => {
             if (link.link && link.link != 'n/a') {
-                const smallIcon = (link.linkIcon == 'file') ? { fontSize: 21 } : { fontSize: 25 };
                 return (
                     <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7, justifyContent: "space-between" }}>
-                        <Icon style={[this.styles.cardText, this.styles.linkIcon, smallIcon]} active={true} type="FontAwesome" name={link.linkIcon} />
+                        <FastImage
+                            style={this.styles.linkIcon}
+                            source={{ uri: `${Config.API_SERVER}/media-icons/${link.linkIcon}.png` }}
+                            resizeMode={FastImage.resizeMode.contain}
+                        />
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {/* <Text style={this.styles.cardText} >
                             {link.linkType}
@@ -230,8 +237,8 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
     linkIcon: {
-        color: (darkMode) ? "#2a6496" : "#000",
-        width: 30,
+        width: 28,
+        height: 28,
     },
     link: {
         color: (darkMode) ? "#2a6496" : "#000",

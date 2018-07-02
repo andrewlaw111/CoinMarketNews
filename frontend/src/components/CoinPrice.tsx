@@ -193,6 +193,6 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     webView: {
         borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
-        height: (Dimensions.get("window").height - 120  ) / 2,
+        height: (Dimensions.get("window").height - 140  ) / 2,
     },
 })
