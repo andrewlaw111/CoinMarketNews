@@ -27,6 +27,7 @@ const CoinPriceUpdate = require("./cron/coin-price-update");
 const CoinInfosUpdate = require("./cron/coin-infos-update2");
 const PriceUpdate = require("./cron/price-update");
 const PriceAlert = require("./cron/price-alert");
+const LikeUpdate = require("./cron/like-update");
 const NewsUpdate = require("./cron/news-update");
 
 var CronJob = cron.CronJob;
@@ -45,17 +46,7 @@ if (process.env.CRON_COIN_PRICE === "true") {
     }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_COIN_INFOS === "true") {
-    new CoinInfosUpdate();   // dev only || one shot
-    // once a day
-    let CRON_COIN_PRICE = true;
-    new CronJob('0 30 0 * * *', function () {
-        if (CRON_COIN_PRICE) {
-            new CoinInfosUpdate();
-            CRON_COIN_PRICE = false;
-        }
-    }, function () {
-        CRON_COIN_PRICE = true;
-    }, true, 'America/Los_Angeles');
+    new CoinInfosUpdate();   // one shot
 }
 if (process.env.CRON_PRICE === "true") {
     // new PriceUpdate();   // dev only
@@ -83,6 +74,19 @@ if (process.env.CRON_PRICE_ALERT === "true") {
         CRON_COIN_PRICE = true;
     }, true, 'America/Los_Angeles');
 }
+if (process.env.CRON_LIKE === "true") {
+    // new LikeUpdate();   // dev only
+    // every 20 minutes at 3 sec
+    let CRON_LIKE = true;
+    new CronJob('3 */20 * * * *', function () {
+        if (CRON_LIKE) {
+            new LikeUpdate();
+            CRON_LIKE = false;
+        }
+    }, function () {
+        CRON_LIKE = true;
+    }, true, 'America/Los_Angeles');
+}
 if (process.env.CRON_NEWS === "true") {
     new NewsUpdate();   // detects new news automatically
 }
@@ -99,6 +103,7 @@ app.use('/chart/*', function (req, res) {
 });
 
 app.use('/source-icons', express.static('public/source-icons'));
+app.use('/media-icons', express.static('public/media-icons'));
 app.use('/icon', express.static('public/cryptocurrency-icons'));
 app.use('/icon', function (req, res) {
     // TODO: check if coin exists?

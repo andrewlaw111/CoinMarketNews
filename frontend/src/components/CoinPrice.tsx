@@ -3,7 +3,7 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Body, Card, CardItem, Container, StyleProvider, Text } from "native-base";
-import { ScrollView, StyleSheet, View, WebView } from "react-native";
+import { ScrollView, StyleSheet, View, WebView, Dimensions } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -101,7 +101,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                         </Card>
                         <Card style={styles(this.props.darkMode).card}>
                             <CardItem bordered={true} style={styles(this.props.darkMode).cardItem} header={true}>
-                                <Text style={styles(this.props.darkMode).cardText}>Price details</Text>
+                                <Text>Price details</Text>
                             </CardItem>
                             <CardItem style={styles(this.props.darkMode).cardItem}>
                                 <View style={styles(this.props.darkMode).coinInfoStats}>
@@ -187,10 +187,12 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     },
     priceWidgetCard: {
         flex: 0.4,
+        backgroundColor: (darkMode) ? "#454951" : "#FFF",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
     },
     webView: {
         borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
-        height: 300,
+        height: (Dimensions.get("window").height - 140  ) / 2,
     },
 })
