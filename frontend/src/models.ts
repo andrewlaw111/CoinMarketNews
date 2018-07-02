@@ -73,7 +73,8 @@ export interface INews {
     id: number;
     title: string;
     content: string;
-    coins:string[];
+    coins: string[];
+    coins_id: number[];
     source_id: string | null;
     link: string;
     created_at: string;

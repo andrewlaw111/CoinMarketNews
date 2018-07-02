@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Body, Card, CardItem, Icon, Right, StyleProvider, Text, Container } from "native-base";
-import { Linking, ScrollView, StyleSheet, View } from "react-native";
+import { Linking, ScrollView, StyleSheet, View, LayoutAnimation, Platform, UIManager } from "react-native";
 
 import getTheme from "../../native-base-theme/components"
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -41,11 +41,11 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                     <Text>What is {this.props.coin.name}?</Text>
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
-                    <Body>
+                    <View>
                         <Text style={this.styles.cardText} numberOfLines={this.state.numberOfLines} onPress={this.handleAboutPress}>
                             {this.props.coin.about}
                         </Text>
-                    </Body>
+                    </View>
                 </CardItem>
             </Card>
         );
@@ -212,6 +212,12 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
     }
     private handleAboutPress = () => {
         const newNumberOfLines = (this.state.numberOfLines === null) ? 8 : null;
+        if (Platform.OS === "android") {
+            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
+
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
         this.setState({
             numberOfLines: newNumberOfLines
         });

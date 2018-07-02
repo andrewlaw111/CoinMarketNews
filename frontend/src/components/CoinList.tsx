@@ -3,7 +3,7 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Icon, Text, StyleProvider, Spinner } from "native-base";
-import { FlatList, TouchableOpacity, View, RefreshControl, Platform } from "react-native";
+import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -20,6 +20,7 @@ import { getCoins } from "../redux/actions/coins";
 import { Navigator } from "react-native-navigation";
 
 import FastImage from "react-native-fast-image";
+import { AnimatedValue } from "react-navigation";
 
 interface ICoinListProps {
     coins: ICoinPrice[];
@@ -38,6 +39,8 @@ export interface ICoinListState {
     cryptoCurrencyName: string;
     fiatCurrencyName: string;
     refreshing: boolean;
+    searchBarVisible: boolean;
+    scrollY: Animated.Value;
 }
 class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
     public cryptoCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>&#xf15a; </Text>;
@@ -59,6 +62,8 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
             cryptoCurrencyName: "BTC",
             fiatCurrencyName: "USD",
             numberOfCoins: 100,
+            searchBarVisible: false,
+            scrollY: new Animated.Value(0),
         };
     }
     public componentWillReceiveProps() {
@@ -131,7 +136,17 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
             </View>
         );
     }
+    public renderSearchBar() {
+        return (
 
+            <TextInput
+                style={{ borderRadius: 3, height: 40, borderColor: 'gray', borderWidth: 1 }}
+                // onChangeText={(text) => this.setState({ text })}
+                placeholder="Search"
+            // value={this.state.text}
+            />
+        )
+    }
     public render() {
         const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
         const spinner = () => {
@@ -180,6 +195,8 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
                                     refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
+                                    ListHeaderComponent={this.renderSearchBar()}
+                                    initialScrollIndex={0}
                                     ListEmptyComponent={spinner()}
                                     ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
                                 />

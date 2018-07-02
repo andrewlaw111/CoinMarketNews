@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { Container, Text, StyleProvider, Icon, } from "native-base";
-import { View, Switch, FlatList, ScrollView, ToastAndroid, } from "react-native";
+import { View, Switch, FlatList, ScrollView, ToastAndroid, Animated, } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -13,6 +13,8 @@ import { Navigator } from "react-native-navigation";
 import CoinAlertsModal from "./CoinAlertsModal";
 import { editAlert, removeAlerts, addNewsAlert, removeNewsAlert } from "../redux/actions/alerts";
 import styles from "./styles/CoinAlertsStyles";
+import RenderAlerts from "./CoinAlertItem";
+import AlertItem from "./CoinAlertItem";
 
 interface ICoinsAlertsProps {
     alerts: IAlerts[];
@@ -25,24 +27,12 @@ interface ICoinsAlertsProps {
     user: IUser;
     addNewsAlert: (coinID: number, token: string) => void;
     removeNewsAlert: (coinID: number, token: string) => void;
-    editAlert: (alert: IAlerts, token: string) => void;
-    removeAlerts: (alert: IAlerts, token: string) => void;
 }
 interface ICoinsAlertsState {
     alerts: IAlerts[];
     newsAlerts: boolean;
 }
 class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsState> {
-    public currencySymbols: { [key: string]: JSX.Element } = {
-        USD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
-        EUR: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>€</Text>,
-        CAD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
-        GBP: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>£</Text>,
-        HKD: <Text style={{ color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>$</Text>,
-        BTC: <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>&#xf15a;</Text>,
-        ETH: <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E" }}>&#xf42e;</Text>,
-    }
-
     constructor(props: ICoinsAlertsProps) {
         super(props);
         this.state = {
@@ -50,6 +40,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
             newsAlerts: (this.props.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) ? true : false,
         };
     }
+
     componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
         const alerts = nextProps.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id)
         this.setState({
@@ -64,19 +55,17 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
                 newsAlerts: false
             })
         }
+
     }
     public renderAlerts = (info: { item: IAlerts, index: number }) => {
         return (
-            <View style={styles(this.props.darkMode).NewsAlertsView}>
-                <View style={{ flexDirection: "row" }}>
-                    <Text style={styles(this.props.darkMode).text}>{this.props.coin.symbol} {(info.item.upper) ? '>' : '<'} {this.currencySymbols[info.item.currency_symbol]} {info.item.price_point} </Text>
-
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                    <Switch value={info.item.active} onValueChange={this.handleValueChange.bind(this, info.item)} style={{ marginRight: 15 }} />
-                    <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, info.item)} />
-                </View>
-            </View>
+            <AlertItem
+                key={info.item.id}
+                alert={info.item}
+                appSettings={this.props.appSettings}
+                coin={this.props.coin}
+                darkMode={this.props.darkMode}
+            />
         )
     }
     public render() {
@@ -105,9 +94,6 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
     private keyExtractor = (item: IAlerts, index: number) => {
         return item.id.toString();
     }
-    private handleDelete = (alert: IAlerts) => {
-        return this.props.removeAlerts(alert, this.props.user.token)
-    }
     private handlenewsAlertChange = () => {
         if (this.state.newsAlerts) {
             this.props.removeNewsAlert(this.props.coin.id, this.props.user.token)
@@ -122,18 +108,12 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
             })
         }
     }
-    private handleValueChange = (alert: IAlerts) => {
-        alert.active = !alert.active
-        return this.props.editAlert(alert, this.props.user.token)
-    }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
         addNewsAlert: (coinID: number, token: string) => dispatch(addNewsAlert(coinID, token)),
         removeNewsAlert: (coinID: number, token: string) => dispatch(removeNewsAlert(coinID, token)),
-        editAlert: (alert: IAlerts, token: string) => dispatch(editAlert(alert, token)),
-        removeAlerts: (alert: IAlerts, token: string) => dispatch(removeAlerts(alert, token)),
     };
 };
 const mapStateToProps = (state: IRootState) => {

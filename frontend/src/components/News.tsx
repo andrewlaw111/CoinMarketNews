@@ -47,59 +47,66 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
         <View>
             <Card style={this.styles.card}>
                 <TouchableOpacity
-                    onPress={this.handleLinkPress.bind(this, this.props.news[info.index].link)}
+                    onPress={this.handleLinkPress.bind(this, info.item.link)}
                 >
                     <CardItem header={true} bordered={true} style={this.styles.cardItem}>
                         <FastImage
                             style={this.styles.newsSourceIcon}
-                            source={{ uri: `${Config.API_SERVER}/source-icons/${this.props.news[info.index].source_id}.png` }}
+                            source={{ uri: `${Config.API_SERVER}/source-icons/${info.item.source_id}.png` }}
                             resizeMode={FastImage.resizeMode.contain}
                         />
                         <Text
                             style={this.styles.headingText}
                         >
-                            {this.props.news[info.index].title}
+                            {info.item.title}
                         </Text>
                     </CardItem>
                     <CardItem style={this.styles.cardItem}>
                         <Body>
                             <Text style={this.styles.newsText} numberOfLines={3}>
-                                {this.props.news[info.index].content}
+                                {info.item.content}
                             </Text>
                         </Body>
                     </CardItem>
                     <CardItem
-                        style={[this.styles.cardItem, { marginTop: 1, marginBottom: 1 }]}
-                    >
-                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                        {(this.props.news[info.index].counter > 1) ?
-                            (
-                                <View style={{ flexDirection: "row", marginRight: 3 }}>
-                                    <Text style={this.styles.newsCounter}>{this.props.news[info.index].counter} </Text>
-                                    <Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" />
-                                </View>
-                            ) : (
-                                null
-                            )}
-                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                        {this.props.news[info.index].coins && this.props.news[info.index].coins.map((coin: string, key: number) => {
-                            return (
-                                <TouchableOpacity key={key} onPress={this.handlePressIcon.bind(this, coin)}>
-                                    <FastImage
-                                        style={this.styles.newsIcons}
-                                        source={{ uri: `${Config.API_SERVER}/icon/${coin.toLocaleLowerCase()}.png` }}
-                                        resizeMode={FastImage.resizeMode.contain}
-                                    />
-                                </TouchableOpacity>
-                            )
-                        })}
-                    </CardItem>
-                    <CardItem
                         footer={true}
                         bordered={true}
-                        style={this.styles.cardItem}
+                        style={[this.styles.cardItem, { justifyContent: "space-between" }]}
                     >
-                        <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                        <View>
+                            <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                        </View>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+
+                                {/* tslint:disable-next-line:jsx-no-multiline-js */}
+                                {info.item.coins && info.item.coins.map((coin: string, key: number) => {
+                                    return (
+                                        <View key={key} >
+                                            <TouchableOpacity onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}>
+                                                <FastImage
+                                                    style={this.styles.newsIcons}
+                                                    source={{ uri: `${Config.API_SERVER}/icon/${coin.toLocaleLowerCase()}.png` }}
+                                                    resizeMode={FastImage.resizeMode.contain}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                })}
+                            </View>
+                            <View>
+                                {/* tslint:disable-next-line:jsx-no-multiline-js */}
+                                {(info.item.counter > 1) ?
+                                    (
+                                        <View style={{ flexDirection: "row", marginRight: 3 }}>
+                                            <Text style={this.styles.newsCounter}>{info.item.counter} </Text>
+                                            <Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" />
+                                        </View>
+                                    ) : (
+                                        null
+                                    )}
+                            </View>
+                        </View>
                     </CardItem>
                 </TouchableOpacity>
             </Card>
@@ -137,43 +144,43 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
     private handleLinkPress = (link: string) => {
         Linking.openURL(link);
     }
-    private handlePressIcon = (newsCoin: string) => {
-        const selectedCoin = this.props.coins.find((coin) => coin.symbol === newsCoin)
-        const favourite = (this.props.favourites.indexOf(selectedCoin.id) > -1) ? true : false
+    private handlePressIcon = (coins_id: number) => {
+        const selectedCoin = this.props.coins.find((coin) => coin.id === coins_id)
+        const favourite = (this.props.favourites.indexOf(coins_id) > -1) ? true : false
 
-            Promise.all([
-                IonIcons.getImageSource("ios-arrow-back", 20, "#FFF"),
-                IonIcons.getImageSource("ios-star", 24, "grey"),
-            ]).then((sources) => {
-                this.props.navigator.showModal({
-                    navigatorButtons: {
-                        leftButtons: [{
-                            buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : (Platform.OS === "ios") ? "#2874F0" : "#333",
-                            buttonFontSize: 18,
-                            buttonFontWeight: "600",
-                            id: "back",
-                            showAsAction: "ifRoom",
-                            title: "back",
-                            icon: (Platform.OS === "ios") ? sources[0] : null,
-                        }],
-                        rightButtons: [{
-                            buttonColor: (favourite) ? "gold" : "grey",
-                            buttonFontSize: 18,
-                            buttonFontWeight: "600",
-                            id: "like",
-                            showAsAction: "ifRoom",
-                            icon: sources[1],
-                        }],
+        Promise.all([
+            IonIcons.getImageSource("ios-arrow-back", 20, "#FFF"),
+            IonIcons.getImageSource("ios-star", 24, "grey"),
+        ]).then((sources) => {
+            this.props.navigator.showModal({
+                navigatorButtons: {
+                    leftButtons: [{
+                        buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : (Platform.OS === "ios") ? "#2874F0" : "#333",
+                        buttonFontSize: 18,
+                        buttonFontWeight: "600",
+                        id: "back",
+                        showAsAction: "ifRoom",
+                        title: "back",
+                        icon: (Platform.OS === "ios") ? sources[0] : null,
+                    }],
+                    rightButtons: [{
+                        buttonColor: (favourite) ? "gold" : "grey",
+                        buttonFontSize: 18,
+                        buttonFontWeight: "600",
+                        id: "like",
+                        showAsAction: "ifRoom",
+                        icon: sources[1],
+                    }],
 
-                    },
-                    navigatorStyle: {},
-                    passProps: { appSettings: this.props.appSettings, coinID: selectedCoin.id, coinPrice: selectedCoin, favourite },
-                    screen: "CoinMarketNews.CoinsPage",
-                    title: selectedCoin.name,
-                });
-            }).catch((err) => {
-                console.error(err)
-            })
+                },
+                navigatorStyle: {},
+                passProps: { appSettings: this.props.appSettings, coinID: coins_id, coinPrice: selectedCoin, favourite },
+                screen: "CoinMarketNews.CoinsPage",
+                title: selectedCoin.name,
+            });
+        }).catch((err) => {
+            console.error(err)
+        })
     }
     private keyExtractor = (item: INews) => item.id.toString();
 
@@ -243,7 +250,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     newsSourceIcon: {
         width: 30,
         height: 30,
-        marginRight: 6,
+        marginRight: 8,
     },
     newsIcons: {
         width: 25,
