@@ -11,8 +11,14 @@ export default class PriceRouter {
     public router() {
         const router = express.Router();
         router.get("/", this.getPrice);
+        router.get("/search", this.getBySearch);
         router.get("/:coinID", this.getSpecificCoin);
         return router;
+    }
+    private getBySearch = (req: express.Request, res: express.Response) => {
+        return this.priceService.getBySearch(req.headers.token, req.headers.searchinput, req.headers.fiat, req.headers.crypto)
+            .then((data: ICoin) => res.json(data))
+            .catch((err: express.Errback) => res.status(500).json(err));
     }
     private getPrice = (req: express.Request, res: express.Response) => {
         // console.log('price');

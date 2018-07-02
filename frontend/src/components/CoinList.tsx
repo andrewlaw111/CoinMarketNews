@@ -3,7 +3,7 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Icon, Text, StyleProvider, Spinner } from "native-base";
-import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions } from "react-native";
+import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions, ScrollView } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -20,6 +20,7 @@ import { Navigator } from "react-native-navigation";
 import CoinListItem from "./CoinListItem";
 import { darkBackground } from "./styles/colours";
 import Coins from "./Coins";
+import axios from "axios";
 
 interface ICoinListProps {
     coins: ICoinPrice[];
@@ -38,6 +39,8 @@ export interface ICoinListState {
     refreshing: boolean;
     searching: boolean;
     searchedCoins: ICoinPrice[];
+    cryptoCurrencyName: string;
+    fiatCurrencyName: string;
 }
 class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     public cryptoCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>&#xf15a; </Text>;
@@ -60,6 +63,8 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             numberOfCoins: 100,
             searching: false,
             searchedCoins: [],
+            cryptoCurrencyName: "BTC",
+            fiatCurrencyName: "USD",
         };
     }
     public componentWillReceiveProps() {
@@ -101,13 +106,20 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                         data={this.state.searchedCoins}
                         extraData={this.props.favourites}
                         initialNumToRender={15}
-                        renderItem={this.renderCoinList}
+                        renderItem={this.renderSearchList}
                         keyExtractor={this.keyExtractor}
                         style={styles(this.props.appSettings.darkMode).coinList}
                         getItemLayout={this.getItemLayout}
                     />
                 </View>
             </View >
+        )
+    }
+    public renderSearchList(info: { item: ICoinPrice, index: number }) {
+        return (
+            <ScrollView key={info.item.id}>
+                <Text>{info.item.name}</Text>
+            </ScrollView>
         )
     }
     public render() {
@@ -137,6 +149,12 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                     {/* tslint:disable-next-line:jsx-no-multiline-js */}
                     {
+                        (this.props.favouriteTab) ? null : (
+                            this.renderSearchBar()
+                        )
+                    }
+                    {/* tslint:disable-next-line:jsx-no-multiline-js */}
+                    {
                         (this.props.favouriteTab) ? (
                             <FlatList
                                 data={favouriteCoins}
@@ -158,8 +176,9 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
                                     refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
-                                    ListHeaderComponent={this.renderSearchBar()}
                                     initialScrollIndex={0}
+                                    scrollEnabled={!this.state.searching}
+
                                     ListEmptyComponent={spinner()}
                                     ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
                                 />
@@ -181,19 +200,45 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     private getItemLayout = (data: any, index: number) => ({ length: 70, offset: 70 * index, index });
     private keyExtractor = (item: ICoinPrice) => item.id.toString();
     private onBlurHandler = () => {
-        if (Platform.OS === "android") {
-            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        if (this.state.searchedCoins.length > 0) {
+            return
+        } else {
+            if (Platform.OS === "android") {
+                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+            }
+            let animationConfig = { ...LayoutAnimation.Presets.spring };
+            animationConfig.duration = 820;
+            LayoutAnimation.configureNext(animationConfig);
+
+            this.setState({
+                searching: false
+            })
         }
-        let animationConfig = { ...LayoutAnimation.Presets.spring };
-        animationConfig.duration = 520;
-        LayoutAnimation.configureNext(animationConfig);
-
-        this.setState({
-            searching: false
-        })
     }
-    private onChangeTextHandler = () => {
-
+    private onChangeTextHandler = (searchInput: string) => {
+        if (searchInput.length > 1) {
+            axios
+                .get<ICoinPrice[]>(
+                    `${Config.API_SERVER}/price/search`,
+                    {
+                        headers: {
+                            token: this.props.user.token,
+                            searchInput: searchInput,
+                            fiat: this.state.fiatCurrencyName,
+                            crypto: this.state.cryptoCurrencyName,
+                        }
+                    }
+                )
+                .then((response) => {
+                    this.setState({
+                        searchedCoins: response.data
+                    });
+                });
+        } else {
+            this.setState({
+                searchedCoins: []
+            });
+        }
     }
     private onFocusHandler = () => {
         if (Platform.OS === "android") {

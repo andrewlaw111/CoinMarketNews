@@ -12,6 +12,7 @@ import Config from "react-native-config";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 import { Navigator } from "react-native-navigation";
+import axios from "axios";
 
 interface ICoinListProps {
     appSettings: ISettings;

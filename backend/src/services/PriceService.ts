@@ -48,6 +48,24 @@ export default class CoinService {
             }
         });
     }
+    public getBySearch(token: string, searchInput: string, fiat: string = 'USD', crypto: string = 'BTC') {
+        return new Promise((resolve, reject) => {
+            // Make a query to the database if the list has not been updated for 5 minutes
+            if (Date.now() - this.lastUpdated < 300000) {
+                const findcoins = this.selectCurrency(fiat, crypto).filter((coin) => RegExp(searchInput.toLowerCase()).test(coin.name.toLowerCase()) || RegExp(searchInput.toLowerCase()).test(coin.symbol.toLowerCase()));
+                resolve(findcoins);
+            } else {
+                this.updatePriceList()
+                    .then(() => {
+                        const findcoins = this.selectCurrency(fiat, crypto).filter((coin) => RegExp(searchInput.toLowerCase()).test(coin.name.toLowerCase()) || RegExp(searchInput.toLowerCase()).test(coin.symbol.toLowerCase()));
+                        resolve(findcoins);
+                    })
+                    .catch((err: any) => {
+                        reject(err);
+                    });
+            }
+        });
+    }
     public getSpecificCoin(token: string, coinID: string, fiat: string = 'USD', crypto: string = 'BTC') {
         return new Promise((resolve, reject) => {
             // Make a query to the database if the list has not been updated for 5 minutes
