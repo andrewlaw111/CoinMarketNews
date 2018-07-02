@@ -178,7 +178,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                         <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
                             <Icon type="FontAwesome" name="info" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
                         </View>
-                        <Text style={styles(this.props.appSettings.darkMode).settingsText}>About</Text>
+                        <Text style={styles(this.props.appSettings.darkMode).settingsText}>CoinMarketNews v1.0</Text>
 
                     </TouchableOpacity>
                 </Content>
