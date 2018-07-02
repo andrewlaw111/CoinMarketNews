@@ -103,6 +103,7 @@ app.use('/chart/*', function (req, res) {
 });
 
 app.use('/source-icons', express.static('public/source-icons'));
+app.use('/media-icons', express.static('public/media-icons'));
 app.use('/icon', express.static('public/cryptocurrency-icons'));
 app.use('/icon', function (req, res) {
     // TODO: check if coin exists?
