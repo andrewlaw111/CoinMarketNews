@@ -50,7 +50,7 @@ const updateCoinSuccess = (coins: ICoinPrice[]) => {
     };
 };
 
-export const getCoins = async (settings: ISettings, rangeStart?: number, rangeEnd?: number) => {
+export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: number) => {
     try {
         const token = store.getState().user.user.token;
         let fiatCurrency: string;
@@ -101,7 +101,7 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, rangeEn
                             fiat: fiatCurrency,
                             crypto: cryptoCurrency,
                             start: rangeStart,
-                            limit: rangeEnd,
+                            limit: nb,
                         },
                     },
             ).then((result) => {
