@@ -44,7 +44,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
         {
             stat: `${this.props.coinPrice.price_crypto.price}`,
             statType: `Price in ${this.props.appSettings.cryptoCurrency}`,
-            style: [styles(this.props.darkMode).coinInfoStatsText, { fontFamily: "Font Awesome 5 Brands" }, ]
+            style: [styles(this.props.darkMode).coinInfoStatsText, { fontFamily: "Font Awesome 5 Brands" },]
         },
         {
             stat: `${this.props.coinPrice.price_fiat.percent_change_1h}%`,
@@ -93,9 +93,15 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
             <StyleProvider style={getTheme(commonColour)} >
                 <ScrollView style={styles(this.props.darkMode).price}>
                     <View>
+                        <Card style={styles(this.props.darkMode).priceWidgetCard}>
+                            <WebView
+                                source={{ uri: this.props.priceWidget }}
+                                style={styles(this.props.darkMode).webView}
+                            />
+                        </Card>
                         <Card style={styles(this.props.darkMode).card}>
                             <CardItem bordered={true} style={styles(this.props.darkMode).cardItem} header={true}>
-                                <Text style={styles(this.props.darkMode).cardText}>Price</Text>
+                                <Text style={styles(this.props.darkMode).cardText}>Price details</Text>
                             </CardItem>
                             <CardItem style={styles(this.props.darkMode).cardItem}>
                                 <View style={styles(this.props.darkMode).coinInfoStats}>
@@ -110,12 +116,12 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                                                     {/*tslint:disable-next-line:jsx-no-multiline-js*/}
                                                     {(index === 1) ? (
                                                         (this.props.appSettings.cryptoCurrency === "BTC") ? (
-                                                            <Text style={stat.style}> &#xf15a;{stat.stat}</Text>
+                                                            <Text style={stat.style}> &#xf15a; {stat.stat}</Text>
                                                         ) : (
-                                                                <Text style={stat.style}> &#xf42e;{stat.stat}</Text>
+                                                                <Text style={stat.style}> &#xf42e; {stat.stat}</Text>
                                                             )
                                                     ) : (
-                                                            <Text style={stat.style}> {stat.stat}</Text>
+                                                            <Text style={stat.style}>{stat.stat}</Text>
                                                         )}
                                                 </View>
                                             )
@@ -125,12 +131,6 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                                     })}
                                 </View>
                             </CardItem>
-                        </Card>
-                        <Card style={styles(this.props.darkMode).priceWidgetCard}>
-                            <WebView
-                                source={{ uri: this.props.priceWidget }}
-                                style={styles(this.props.darkMode).webView}
-                            />
                         </Card>
                     </View>
                 </ScrollView>
@@ -167,9 +167,9 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     cardItem: {
         backgroundColor: (darkMode) ? "#454951" : "#FFF",
     },
-    cardText: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
-    },
+    // cardText: {
+    //     color: (darkMode) ? "#F8F8F8" : "#000",
+    // },
     coinInfoStats: {
         flex: 1,
     },

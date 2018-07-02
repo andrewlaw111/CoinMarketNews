@@ -144,9 +144,10 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         ];
         return links.map((link, index) => {
             if (link.link && link.link != 'n/a') {
+                const smallIcon = (link.linkIcon == 'file') ? { fontSize: 21 } : { fontSize: 25 };
                 return (
-                    <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Icon style={[this.styles.cardText, this.styles.linkIcon]} active={true} type="FontAwesome" name={link.linkIcon} />
+                    <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7, justifyContent: "space-between" }}>
+                        <Icon style={[this.styles.cardText, this.styles.linkIcon, smallIcon]} active={true} type="FontAwesome" name={link.linkIcon} />
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {/* <Text style={this.styles.cardText} >
                             {link.linkType}
@@ -230,7 +231,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     },
     linkIcon: {
         color: (darkMode) ? "#2a6496" : "#000",
-        fontSize: 25,
+        width: 30,
     },
     link: {
         color: (darkMode) ? "#2a6496" : "#000",
@@ -246,6 +247,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
+        marginBottom: 7,
     },
     coinInfoStatsText: {
         flex: 1,
