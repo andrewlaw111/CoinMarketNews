@@ -115,7 +115,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                                 onPress={this.changeCurrency.bind(this, "fiat")}
                                 active={(this.state.fiatCurrency) ? true : false}
                             >
-                                <Text style={(Platform.OS === "android") ? style(this.props.darkMode).activeButtonTextAndroid : style(this.props.darkMode).text}>
+                                <Text style={(Platform.OS === "android") ? (this.state.fiatCurrency) ? style(this.props.darkMode).text : style(this.props.darkMode).activeButtonTextAndroid : null /*{ color: (this.props.darkMode) ? "#F8F8F8" : "#000" }*/}>
                                     {this.props.appSettings.fiatCurrency}
                                 </Text>
                             </Button>
@@ -125,7 +125,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                                 onPress={this.changeCurrency.bind(this, "crypto")}
                                 active={(this.state.fiatCurrency) ? false : true}
                             >
-                                <Text style={(Platform.OS === "android" && this.state.fiatCurrency) ? style(this.props.darkMode).text : style(this.props.darkMode).activeButtonTextAndroid}>
+                                <Text style={(Platform.OS === "android") ? (this.state.fiatCurrency) ? style(this.props.darkMode).text : style(this.props.darkMode).activeButtonTextAndroid : null /*{ color: (this.props.darkMode) ? "#F8F8F8" : "#000" }*/}>
                                     {this.props.appSettings.cryptoCurrency}
                                 </Text>
                             </Button>
@@ -254,7 +254,7 @@ const style = (darkMode: boolean) => StyleSheet.create({
         height: 40,
         flexDirection: "row",
         justifyContent: "center",
-        backgroundColor: "green",
+        backgroundColor: "transparent",
     },
     buttons: {
         backgroundColor: "#2874F0",
@@ -277,7 +277,7 @@ const style = (darkMode: boolean) => StyleSheet.create({
     modalForm: {
         height: Dimensions.get("window").height + 150,
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        bottom: -Dimensions.get("window").height -50, 
+        bottom: -Dimensions.get("window").height - 50,
         paddingBottom: Dimensions.get("window").height - 250,
         elevation: 20,
         borderWidth: 1,
@@ -301,7 +301,8 @@ const style = (darkMode: boolean) => StyleSheet.create({
         flex: 0.2,
         flexDirection: "row",
         justifyContent: 'center',
-        backgroundColor: "green",
+        backgroundColor: "transparent",
+        // backgroundColor: "green",
     },
     segment: {
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8"
