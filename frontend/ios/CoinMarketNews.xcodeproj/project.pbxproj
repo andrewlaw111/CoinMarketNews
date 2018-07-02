@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -23,6 +24,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		22CD4EB120EA03B0004EDC60 /* playstore-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 22CD4EB020EA03B0004EDC60 /* playstore-icon.png */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -393,6 +395,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		2243B65720D8AE5A0028C1D5 /* CoinMarketNews.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CoinMarketNews.entitlements; path = CoinMarketNews/CoinMarketNews.entitlements; sourceTree = "<group>"; };
 		22940AA74E514C259C36ADE3 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		22CD4EB020EA03B0004EDC60 /* playstore-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playstore-icon.png"; path = "../CoinMarketNews-Logo/android/playstore-icon.png"; sourceTree = "<group>"; };
 		292ED07BA7A6442391D9267B /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		2B46059854104C23AE83CBD9 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* CoinMarketNews-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CoinMarketNews-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -570,6 +573,7 @@
 		13B07FAE1A68108700A75B9A /* CoinMarketNews */ = {
 			isa = PBXGroup;
 			children = (
+				22CD4EB020EA03B0004EDC60 /* playstore-icon.png */,
 				2243B65720D8AE5A0028C1D5 /* CoinMarketNews.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -1267,6 +1271,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				22CD4EB120EA03B0004EDC60 /* playstore-icon.png in Resources */,
 				FF4DDC8C171F490588433148 /* Entypo.ttf in Resources */,
 				F364F020220043AC8FD86FE1 /* EvilIcons.ttf in Resources */,
 				0A554B96C88A4178ADA4EC7A /* FontAwesome.ttf in Resources */,
