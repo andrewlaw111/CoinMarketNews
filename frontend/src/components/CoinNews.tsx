@@ -42,30 +42,6 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
         this.styles = (this.props.darkMode) ? darkStyles : styles;
     }
 
-    // public renderList = (info: { item: INews, index: number }) => {
-    //     let coinStyle = this.styles.card;
-    //     if (info.index === this.state.news.length - 1) {
-    //         coinStyle = this.styles.lastCard;
-    //     }
-    //     return (
-    //         <Card style={coinStyle}>
-    //             <TouchableOpacity onPress={this.handleLinkPress.bind(this, info.item.link)}>
-    //                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-    //                     <Text style={this.styles.cardText}>{info.item.title}</Text>
-    //                 </CardItem>
-    //                 <CardItem button={true} style={this.styles.cardItem}>
-    //                     <Body>
-    //                         <Text style={this.styles.cardText} numberOfLines={3}>{info.item.content}</Text>
-    //                     </Body>
-    //                 </CardItem>
-    //                 <CardItem footer={true} style={this.styles.cardItem}>
-    //                     {/* <Text style={this.styles.cardText}>{new Date(Date.parse(info.item.created_at)).toLocaleString()}</Text> */}
-    //                     <Moment style={this.styles.cardText} element={Text} fromNow={true}>{info.item.created_at}</Moment>
-    //                 </CardItem>
-    //             </TouchableOpacity>
-    //         </Card>
-    //     )
-    // }
     public renderNewsList = (info: { item: INews, index: number }) => (
         <View>
             <Card style={this.styles.card}>
@@ -97,7 +73,6 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                         style={[this.styles.cardItem, { paddingTop: 0 }]}
                     >
                         {(info.item.counter > 1) ? <View style={{ flexDirection: "row", marginRight: 3 }}><Text style={this.styles.newsCounter}>{info.item.counter} </Text><Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" /></View> : <Text />}
-                        <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                         {/* tslint:disable-next-line:jsx-no-multiline-js */}
                         {info.item.coins && info.item.coins.map((coin: string, key: number) => {
                             return (
@@ -109,6 +84,9 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                                 />
                             )
                         })}
+                    </CardItem>
+                    <CardItem footer={true} bordered={true} style={this.styles.cardItem}>
+                        <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                     </CardItem>
                 </TouchableOpacity>
             </Card>

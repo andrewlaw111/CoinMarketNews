@@ -254,7 +254,7 @@ const style = (darkMode: boolean) => StyleSheet.create({
         height: 40,
         flexDirection: "row",
         justifyContent: "center",
-        // backgroundColor: "green",
+        backgroundColor: "green",
     },
     buttons: {
         backgroundColor: "#2874F0",
@@ -301,7 +301,7 @@ const style = (darkMode: boolean) => StyleSheet.create({
         flex: 0.2,
         flexDirection: "row",
         justifyContent: 'center',
-        // backgroundColor: "green",
+        backgroundColor: "green",
     },
     segment: {
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8"

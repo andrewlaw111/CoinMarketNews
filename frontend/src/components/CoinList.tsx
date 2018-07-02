@@ -2,7 +2,7 @@ import React from "react";
 import Config from "react-native-config";
 import { connect } from "react-redux";
 
-import { Icon, Text, Thumbnail, StyleProvider, Spinner } from "native-base";
+import { Icon, Text, StyleProvider, Spinner } from "native-base";
 import { FlatList, TouchableOpacity, View, RefreshControl, Platform } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
