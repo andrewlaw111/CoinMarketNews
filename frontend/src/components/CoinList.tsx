@@ -14,13 +14,10 @@ import displayCoinOptions from "./functions/CoinsRenderSettings";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
-import IonIcons from "react-native-vector-icons/Ionicons";
 
 import { getCoins } from "../redux/actions/coins";
 import { Navigator } from "react-native-navigation";
-
-import FastImage from "react-native-fast-image";
-import { AnimatedValue } from "react-navigation";
+import CoinListItem from "./CoinListItem";
 
 interface ICoinListProps {
     coins: ICoinPrice[];
@@ -36,13 +33,11 @@ interface ICoinListProps {
 
 export interface ICoinListState {
     numberOfCoins: number
-    cryptoCurrencyName: string;
-    fiatCurrencyName: string;
     refreshing: boolean;
     searchBarVisible: boolean;
     scrollY: Animated.Value;
 }
-class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
+class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     public cryptoCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>&#xf15a; </Text>;
     public fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>$ </Text>;
 
@@ -59,8 +54,6 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         super(props);
         this.state = {
             refreshing: false,
-            cryptoCurrencyName: "BTC",
-            fiatCurrencyName: "USD",
             numberOfCoins: 100,
             searchBarVisible: false,
             scrollY: new Animated.Value(0),
@@ -78,63 +71,13 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
 
     }
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
-        let heartColour: string;
-        if (this.props.favourites.indexOf(info.item.id) > -1) {
-            heartColour = "orange";
-        } else {
-            heartColour = "grey";
-        }
+        const favourite = this.props.favourites.indexOf(info.item.id) > -1;
         if (info.item.price_crypto.percent_change_1h === null || info.item.price_crypto.percent_change_24h === null || info.item.price_crypto.percent_change_7d === null || info.item.price_fiat.percent_change_1h === null || info.item.price_fiat.percent_change_24h === null || info.item.price_fiat.percent_change_7d === null) {
-            return
+            return null
         };
-        const percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(info.item);
-        const coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(info.item);
-
-        const priceColour = (parseFloat(percentageChange) > 0) ? "green" : (parseFloat(percentageChange) === 0) ? "grey" : "red";
         return (
-            <View style={styles(this.props.appSettings.darkMode).listItem}>
-                <TouchableOpacity onPress={this.handlePress.bind(this, info)} delayPressIn={0}>
-                    <View style={styles(this.props.appSettings.darkMode).listCoin} >
-
-                        <View style={styles(this.props.appSettings.darkMode).listCoinLeft}>
-                            <Text style={styles(this.props.appSettings.darkMode).coinText}>{info.item.rank}</Text>
-                            <FastImage
-                                style={styles(this.props.appSettings.darkMode).coinThumbnail}
-                                source={{ uri: `${Config.API_SERVER}/icon/${info.item.symbol.toLocaleLowerCase()}.png` }}
-                                resizeMode={FastImage.resizeMode.contain}
-                            />
-                        </View>
-
-                        <View style={styles(this.props.appSettings.darkMode).listCoinBody}>
-                            <View style={styles(this.props.appSettings.darkMode).listCoinName}>
-                                <Text style={styles(this.props.appSettings.darkMode).coinName}>{info.item.name}</Text>
-                                <Text style={styles(this.props.appSettings.darkMode).coinSymbol}>{info.item.symbol}</Text>
-                            </View>
-                            <View style={styles(this.props.appSettings.darkMode).listCoinName}>
-                                {(this.props.setting[1] === '1') ? this.cryptoCurrency : this.fiatCurrency}
-                                <Text note={true} style={styles(this.props.appSettings.darkMode).coinPrice}>{coinPrice} </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles(this.props.appSettings.darkMode).listCoinRight}>
-                            <View style={{ alignItems: "flex-end" }}>
-                                <Text note={true} style={{ color: priceColour, fontSize: 18 }}>{percentageChange}%</Text>
-                            </View>
-                            <TouchableOpacity
-                                style={{ alignItems: "flex-end", height: 70, justifyContent: "center", paddingRight: 10, right: -10, width: 50 }}
-                                onPress={this.handlePressHeart.bind(this, info.item.id, this.props.user.token)}
-                            >
-                                <Icon
-                                    type="Ionicons"
-                                    name="ios-star"
-                                    style={{ color: heartColour }}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        );
+            <CoinListItem key={info.item.id} item={info.item} cryptoCurrency={this.cryptoCurrency} fiatCurrency={this.fiatCurrency} favourite={favourite} navigator={this.props.navigator} setting={this.props.setting} />
+        )
     }
     public renderSearchBar() {
         return (
@@ -214,50 +157,6 @@ class PureCoinList extends React.PureComponent<ICoinListProps, ICoinListState> {
         //         numberOfCoins: newNumberOfCoins,
         //     })
         // })
-    }
-    private handlePress = (info: { item: ICoinPrice, index: number }) => {
-        const favourite = (this.props.favourites.indexOf(info.item.id) > -1) ? true : false;
-        Promise.all([
-            IonIcons.getImageSource("ios-arrow-back", 20, "#FFF"),
-            IonIcons.getImageSource("ios-star", 24, "grey"),
-        ]).then((sources) => {
-            this.props.navigator.showModal({
-                navigatorButtons: {
-                    leftButtons: [{
-                        buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : (Platform.OS === "ios") ? "#   2874F0" : "#333",
-                        buttonFontSize: 18,
-                        buttonFontWeight: "600",
-                        id: "back",
-                        showAsAction: "ifRoom",
-                        title: "back",
-                        icon: (Platform.OS === "ios") ? sources[0] : null,
-                    }],
-                    rightButtons: [{
-                        buttonColor: (favourite) ? "gold" : "grey",
-                        buttonFontSize: 18,
-                        buttonFontWeight: "600",
-                        id: "like",
-                        showAsAction: "ifRoom",
-                        icon: sources[1],
-                    }],
-
-                },
-                navigatorStyle: {},
-                passProps: { appSettings: this.props.appSettings, coinID: info.item.id, coinPrice: info.item, favourite },
-                screen: "CoinMarketNews.CoinsPage",
-                title: info.item.name,
-            });
-        }).catch((err) => {
-            console.error(err)
-        })
-    }
-
-    private handlePressHeart = (coinID: number, token: string) => {
-        if (this.props.favourites.indexOf(coinID) === -1) {
-            return this.props.addCoinFavourite(coinID, token);
-        } else {
-            return this.props.removeCoinFavourite(coinID, token);
-        }
     }
     private getItemLayout = (data: any, index: number) => ({ length: 70, offset: 70 * index, index });
     private keyExtractor = (item: ICoinPrice) => item.id.toString();
