@@ -3,7 +3,7 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Icon, Text, StyleProvider, Spinner } from "native-base";
-import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated } from "react-native";
+import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -18,6 +18,8 @@ import commonColour from '../../native-base-theme/variables/commonColor';
 import { getCoins } from "../redux/actions/coins";
 import { Navigator } from "react-native-navigation";
 import CoinListItem from "./CoinListItem";
+import { darkBackground } from "./styles/colours";
+import Coins from "./Coins";
 
 interface ICoinListProps {
     coins: ICoinPrice[];
@@ -34,12 +36,13 @@ interface ICoinListProps {
 export interface ICoinListState {
     numberOfCoins: number
     refreshing: boolean;
-    searchBarVisible: boolean;
-    scrollY: Animated.Value;
+    searching: boolean;
+    searchedCoins: ICoinPrice[];
 }
 class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     public cryptoCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>&#xf15a; </Text>;
     public fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>$ </Text>;
+    public windowHeight = Dimensions.get("window").height;
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
@@ -55,8 +58,8 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         this.state = {
             refreshing: false,
             numberOfCoins: 100,
-            searchBarVisible: false,
-            scrollY: new Animated.Value(0),
+            searching: false,
+            searchedCoins: [],
         };
     }
     public componentWillReceiveProps() {
@@ -81,13 +84,30 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     }
     public renderSearchBar() {
         return (
-
-            <TextInput
-                style={{ borderRadius: 3, height: 40, borderColor: 'gray', borderWidth: 1 }}
-                // onChangeText={(text) => this.setState({ text })}
-                placeholder="Search"
-            // value={this.state.text}
-            />
+            <View>
+                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: (this.props.appSettings.darkMode) ? "#343a44" : "#F8F8F8", height: 50, }}>
+                    <TextInput
+                        style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, }}
+                        onChangeText={this.onChangeTextHandler}
+                        onFocus={this.onFocusHandler}
+                        onBlur={this.onBlurHandler}
+                        underlineColorAndroid="transparent"
+                        placeholder="Search"
+                    // value={this.state.text}
+                    />
+                </View>
+                <View style={{ height: (this.state.searching) ? this.windowHeight : 0 }}>
+                    <FlatList
+                        data={this.state.searchedCoins}
+                        extraData={this.props.favourites}
+                        initialNumToRender={15}
+                        renderItem={this.renderCoinList}
+                        keyExtractor={this.keyExtractor}
+                        style={styles(this.props.appSettings.darkMode).coinList}
+                        getItemLayout={this.getItemLayout}
+                    />
+                </View>
+            </View >
         )
     }
     public render() {
@@ -160,7 +180,35 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     }
     private getItemLayout = (data: any, index: number) => ({ length: 70, offset: 70 * index, index });
     private keyExtractor = (item: ICoinPrice) => item.id.toString();
+    private onBlurHandler = () => {
+        if (Platform.OS === "android") {
+            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
+        let animationConfig = { ...LayoutAnimation.Presets.spring };
+        animationConfig.duration = 520;
+        LayoutAnimation.configureNext(animationConfig);
 
+        this.setState({
+            searching: false
+        })
+    }
+    private onChangeTextHandler = () => {
+
+    }
+    private onFocusHandler = () => {
+        if (Platform.OS === "android") {
+            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
+
+        let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
+        animationConfig.duration = 620;
+
+        LayoutAnimation.configureNext(animationConfig);
+
+        this.setState({
+            searching: true
+        })
+    }
     private onRefresh = () => {
         const newNumberOfCoins = this.state.numberOfCoins + 100;
         this.setState({
