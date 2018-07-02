@@ -41,11 +41,16 @@ export interface ICoinListState {
     searchedCoins: ICoinPrice[];
     cryptoCurrencyName: string;
     fiatCurrencyName: string;
+    showCancel: boolean;
+    showSearch: boolean;
 }
 class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     public cryptoCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>&#xf15a; </Text>;
     public fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>$ </Text>;
     public windowHeight = Dimensions.get("window").height;
+    public textInput: TextInput;
+    public searchInput: string = "";
+    public offset = 0;
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
@@ -64,6 +69,8 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             searching: false,
             searchedCoins: [],
             cryptoCurrencyName: "BTC",
+            showCancel: false,
+            showSearch: true,
             fiatCurrencyName: "USD",
         };
     }
@@ -88,32 +95,39 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         )
     }
     public renderSearchBar() {
-        return (
-            <View>
-                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: (this.props.appSettings.darkMode) ? "#343a44" : "#F8F8F8", height: 50, }}>
-                    <TextInput
-                        style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, }}
-                        onChangeText={this.onChangeTextHandler}
-                        onFocus={this.onFocusHandler}
-                        onBlur={this.onBlurHandler}
-                        underlineColorAndroid="transparent"
-                        placeholder="Search"
-                    // value={this.state.text}
-                    />
-                </View>
-                <View style={{ height: (this.state.searching) ? this.windowHeight : 0 }}>
-                    <FlatList
-                        data={this.state.searchedCoins}
-                        extraData={this.props.favourites}
-                        initialNumToRender={15}
-                        renderItem={this.renderSearchList}
-                        keyExtractor={this.keyExtractor}
-                        style={styles(this.props.appSettings.darkMode).coinList}
-                        getItemLayout={this.getItemLayout}
-                    />
-                </View>
-            </View >
-        )
+        if (this.state.showSearch) {
+            return (
+                <View>
+                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: (this.props.appSettings.darkMode) ? "#343a44" : "#F8F8F8", height: 50, }}>
+                        <TextInput
+                            style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, }}
+                            clearButtonMode={"always"}
+                            onChangeText={this.onChangeTextHandler}
+                            onFocus={this.onFocusHandler}
+                            onBlur={this.onBlurHandler}
+                            underlineColorAndroid="transparent"
+                            placeholder="Search"
+                            ref={input => { this.textInput = input }}
+                        // value={this.state.text}
+                        />
+                        <TouchableOpacity style={{ marginLeft: 5 }} onPress={this.onPressCancel}>{(this.state.showCancel) ? <Text>Cancel</Text> : null}</TouchableOpacity>
+                    </View>
+                    <View style={{ height: (this.state.searching) ? this.windowHeight : 0 }}>
+                        <FlatList
+                            data={this.state.searchedCoins}
+                            extraData={this.props.favourites}
+                            initialNumToRender={15}
+                            renderItem={this.renderSearchList}
+                            keyExtractor={this.keyExtractor}
+                            style={styles(this.props.appSettings.darkMode).coinList}
+                            getItemLayout={this.getItemLayout}
+                        />
+                    </View>
+                </View >
+            )
+        } else {
+            return null
+        }
     }
     public renderSearchList(info: { item: ICoinPrice, index: number }) {
         return (
@@ -176,9 +190,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     style={styles(this.props.appSettings.darkMode).coinList}
                                     getItemLayout={this.getItemLayout}
                                     refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
-                                    initialScrollIndex={0}
-                                    scrollEnabled={!this.state.searching}
-
+                                    onScroll={this.onScroll}
                                     ListEmptyComponent={spinner()}
                                     ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
                                 />
@@ -203,11 +215,15 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         if (this.state.searchedCoins.length > 0) {
             return
         } else {
+            this.setState({
+                showCancel: false
+            })
             if (Platform.OS === "android") {
                 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
             }
-            let animationConfig = { ...LayoutAnimation.Presets.spring };
-            animationConfig.duration = 820;
+            let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
+            animationConfig.duration = 40;
+    
             LayoutAnimation.configureNext(animationConfig);
 
             this.setState({
@@ -216,24 +232,31 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         }
     }
     private onChangeTextHandler = (searchInput: string) => {
+        this.searchInput = searchInput;
         if (searchInput.length > 1) {
-            axios
-                .get<ICoinPrice[]>(
-                    `${Config.API_SERVER}/price/search`,
-                    {
-                        headers: {
-                            token: this.props.user.token,
-                            searchInput: searchInput,
-                            fiat: this.state.fiatCurrencyName,
-                            crypto: this.state.cryptoCurrencyName,
+            if (searchInput.length > 2 && this.state.searchedCoins.length === 0) {
+                return
+            } else {
+                axios
+                    .get<ICoinPrice[]>(
+                        `${Config.API_SERVER}/price/search`,
+                        {
+                            headers: {
+                                token: this.props.user.token,
+                                searchInput: searchInput,
+                                fiat: this.state.fiatCurrencyName,
+                                crypto: this.state.cryptoCurrencyName,
+                            }
                         }
-                    }
-                )
-                .then((response) => {
-                    this.setState({
-                        searchedCoins: response.data
+                    )
+                    .then((response) => {
+                        if (this.searchInput.length > 1) {
+                            this.setState({
+                                searchedCoins: response.data
+                            });
+                        }
                     });
-                });
+            }
         } else {
             this.setState({
                 searchedCoins: []
@@ -241,18 +264,22 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         }
     }
     private onFocusHandler = () => {
+        this.setState({
+            showCancel: true
+        })
         if (Platform.OS === "android") {
             UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
         }
 
         let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
-        animationConfig.duration = 620;
+        animationConfig.duration = 40;
 
         LayoutAnimation.configureNext(animationConfig);
 
         this.setState({
             searching: true
         })
+
     }
     private onRefresh = () => {
         const newNumberOfCoins = this.state.numberOfCoins + 100;
@@ -265,6 +292,37 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                 refreshing: false
             });
         });
+    }
+
+    private onPressCancel = () => {
+        this.textInput.clear()
+        this.textInput.blur()
+        this.setState({
+            searchedCoins: []
+        })
+    }
+    private onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        if (this.offset - event.nativeEvent.contentOffset.y > 6) {
+            if (Platform.OS === "android") {
+                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+            }
+
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            this.offset = event.nativeEvent.contentOffset.y,
+                this.setState({
+                    showSearch: true
+                })
+        } else if (event.nativeEvent.contentOffset.y - this.offset > 6) {
+            if (Platform.OS === "android") {
+                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+            }
+
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            this.offset = event.nativeEvent.contentOffset.y,
+                this.setState({
+                    showSearch: false
+                })
+        }
     }
 }
 
