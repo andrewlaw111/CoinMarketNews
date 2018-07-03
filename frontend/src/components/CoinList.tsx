@@ -92,7 +92,6 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         if (info.item.price_crypto.percent_change_1h === null || info.item.price_crypto.percent_change_24h === null || info.item.price_crypto.percent_change_7d === null || info.item.price_fiat.percent_change_1h === null || info.item.price_fiat.percent_change_24h === null || info.item.price_fiat.percent_change_7d === null) {
             return null
         };
-
         return (
             <CoinListItem key={info.item.id} item={info.item} favourite={favourite} navigator={this.props.navigator} setting={this.props.setting} />
         )
@@ -138,6 +137,8 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                 return spinner()
             }
         }
+        const top200 = this.props.coins.filter((coin) => coin.rank < 200)
+
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
@@ -163,7 +164,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                             />
                         ) : (
                                 <FlatList
-                                    data={this.props.coins.slice(0, this.state.numberOfCoins)}
+                                    data={(this.props.setting[0] === "0") ? this.props.coins.slice(0, this.state.numberOfCoins) : top200}
                                     extraData={this.props.favourites}
                                     initialNumToRender={15}
                                     renderItem={this.renderCoinList}
@@ -177,7 +178,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     // scrollEnabled={!this.state.searching}
                                     ListEmptyComponent={spinner()}
                                     ref={(flatList) => { this.flatListMarket = flatList }}
-                                    ListFooterComponent={spinner()}
+                                    ListFooterComponent={(this.props.setting[0] === "0") ? spinner() : null}
                                 />
                             )
                     }
