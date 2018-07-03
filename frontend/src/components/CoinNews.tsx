@@ -106,7 +106,7 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
     public renderNoNews() {
         return (
             <View style={styles(this.props.darkMode).news}>
-                <Text>
+                 <Text style={this.styles.cardText}>
                     No news was found, please check again later.
                 </Text>
             </View>

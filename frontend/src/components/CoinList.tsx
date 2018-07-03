@@ -147,9 +147,9 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                     {/* tslint:disable-next-line:jsx-no-multiline-js */}
                     {
-                        (this.props.favouriteTab) ? null : (
-                            this.renderSearchBar()
-                        )
+                        // (this.props.favouriteTab) ? null : (
+                        //     this.renderSearchBar()
+                        // )
                     }
                     {/* tslint:disable-next-line:jsx-no-multiline-js */}
                     {
@@ -177,6 +177,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     // onEndReached={this.endReached}
                                     // onEndReachedThreshold={0.8}
                                     onScroll={this.onScroll}
+                                    scrollEnabled={!this.state.searching}
                                     ListEmptyComponent={spinner()}
                                 // ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
                                 />

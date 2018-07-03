@@ -136,6 +136,8 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                             <TextInput
                                 keyboardType="numeric"
                                 style={style(this.props.darkMode).textInput}
+                                onFocus={this.pushUp}
+                                onBlur={this.pushDown}
                                 onChangeText={this.changeAlertAmount}
                                 returnKeyType="done"
                                 underlineColorAndroid="transparent"
@@ -232,6 +234,36 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
         }
         this.props.addAlerts(alert, this.props.user.token)
         this.closeModal()
+    }
+    public onFocus = () => {
+        if (Platform.OS === "ios") {
+            Animated.timing(
+                // Animate value over time
+                this.state.pan.y, // The value to drive
+                {
+                    toValue: -520, // Animate to final value of 1
+                }
+            ).start(() => {
+                this.setState({
+                    modalOpen: true,
+                })
+            }); // Start the animation
+        }
+    }
+    public onBlur = () => {
+        if (Platform.OS === "ios") {
+            Animated.timing(
+                // Animate value over time
+                this.state.pan.y, // The value to drive
+                {
+                    toValue: -320, // Animate to final value of 1
+                }
+            ).start(() => {
+                this.setState({
+                    modalOpen: true,
+                })
+            }); // Start the animation
+        }
     }
 }
 

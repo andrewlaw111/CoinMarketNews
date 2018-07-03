@@ -41,7 +41,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
         return (
             <Card style={this.styles.Card}>
                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                    <Text>What is {this.props.coin.name}?</Text>
+                    <Text style={this.styles.cardText}>What is {this.props.coin.name}?</Text>
                 </CardItem>
                 <CardItem style={this.styles.cardItem}>
                     <View>
@@ -183,7 +183,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                         {(this.props.coin.rank || this.props.coin.type || this.props.coin.algorithm || this.props.coin.proof || this.props.coin.mineable || this.props.coin.premined) ? (
                             <Card style={this.styles.Card}>
                                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                                    <Text>Information</Text>
+                                    <Text style={this.styles.cardText}>Information</Text>
                                 </CardItem>
                                 <CardItem style={this.styles.cardItem}>
                                     <Body style={styles.coinInfoStats}>
@@ -198,7 +198,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                         {(this.props.coin.website_link || this.props.coin.medium_link || this.props.coin.telegram_link || this.props.coin.twitter_link || this.props.coin.reddit_link) ? (
                             <Card style={this.styles.Card}>
                                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
-                                    <Text>Links</Text>
+                                    <Text style={this.styles.cardText}>Links</Text>
                                 </CardItem>
                                 <CardItem style={this.styles.cardItem}>
                                     <Body style={this.styles.coinInfoStats}>

@@ -79,7 +79,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <ScrollView ref={(scroller_favourite) => { this.scroller_favourite = scroller_favourite }}>
+                    <ScrollView ref={(scroller_favourite) => { this.scroller_favourite = scroller_favourite }} style={styles(this.props.appSettings.darkMode).coinListComponent}>
                         <CoinList coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
                     </ScrollView>
                 </Tab>
@@ -91,7 +91,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <ScrollView ref={(scroller_market) => { this.scroller_market = scroller_market }}>
+                    <ScrollView ref={(scroller_market) => { this.scroller_market = scroller_market }} style={styles(this.props.appSettings.darkMode).coinListComponent}>
                         <CoinList coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
                     </ScrollView>
                 </Tab>
