@@ -275,6 +275,7 @@ class PureSettings extends React.Component<ISettingsProps>{
                         screenBackgroundColor: colours.screenBackgroundColor,
                         statusBarColor: colours.backgroundColor,
                         statusBarTextColorScheme: colours.statusBarTextColorScheme,
+                        keepStyleAcrossPush: false,
                     },
                     animationType: "fade"
                 })

@@ -148,12 +148,13 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
     private handlePress = (item: ICoinPrice) => {
         Promise.all([
             IonIcons.getImageSource("ios-arrow-back", 20, "#FFF"),
+            IonIcons.getImageSource("ios-star", 24, "orange"),
             IonIcons.getImageSource("ios-star", 24, "grey"),
         ]).then((sources) => {
             this.props.navigator.showModal({
                 navigatorButtons: {
                     leftButtons: [{
-                        buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : (Platform.OS === "ios") ? "#   2874F0" : "#333",
+                        buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : "#333",
                         buttonFontSize: 18,
                         buttonFontWeight: "600",
                         id: "back",
@@ -162,20 +163,25 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
                         icon: (Platform.OS === "ios") ? sources[0] : null,
                     }],
                     rightButtons: [{
-                        buttonColor: (this.props.favourite) ? "gold" : "grey",
+                        // buttonColor: (this.props.favourite) ? "orange" : "grey",
                         buttonFontSize: 18,
+                        disableIconTint: true,
                         buttonFontWeight: "600",
                         id: "like",
                         showAsAction: "ifRoom",
-                        icon: sources[1],
+                        icon: (this.props.favourite) ? sources[1] : sources[2],
                     }],
 
                 },
-                navigatorStyle: {},
+                navigatorStyle: {
+                    // navBarButtonColor: (this.props.favourite) ? "orange" : "grey",
+                    // navBarRightButtonColor: (this.props.favourite) ? "orange" : "grey", // navBarRightButtonColor not working ?!
+                },
                 passProps: { appSettings: this.props.appSettings, coinID: item.id, coinPrice: item, favourite: this.props.favourite },
                 screen: "CoinMarketNews.CoinsPage",
                 title: item.name,
             });
+
         }).catch((err) => {
             console.error(err)
         })
