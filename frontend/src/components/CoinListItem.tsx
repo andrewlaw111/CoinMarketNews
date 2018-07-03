@@ -16,9 +16,7 @@ import axios from "axios";
 
 interface ICoinListProps {
     appSettings: ISettings;
-    cryptoCurrency: JSX.Element;
     favourite: boolean;
-    fiatCurrency: JSX.Element;
     item: ICoinPrice;
     navigator: Navigator;
     setting: string,
@@ -33,15 +31,39 @@ export interface ICoinListState {
 }
 class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListState> {
     public heartColour: string;
+    public cryptoCurrency: JSX.Element;
+    public fiatCurrency: JSX.Element;
 
     public percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(this.props.item);
     public coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(this.props.item);
     public priceColour = (parseFloat(this.percentageChange) > 0) ? "green" : (parseFloat(this.percentageChange) === 0) ? "grey" : "red";
 
+    public currencySymbols: { [key: string]: string } = {
+        USD: "$",
+        EUR: "€",
+        CAD: "$",
+        GBP: "£",
+        HKD: "$",
+        // BTC: "&#xf15a",
+        // ETH: "&#xf42e",
+    }
     public componentWillReceiveProps(nextProps: ICoinListProps) {
+        this.cryptoCurrency = (nextProps.appSettings.cryptoCurrency === "BTC") ?
+            (
+                <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (nextProps.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }}>&#xf15a; </Text>
+            ) : (
+                < Text style={{ fontFamily: "Font Awesome 5 Brands", color: (nextProps.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }} >&#xf42e; </Text >
+            );
+
+        this.fiatCurrency = <Text style={styles(nextProps.appSettings.darkMode).coinPrice} >{this.currencySymbols[nextProps.appSettings.fiatCurrency]} </Text>;
         this.percentageChange = displayCoinOptions[nextProps.setting[1]][nextProps.setting[2]].percentageChange(nextProps.item);
         this.coinPrice = displayCoinOptions[nextProps.setting[1]][nextProps.setting[2]].coinPrice(nextProps.item);
         this.priceColour = (parseFloat(this.percentageChange) > 0) ? "green" : (parseFloat(this.percentageChange) === 0) ? "grey" : "red";
+        if (nextProps.favourite) {
+            this.heartColour = "orange";
+        } else {
+            this.heartColour = "grey";
+        }
     }
     constructor(props: ICoinListProps) {
         super(props);
@@ -55,6 +77,7 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
             this.heartColour = "grey";
         }
     }
+
     public renderItemIcon() {
         return (
             <View style={styles(this.props.appSettings.darkMode).listCoinLeft}>
@@ -76,7 +99,7 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
                     <Text style={styles(this.props.appSettings.darkMode).coinSymbol}>{this.props.item.symbol}</Text>
                 </View>
                 <View style={styles(this.props.appSettings.darkMode).listCoinName}>
-                    {(this.props.setting[1] === '1') ? this.props.cryptoCurrency : this.props.fiatCurrency}
+                    {(this.props.setting[1] === '1') ? this.cryptoCurrency : this.fiatCurrency}
                     <Text note={true} style={styles(this.props.appSettings.darkMode).coinPrice}>{this.coinPrice} </Text>
                 </View>
             </View>
@@ -151,7 +174,7 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
         })
     }
     private handlePressHeart = (coinID: number, token: string) => {
-        if (this.props.favourite) {
+        if (!this.props.favourite) {
             return this.props.addCoinFavourite(coinID, token);
         } else {
             return this.props.removeCoinFavourite(coinID, token);

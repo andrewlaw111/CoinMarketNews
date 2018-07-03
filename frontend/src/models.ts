@@ -34,6 +34,7 @@ export interface ICoinPrice {
     name: string;
     symbol: string;
     rank: number;
+    favourite?: boolean;
     price_fiat: {
         id: number;
         coinmarketcap_id: number;

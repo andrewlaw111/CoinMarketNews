@@ -52,15 +52,6 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     public searchInput: string = "";
     public offset = 0;
 
-    public currencySymbols: { [key: string]: string } = {
-        USD: "$",
-        EUR: "€",
-        CAD: "$",
-        GBP: "£",
-        HKD: "$",
-        // BTC: "&#xf15a",
-        // ETH: "&#xf42e",
-    }
     public constructor(props: ICoinListProps) {
         super(props);
         this.state = {
@@ -74,24 +65,23 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             fiatCurrencyName: "USD",
         };
     }
-    public componentWillReceiveProps() {
-        this.cryptoCurrency = (this.props.appSettings.cryptoCurrency === "BTC") ?
-            (
-                <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }}>&#xf15a; </Text>
-            ) : (
-                < Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }} >&#xf42e; </Text >
-            );
-
-        this.fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice} >{this.currencySymbols[this.props.appSettings.fiatCurrency]} </Text>;
+    public componentWillReceiveProps(nextProps: ICoinListProps) {
+        nextProps.coins.forEach((coin) => {
+            if (nextProps.favourites.indexOf(coin.id) > -1) {
+                coin.favourite = true;
+            } else {
+                coin.favourite = false;
+            }
+        })
 
     }
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
-        const favourite = this.props.favourites.indexOf(info.item.id) > -1;
         if (info.item.price_crypto.percent_change_1h === null || info.item.price_crypto.percent_change_24h === null || info.item.price_crypto.percent_change_7d === null || info.item.price_fiat.percent_change_1h === null || info.item.price_fiat.percent_change_24h === null || info.item.price_fiat.percent_change_7d === null) {
             return null
         };
+
         return (
-            <CoinListItem key={info.item.id} item={info.item} cryptoCurrency={this.cryptoCurrency} fiatCurrency={this.fiatCurrency} favourite={favourite} navigator={this.props.navigator} setting={this.props.setting} />
+            <CoinListItem key={info.item.id} item={info.item} favourite={info.item.favourite} navigator={this.props.navigator} setting={this.props.setting} />
         )
     }
     public renderSearchBar() {
@@ -174,9 +164,9 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                 ListEmptyComponent={noFavourites()}
                             />
                         ) : (
+
                                 <FlatList
                                     data={this.props.coins}
-                                    extraData={this.props.favourites}
                                     initialNumToRender={15}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
