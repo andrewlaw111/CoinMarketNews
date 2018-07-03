@@ -20,9 +20,18 @@ export const coinReducer = (state: ICoinState = defaultCoinState, action: CoinAc
       return {
       };
     case UPDATE_COIN_SUCCESS:
-
+      const currentCoins = state.coins.slice();
+      const newCoins = action.coins.filter((coin) => {
+        let duplicate = false;
+        currentCoins.forEach((currentCoin) => {
+          if (currentCoin.id === coin.id) {
+            duplicate = true
+          }
+        })
+        return duplicate
+      });
       return {
-        coins: state.coins.concat(action.coins)
+        coins: state.coins.concat(newCoins)
       };
     default:
       return state; // Do not change the state in case of any other actions
