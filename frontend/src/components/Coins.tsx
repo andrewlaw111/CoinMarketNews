@@ -41,8 +41,12 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         statusBarBlur: true,
     };
 
+    public scroller_favourite: ScrollView;
+    public scroller_market: ScrollView;
+
     public constructor(props: ICoinsListProps) {
         super(props);
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             coins: this.props.coins.slice(),
             setting: "000",
@@ -75,7 +79,9 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    <ScrollView ref={(scroller_favourite) => { this.scroller_favourite = scroller_favourite }}>
+                        <CoinList coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    </ScrollView>
                 </Tab>
                 <Tab
                     heading="Market"
@@ -85,7 +91,9 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    <ScrollView ref={(scroller_market) => { this.scroller_market = scroller_market }}>
+                        <CoinList coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    </ScrollView>
                 </Tab>
             </Tabs>
         )
@@ -98,7 +106,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                         {this.renderTabs()}
                     </View>
-
                 </SafeAreaView>
             </StyleProvider >
         );
@@ -123,6 +130,15 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                 refreshing: false
             });
         });
+    }
+    public onNavigatorEvent(event: any) {
+        if (event.id === 'bottomTabSelected') {
+
+        }
+        if (event.id === 'bottomTabReselected') {
+            this.scroller_favourite.scrollTo({ x: 0, y: 0, animated: true });
+            this.scroller_market.scrollTo({ x: 0, y: 0, animated: true });
+        }
     }
 }
 
