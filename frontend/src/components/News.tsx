@@ -75,7 +75,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                         footer={true}
                         style={[this.styles.cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
                     >
-                        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-start", marginTop:5 }}>
                             <View>
                                 {/* tslint:disable-next-line:jsx-no-multiline-js */}
                                 {(info.item.counter > 1) ?
@@ -95,9 +95,9 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                             {/* tslint:disable-next-line:jsx-no-multiline-js */}
                             {info.item.coins && info.item.coins.map((coin: string, key: number) => {
-                                if (key < 5) {
+                                if (key < 6) {
                                     return (
-                                        <View key={key} style={{marginBottom: 5}} >
+                                        <View key={key}>
                                             <TouchableOpacity onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}>
                                                 <FastImage
                                                     style={this.styles.newsIcons}

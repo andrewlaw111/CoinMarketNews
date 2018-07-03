@@ -91,7 +91,7 @@ export default class CoinService {
                     if (!(price.coinmarketcap_id in this.prices)) {
                         this.prices[price.coinmarketcap_id] = [];
                     }
-                    // TODO: adapt decimals for each currency ( 3 = BTC ) => 8 decimals
+                    // TODO?: adapt decimals for each currency ( 3 = BTC ) => 8 decimals
                     price.price = (price.currency_id == 6) ? parseFloat(price.price).toFixed(8) : parseFloat(price.price);
                     price.volume_24h = parseFloat(price.volume_24h);
                     price.market_cap = parseFloat(price.market_cap);
@@ -124,10 +124,12 @@ export default class CoinService {
         const nb = startInt + parseInt(limit);
         const priceList = this.priceList.slice(startInt, nb);
         for (const coin of priceList) {
-            if (coin.coinmarketcap_id in this.prices && map_symbol_id[fiat] in this.prices[coin.coinmarketcap_id])
+            if (coin.coinmarketcap_id in this.prices && map_symbol_id[fiat] in this.prices[coin.coinmarketcap_id]) {
                 coin.price_fiat = this.prices[coin.coinmarketcap_id][map_symbol_id[fiat]];
-            if (coin.coinmarketcap_id in this.prices && map_symbol_id[crypto] in this.prices[coin.coinmarketcap_id])
+            }
+            if (coin.coinmarketcap_id in this.prices && map_symbol_id[crypto] in this.prices[coin.coinmarketcap_id]) {
                 coin.price_crypto = this.prices[coin.coinmarketcap_id][map_symbol_id[crypto]];
+            }
         };
         return priceList;
     }
