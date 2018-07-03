@@ -79,7 +79,7 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                 const coins = result.data.filter((coin) => coin.price_crypto.market_cap !== null && coin.price_fiat.market_cap !== null && coin.rank !== null);
 
                 store.dispatch(loadCoinSuccess(coins));
-                // cacheSorts(coins);
+                cacheSorts(coins);
             }).catch(async (err) => {
                 console.error(err);
                 try {
@@ -124,7 +124,7 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                 });
 
                 store.dispatch(updateCoinSuccess(coins));
-                // cacheSorts(coins);
+                cacheSorts(coins);
             }).catch(async (err) => {
                 console.error(err);
                 try {

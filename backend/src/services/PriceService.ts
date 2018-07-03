@@ -70,7 +70,7 @@ export default class CoinService {
         return new Promise((resolve, reject) => {
             // Make a query to the database if the list has not been updated for 5 minutes
             if (Date.now() - this.lastUpdated < 300000) {
-                const findcoin = this.selectCurrency(fiat, crypto).find((coin) => coin.id === parseInt(coinID, undefined));
+                const findcoin = this.selectCurrency(fiat, crypto, "0", this.priceList.length.toString()).find((price) => price.id === parseInt(coinID, undefined));
                 resolve(findcoin);
             } else {
                 this.updatePriceList()

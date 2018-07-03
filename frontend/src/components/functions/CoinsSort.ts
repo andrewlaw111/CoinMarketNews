@@ -38,7 +38,7 @@ const sortCoins = (setting: string, coins: ICoinPrice[]) => {
     }
 }
 
-const sortMap: IDisplayCoinOptions = {
+export const sortMap: IDisplayCoinOptions = {
     0: (coins: ICoinPrice[]) => coins.sort((coinA, coinB) => coinA.rank - coinB.rank),
     1: {
         0: {

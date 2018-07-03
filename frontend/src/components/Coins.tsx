@@ -19,7 +19,7 @@ import commonColour from "../../native-base-theme/variables/commonColor";
 
 
 import CoinList from "./CoinList";
-import sortCoins from "./functions/CoinsSort";
+import sortCoins, { cacheSorts } from "./functions/CoinsSort";
 import { getCoins } from "../redux/actions/coins";
 
 interface ICoinsListProps {
@@ -75,7 +75,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
                 </Tab>
                 <Tab
                     heading="Market"
@@ -85,7 +85,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
                 </Tab>
             </Tabs>
         )
@@ -112,7 +112,14 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         })
 
     }
-
+    private addMissingFavourites = (favourites: ICoinPrice[]) => {
+        let coins = this.state.coins.concat(favourites);
+        cacheSorts(coins);
+        coins = sortCoins(this.state.setting, coins);
+        this.setState({
+            coins
+        })
+    }
     private onRefresh = () => {
         this.setState({
             refreshing: true
@@ -123,7 +130,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             });
         });
     }
-    
+
 }
 
 const mapStateToProps = (state: IRootState) => {

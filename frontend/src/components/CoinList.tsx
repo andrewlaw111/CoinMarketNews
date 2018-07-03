@@ -30,11 +30,13 @@ interface ICoinListProps {
     setting: string,
     user: IUser,
     navigator: Navigator;
+    addMissingFavourites: (favourites: ICoinPrice[]) => void;
     addCoinFavourite: (coinID: number, token: string) => void;
     removeCoinFavourite: (coinID: number, token: string) => void;
 }
 
 export interface ICoinListState {
+    coins: ICoinPrice[];
     numberOfCoins: number
     refreshing: boolean;
     // searching: boolean;
@@ -62,12 +64,14 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         // BTC: "&#xf15a",
         // ETH: "&#xf42e",
     }
+
     public constructor(props: ICoinListProps) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             refreshing: false,
             numberOfCoins: 100,
+            coins: this.props.coins,
             // searching: false,
             // searchedCoins: [],
             cryptoCurrencyName: "BTC",
@@ -76,7 +80,11 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             fiatCurrencyName: "USD",
         };
     }
-
+    public componentWillReceiveProps(nextProps: ICoinListProps) {
+        this.setState({
+            coins: nextProps.coins,
+        })
+    }
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
         const favourite = this.props.favourites.indexOf(info.item.id) > -1;
         if (info.item.price_crypto.percent_change_1h === null || info.item.price_crypto.percent_change_24h === null || info.item.price_crypto.percent_change_7d === null || info.item.price_fiat.percent_change_1h === null || info.item.price_fiat.percent_change_24h === null || info.item.price_fiat.percent_change_7d === null) {
@@ -97,7 +105,18 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     //     }
     // }
     public render() {
-        const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
+        const favouriteCoins = this.state.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
+        console.log(this.props.coins);
+        const missingFavourites = this.props.favourites.filter((favourite) => {
+            let favouriteMissing = true
+            favouriteCoins.forEach((coin) => {
+                if (favourite === coin.id) {
+                    favouriteMissing = false
+                }
+            })
+            return favouriteMissing
+        });
+        if (missingFavourites.length > 0) { this.addMissingCoins(missingFavourites) };
         const spinner = () => {
             return (
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
@@ -106,7 +125,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             )
         }
         const noFavourites = () => {
-            if (this.props.coins.length > 0) {
+            if (this.state.coins.length > 0) {
                 return (
                     <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
                         <Text style={styles(this.props.appSettings.darkMode).NoFavourites}>
@@ -166,6 +185,28 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         );
 
     }
+    public addMissingCoins = (coins: number[]) => {
+        Promise.all(coins.map((favourite) => {
+            return axios
+                .get<ICoinPrice>(`${Config.API_SERVER}/price/${favourite}`, {
+                    headers: {
+                        token: this.props.user.token,
+                        fiat: this.state.fiatCurrencyName,
+                        crypto: this.state.cryptoCurrencyName
+                    }
+                })
+                .then((response) => {
+                    if (typeof response.data.id === "undefined") {
+                        return null
+                    } else {
+                        return response.data
+                    }
+                })
+        })
+        ).then((favourites) => {
+            this.props.addMissingFavourites(favourites);
+        })
+    }
     private endReached = () => {
 
         if (!this.waitingForFetch) {
@@ -188,7 +229,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
 
         // }
         if (event.id === 'bottomTabReselected') {
-            if (typeof this.flatListFavourite !== "undefined" && this.props.coins.length > 0 && this.props.favouriteTab) {
+            if (typeof this.flatListFavourite !== "undefined" && this.state.coins.length > 0 && this.props.favouriteTab) {
                 this.flatListFavourite.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
             }
             else if (typeof this.flatListMarket !== "undefined" && this.props.coins.length > 0) {
