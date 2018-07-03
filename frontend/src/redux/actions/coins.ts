@@ -105,7 +105,23 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                         },
                     },
             ).then((result) => {
-                const coins = result.data.filter((coin) => coin.price_crypto.market_cap !== null && coin.price_fiat.market_cap !== null && coin.rank !== null);
+                const coins = result.data.filter((coin) => {
+                    if (coin.rank === null || typeof coin.name === "undefined" || typeof coin.symbol === "undefined" || typeof coin.price_crypto === "undefined" || typeof coin.price_fiat === "undefined") {
+                        return false
+                    } else {
+                        // for (let i in coin.price_fiat) {
+                        //     if (typeof coin.price_fiat[i] === "undefined") {
+                        //         return false
+                        //     }
+                        // }
+                        // for (let i in coin.price_fiat) {
+                        //     if (typeof coin.price_crypto[i] === "undefined") {
+                        //         return false
+                        //     }
+                        // }
+                        return true
+                    }
+                });
 
                 store.dispatch(updateCoinSuccess(coins));
                 cacheSorts(coins);

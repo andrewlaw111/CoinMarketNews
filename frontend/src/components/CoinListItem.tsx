@@ -31,12 +31,6 @@ export interface ICoinListState {
 }
 class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListState> {
     public heartColour: string;
-    public cryptoCurrency: JSX.Element;
-    public fiatCurrency: JSX.Element;
-
-    public percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(this.props.item);
-    public coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(this.props.item);
-    public priceColour = (parseFloat(this.percentageChange) > 0) ? "green" : (parseFloat(this.percentageChange) === 0) ? "grey" : "red";
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
@@ -47,6 +41,19 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
         // BTC: "&#xf15a",
         // ETH: "&#xf42e",
     }
+    public cryptoCurrency = (this.props.appSettings.cryptoCurrency === "BTC") ?
+        (
+            <Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }}>&#xf15a; </Text>
+        ) : (
+            < Text style={{ fontFamily: "Font Awesome 5 Brands", color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E", }} >&#xf42e; </Text >
+        );
+
+    public fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice} >{this.currencySymbols[this.props.appSettings.fiatCurrency]} </Text>;
+
+    public percentageChange = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].percentageChange(this.props.item);
+    public coinPrice = displayCoinOptions[this.props.setting[1]][this.props.setting[2]].coinPrice(this.props.item);
+    public priceColour = (parseFloat(this.percentageChange) > 0) ? "green" : (parseFloat(this.percentageChange) === 0) ? "grey" : "red";
+
     public componentWillReceiveProps(nextProps: ICoinListProps) {
         this.cryptoCurrency = (nextProps.appSettings.cryptoCurrency === "BTC") ?
             (
