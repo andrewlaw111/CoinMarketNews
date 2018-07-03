@@ -22,14 +22,15 @@ export const coinReducer = (state: ICoinState = defaultCoinState, action: CoinAc
     case UPDATE_COIN_SUCCESS:
       const currentCoins = state.coins.slice();
       const newCoins = action.coins.filter((coin) => {
-        let duplicate = false;
+        let duplicate = true;
         currentCoins.forEach((currentCoin) => {
           if (currentCoin.id === coin.id) {
-            duplicate = true
+            duplicate = false
           }
         })
         return duplicate
       });
+      console.log("newCoins", currentCoins.concat(newCoins));
       return {
         coins: state.coins.concat(newCoins)
       };

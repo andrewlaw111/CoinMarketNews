@@ -3,7 +3,7 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Icon, Text, StyleProvider, Spinner } from "native-base";
-import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions, ScrollView } from "react-native";
+import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions, ScrollView, Slider } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -108,16 +108,16 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     // }
     public render() {
         const favouriteCoins = this.state.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
-        const missingFavourites = this.props.favourites.filter((favourite) => {
-            let favouriteMissing = true
-            favouriteCoins.forEach((coin) => {
-                if (favourite === coin.id) {
-                    favouriteMissing = false
-                }
-            })
-            return favouriteMissing
-        });
-        if (!this.state.missingAdded && this.state.coins.length > 0 && missingFavourites.length > 0) { this.addMissingCoins(missingFavourites) };
+        // const missingFavourites = this.props.favourites.filter((favourite) => {
+        //     let favouriteMissing = true
+        //     favouriteCoins.forEach((coin) => {
+        //         if (favourite === coin.id) {
+        //             favouriteMissing = false
+        //         }
+        //     })
+        //     return favouriteMissing
+        // });
+        // if (!this.state.missingAdded && this.state.coins.length > 0 && missingFavourites.length > 0) { this.addMissingCoins(missingFavourites) };
         const spinner = () => {
             return (
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
@@ -163,7 +163,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                             />
                         ) : (
                                 <FlatList
-                                    data={this.props.coins}
+                                    data={this.props.coins.slice(0, this.state.numberOfCoins)}
                                     extraData={this.props.favourites}
                                     initialNumToRender={15}
                                     renderItem={this.renderCoinList}
@@ -186,48 +186,52 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         );
 
     }
-    public addMissingCoins = (coins: number[]) => {
-        coins.forEach((favourite) => {
-            this.props.coins.forEach((coin) => {
-                if (coin.id === favourite) {
-                    return
-                }
-            })
-        })
-        Promise.all(coins.map((favourite) => {
-            return axios
-                .get<ICoinPrice>(`${Config.API_SERVER}/price/${favourite}`, {
-                    headers: {
-                        token: this.props.user.token,
-                        fiat: this.state.fiatCurrencyName,
-                        crypto: this.state.cryptoCurrencyName
-                    }
-                })
-                .then((response) => {
-                    if (typeof response.data.id === "undefined") {
-                        return null
-                    } else {
-                        return response.data
-                    }
-                })
-        })
-        ).then((favourites) => {
-            this.props.addMissingFavourites(favourites);
-            this.setState({ missingAdded: true })
-        })
-    }
+    // public addMissingCoins = (coins: number[]) => {
+    //     coins.forEach((favourite) => {
+    //         this.props.coins.forEach((coin) => {
+    //             if (coin.id === favourite) {
+    //                 return
+    //             }
+    //         })
+    //     })
+    //     Promise.all(coins.map((favourite) => {
+    //         return axios
+    //             .get<ICoinPrice>(`${Config.API_SERVER}/price/${favourite}`, {
+    //                 headers: {
+    //                     token: this.props.user.token,
+    //                     fiat: this.state.fiatCurrencyName,
+    //                     crypto: this.state.cryptoCurrencyName
+    //                 }
+    //             })
+    //             .then((response) => {
+    //                 if (typeof response.data.id === "undefined") {
+    //                     return null
+    //                 } else {
+    //                     return response.data
+    //                 }
+    //             })
+    //     })
+    //     ).then((favourites) => {
+    //         this.props.addMissingFavourites(favourites);
+    //         this.setState({ missingAdded: true })
+    //     })
+    // }
     private endReached = () => {
 
         if (!this.waitingForFetch) {
             this.waitingForFetch = true;
 
             const newNumberOfCoins = this.state.numberOfCoins + 100;
-            getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
-                this.setState({
-                    numberOfCoins: newNumberOfCoins,
-                });
-                this.waitingForFetch = false;
-            })
+            // getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
+            //     this.setState({
+            //         numberOfCoins: newNumberOfCoins,
+            //     });
+            //     this.waitingForFetch = false;
+            // })
+            this.setState({
+                numberOfCoins: newNumberOfCoins,
+            });
+            this.waitingForFetch = false;
         }
     }
     private getItemLayout = (data: any, index: number) => ({ length: 71, offset: 71 * index, index });

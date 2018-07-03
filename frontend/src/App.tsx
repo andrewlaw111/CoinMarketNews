@@ -63,7 +63,7 @@ Promise.all([
             } else {
                 setColour(false)
             }
-            getCoins(settings);
+            getCoins(settings, 0, 2000);
         }),
 ])
     .then((sources) => {
