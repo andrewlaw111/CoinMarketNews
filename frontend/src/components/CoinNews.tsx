@@ -105,8 +105,8 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
     }
     public renderNoNews() {
         return (
-            <View style={styles(this.props.darkMode).news}>
-                 <Text style={this.styles.cardText}>
+            <View style={[styles(this.props.darkMode).news,{justifyContent:"center", alignItems: "center"}]}>
+                 <Text style={styles(this.props.darkMode).cardText}>
                     No news was found, please check again later.
                 </Text>
             </View>
@@ -193,6 +193,9 @@ const styles = (darkMode: boolean) => StyleSheet.create({
         paddingLeft: 10,
         paddingTop: 10,
         paddingBottom: 10,
+    },
+    cardText: {
+        color: (darkMode) ? "#F8F8F8" : "#000",
     },
     headingText: {
         color: (darkMode) ? "#F8F8F8" : "#000",

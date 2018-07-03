@@ -149,7 +149,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                         <View style={{ bottom: -20, height: Dimensions.get("window").height, }} />
                     ) : null}
                 { // tslint:disable-next-line:jsx-no-multiline-js
-                    (Platform.OS === "ios") ? (
+                    (Platform.OS === "android") ? (
                         <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
                             <Animated.View style={style(this.props.darkMode).alertArrow} {...this.panResponder.panHandlers}>
                                 {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
