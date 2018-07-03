@@ -187,7 +187,13 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
 
     }
     public addMissingCoins = (coins: number[]) => {
-        console.error("add")
+        coins.forEach((favourite) => {
+            this.props.coins.forEach((coin) => {
+                if (coin.id === favourite) {
+                    return
+                }
+            })
+        })
         Promise.all(coins.map((favourite) => {
             return axios
                 .get<ICoinPrice>(`${Config.API_SERVER}/price/${favourite}`, {
@@ -207,7 +213,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         })
         ).then((favourites) => {
             this.props.addMissingFavourites(favourites);
-            this.setState({missingAdded: true})
+            this.setState({ missingAdded: true })
         })
     }
     private endReached = () => {
