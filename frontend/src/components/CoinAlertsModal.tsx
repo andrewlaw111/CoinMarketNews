@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TextInput, StyleSheet, KeyboardAvoidingView, PanResponder, PanResponderInstance, Animated, Dimensions, Platform } from 'react-native';
+import { Text, View, TextInput, StyleSheet, KeyboardAvoidingView, PanResponder, PanResponderInstance, Animated, Dimensions, Platform, TouchableOpacity } from 'react-native';
 import { ICoinPrice, ISettings, IAlerts, IUser } from '../models';
 import { Segment, Button, Icon } from 'native-base';
 import { IRootState } from '../redux/store';
@@ -85,7 +85,56 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
         });
 
     }
+    public renderForm = () => {
+        return (
+            <View style={style(this.props.darkMode).modalFormComponentsWrapper}>
+                <Segment style={style(this.props.darkMode).segment}>
+                    <Button
+                        style={(Platform.OS === "android") ? [style(this.props.darkMode).segmentButton, { backgroundColor: (this.state.fiatCurrency) ? "#3f78ba" : null }] : null}
+                        first={true}
+                        onPress={this.changeCurrency.bind(this, "fiat")}
+                        active={(this.state.fiatCurrency) ? true : false}
+                    >
+                        <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButtonActive : style(this.props.darkMode).textSegmentButton}>
+                            {this.props.appSettings.fiatCurrency}
+                        </Text>
+                    </Button>
+                    <Button
+                        style={(Platform.OS === "android") ? [style(this.props.darkMode).segmentButton, { backgroundColor: (this.state.fiatCurrency) ? null : "#3f78ba" }] : null}
+                        last={true}
+                        onPress={this.changeCurrency.bind(this, "crypto")}
+                        active={(this.state.fiatCurrency) ? false : true}
+                    >
+                        <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButton : style(this.props.darkMode).textSegmentButtonActive}>
+                            {this.props.appSettings.cryptoCurrency}
+                        </Text>
+                    </Button>
+                </Segment>
 
+                {/* <View style={style(this.props.darkMode).modalForm}> */}
+                <KeyboardAvoidingView style={{ flexDirection: "row" }} >
+                    <TextInput
+                        keyboardType="numeric"
+                        style={style(this.props.darkMode).textInput}
+                        onFocus={this.onFocus}
+                        onBlur={this.onBlur}
+                        onChangeText={this.changeAlertAmount}
+                        returnKeyType="done"
+                        underlineColorAndroid="transparent"
+                        value={(this.state.fiatCurrency) ? this.state.alertAmountFiat : this.state.alertAmountCrypto}
+                    />
+                </KeyboardAvoidingView>
+                <View style={style(this.props.darkMode).buttonsView}>
+                    <Button style={style(this.props.darkMode).buttons} onPress={this.handleAdd}>
+                        <Text style={style(this.props.darkMode).textButton}>Add Alert</Text>
+                    </Button>
+                    <Button style={style(this.props.darkMode).buttons} onPress={this.closeModal}>
+                        <Text style={style(this.props.darkMode).textButton}>Close</Text>
+                    </Button>
+                </View>
+            </View>
+        )
+    }
     public render() {
         let { pan } = this.state;
         // Calculate the x and y transform from the pan value
@@ -99,62 +148,34 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                     (this.state.modalOpen) ? (
                         <View style={{ bottom: -20, height: Dimensions.get("window").height, }} />
                     ) : null}
-                <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
-                    <Animated.View style={style(this.props.darkMode).alertArrow} {...this.panResponder.panHandlers}>
-                        {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
-                    </Animated.View>
-                    <Animated.View style={style(this.props.darkMode).modalHeading} {...this.panResponder.panHandlers}>
-                        <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
-                    </Animated.View>
+                { // tslint:disable-next-line:jsx-no-multiline-js
+                    (Platform.OS === "ios") ? (
+                        <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
+                            <Animated.View style={style(this.props.darkMode).alertArrow} {...this.panResponder.panHandlers}>
+                                {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
+                            </Animated.View>
+                            <Animated.View style={style(this.props.darkMode).modalHeading} {...this.panResponder.panHandlers}>
+                                <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
+                            </Animated.View>
 
-                    <View style={style(this.props.darkMode).modalFormComponentsWrapper}>
-                        <Segment style={style(this.props.darkMode).segment}>
-                            <Button
-                                style={(Platform.OS === "android") ? [style(this.props.darkMode).segmentButton, { backgroundColor: (this.state.fiatCurrency) ? "#3f78ba" : null }] : null}
-                                first={true}
-                                onPress={this.changeCurrency.bind(this, "fiat")}
-                                active={(this.state.fiatCurrency) ? true : false}
-                            >
-                                <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButtonActive : style(this.props.darkMode).textSegmentButton}>
-                                    {this.props.appSettings.fiatCurrency}
-                                </Text>
-                            </Button>
-                            <Button
-                                style={(Platform.OS === "android") ? [style(this.props.darkMode).segmentButton, { backgroundColor: (this.state.fiatCurrency) ? null : "#3f78ba" }] : null}
-                                last={true}
-                                onPress={this.changeCurrency.bind(this, "crypto")}
-                                active={(this.state.fiatCurrency) ? false : true}
-                            >
-                                <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButton : style(this.props.darkMode).textSegmentButtonActive}>
-                                    {this.props.appSettings.cryptoCurrency}
-                                </Text>
-                            </Button>
-                        </Segment>
+                            {this.renderForm}
 
-                        {/* <View style={style(this.props.darkMode).modalForm}> */}
-                        <KeyboardAvoidingView style={{ flexDirection: "row" }} >
-                            <TextInput
-                                keyboardType="numeric"
-                                style={style(this.props.darkMode).textInput}
-                                onFocus={this.pushUp}
-                                onBlur={this.pushDown}
-                                onChangeText={this.changeAlertAmount}
-                                returnKeyType="done"
-                                underlineColorAndroid="transparent"
-                                value={(this.state.fiatCurrency) ? this.state.alertAmountFiat : this.state.alertAmountCrypto}
-                            />
-                        </KeyboardAvoidingView>
-                        <View style={style(this.props.darkMode).buttonsView}>
-                            <Button style={style(this.props.darkMode).buttons} onPress={this.handleAdd}>
-                                <Text style={style(this.props.darkMode).textButton}>Add Alert</Text>
-                            </Button>
-                            <Button style={style(this.props.darkMode).buttons} onPress={this.closeModal}>
-                                <Text style={style(this.props.darkMode).textButton}>Close</Text>
-                            </Button>
-                        </View>
-                    </View>
+                        </Animated.View>
+                    ) : (
+                            <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
+                                <Animated.View style={style(this.props.darkMode).alertArrow} >
+                                    <TouchableOpacity onPress={this.handleIOSPress}>
+                                        {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
+                                    </TouchableOpacity>
+                                </Animated.View>
+                                <Animated.View style={style(this.props.darkMode).modalHeading}>
+                                    <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
+                                </Animated.View>
 
-                </Animated.View>
+                                {this.renderForm}
+
+                            </Animated.View>
+                        )}
             </View>
         );
     }
@@ -180,6 +201,13 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                     alertAmountCrypto: amount,
                 })
             }
+        }
+    }
+    private handleIOSPress = () => {
+        if (this.state.modalOpen) {
+            this.closeModal();
+        } else {
+            this.openModal();
         }
     }
     private openModal = () => {
