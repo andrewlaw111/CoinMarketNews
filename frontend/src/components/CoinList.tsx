@@ -112,14 +112,14 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                         />
                         <TouchableOpacity style={{ marginLeft: 5 }} onPress={this.onPressCancel}>{(this.state.showCancel) ? <Text>Cancel</Text> : null}</TouchableOpacity>
                     </View>
-                    <View style={{ height: (this.state.searching) ? this.windowHeight : 0 }}>
+                    <View style={{ height: (this.state.searching) ? this.windowHeight - 227 : 0 }}>
                         <FlatList
                             data={this.state.searchedCoins}
                             extraData={this.props.favourites}
                             initialNumToRender={15}
-                            renderItem={this.renderSearchList}
+                            renderItem={this.renderCoinList}
                             keyExtractor={this.keyExtractor}
-                            style={styles(this.props.appSettings.darkMode).coinList}
+                            style={[styles(this.props.appSettings.darkMode).coinList,]}
                             getItemLayout={this.getItemLayout}
                         />
                     </View>
@@ -128,13 +128,6 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         } else {
             return null
         }
-    }
-    public renderSearchList(info: { item: ICoinPrice, index: number }) {
-        return (
-            <ScrollView key={info.item.id}>
-                <Text>{info.item.name}</Text>
-            </ScrollView>
-        )
     }
     public render() {
         const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
@@ -187,12 +180,14 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     initialNumToRender={15}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
-                                    style={styles(this.props.appSettings.darkMode).coinList}
+                                    style={[styles(this.props.appSettings.darkMode).coinList,]}
                                     getItemLayout={this.getItemLayout}
                                     refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
+                                    // onEndReached={this.endReached}
+                                    // onEndReachedThreshold={0.8}
                                     onScroll={this.onScroll}
                                     ListEmptyComponent={spinner()}
-                                    ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
+                                // ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
                                 />
                             )
                     }
@@ -202,6 +197,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
 
     }
     private endReached = () => {
+        // console.log('end');
         // const newNumberOfCoins = this.state.numberOfCoins + 100;
         // getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
         //     this.setState({
@@ -215,19 +211,21 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         if (this.state.searchedCoins.length > 0) {
             return
         } else {
+            this.textInput.clear()
             this.setState({
                 showCancel: false
-            })
-            if (Platform.OS === "android") {
-                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-            }
-            let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
-            animationConfig.duration = 40;
+            }, () => {
+                if (Platform.OS === "android") {
+                    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+                }
+                let animationConfig = { ...LayoutAnimation.Presets.spring };
+                animationConfig.duration = 720;
 
-            LayoutAnimation.configureNext(animationConfig);
+                LayoutAnimation.configureNext(animationConfig);
 
-            this.setState({
-                searching: false
+                this.setState({
+                    searching: false
+                })
             })
         }
     }
@@ -266,18 +264,19 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     private onFocusHandler = () => {
         this.setState({
             showCancel: true
-        })
-        if (Platform.OS === "android") {
-            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-        }
+        }, () => {
+            if (Platform.OS === "android") {
+                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+            }
 
-        let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
-        animationConfig.duration = 40;
+            let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
+            animationConfig.duration = 400;
 
-        LayoutAnimation.configureNext(animationConfig);
+            LayoutAnimation.configureNext(animationConfig);
 
-        this.setState({
-            searching: true
+            this.setState({
+                searching: true
+            })
         })
 
     }
@@ -295,10 +294,12 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     }
 
     private onPressCancel = () => {
-        this.textInput.clear()
-        this.textInput.blur()
         this.setState({
             searchedCoins: []
+        }, () => {
+            this.textInput.clear();
+            this.textInput.blur();
+            this.onBlurHandler();
         })
     }
     private onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {

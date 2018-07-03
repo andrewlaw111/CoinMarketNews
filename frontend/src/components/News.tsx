@@ -73,7 +73,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                     </CardItem>
                     <CardItem
                         footer={true}
-                        style={[this.styles.cardItem, { justifyContent: "space-between" }]}
+                        style={[this.styles.cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
                     >
                         <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
                             <View>
@@ -97,7 +97,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                             {info.item.coins && info.item.coins.map((coin: string, key: number) => {
                                 if (key < 5) {
                                     return (
-                                        <View key={key} >
+                                        <View key={key} style={{marginBottom: 5}} >
                                             <TouchableOpacity onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}>
                                                 <FastImage
                                                     style={this.styles.newsIcons}
