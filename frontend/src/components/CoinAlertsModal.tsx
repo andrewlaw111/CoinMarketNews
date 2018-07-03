@@ -158,7 +158,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                                 <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
                             </Animated.View>
 
-                            {this.renderForm}
+                            {this.renderForm()}
 
                         </Animated.View>
                     ) : (
@@ -172,7 +172,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                                     <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
                                 </Animated.View>
 
-                                {this.renderForm}
+                                {this.renderForm()}
 
                             </Animated.View>
                         )}
@@ -269,7 +269,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                 // Animate value over time
                 this.state.pan.y, // The value to drive
                 {
-                    toValue: -520, // Animate to final value of 1
+                    toValue: -620, // Animate to final value of 1
                 }
             ).start(() => {
                 this.setState({
@@ -376,13 +376,13 @@ const style = (darkMode: boolean) => StyleSheet.create({
         color: (darkMode) ? "#F8F8F8" : "#000",
     },
     textButton: {
-        color: (darkMode) ? "#F8F8F8" : "#fff",
+        color: (Platform.OS === "ios") ? (darkMode) ? "#F8F8F8" : "#000" : (darkMode) ? "#F8F8F8" : "#fff",
     },
     textSegmentButton: {
         color: (darkMode) ? "#007aff" : "#000",
     },
     textSegmentButtonActive: {
-        color: (darkMode) ? ((Platform.OS === "android") ? "#3f78ba" : "#007aff") : "#F8F8F8",
+        color: "#F8F8F8",
     },
     textInput: {
         height: 40,
