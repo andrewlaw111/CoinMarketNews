@@ -109,6 +109,7 @@ Promise.all([
                 screenBackgroundColor: colours.screenBackgroundColor,
                 statusBarTextColorScheme: colours.statusBarTextColorScheme,
                 statusBarColor: colours.backgroundColor,
+                keepStyleAcrossPush: false,
             },
             animationType: "none"
         })
