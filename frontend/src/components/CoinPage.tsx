@@ -4,7 +4,7 @@ import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Container, Content, Spinner, Tab, Tabs, ScrollableTab, StyleProvider } from "native-base";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, AsyncStorage } from "react-native";
 
 import getTheme from "../../native-base-theme/components";
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -161,18 +161,33 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
             </StyleProvider>
         );
     }
-    private getCoin = () => {
-        axios
-            .get<ICoin>(`${Config.API_SERVER}/coin/${this.props.coinID}`)
-            .then((response) => {
+    private getCoin = async () => {
+        const coin: string = await AsyncStorage.getItem(`@CoinMarketNews:coin${this.props.coinID}`);
+        if (coin !== null) {
+            const storedCoin = JSON.parse(coin)
+            const priceWidget = "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_fd207&symbol=BTCUSD&interval=D&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=%5B%5D&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_medium=widget&utm_campaign=chart&utm_term=BTCUSD".replace(/BTC/, storedCoin.symbol);
 
-                const priceWidget = "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_fd207&symbol=BTCUSD&interval=D&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=%5B%5D&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_medium=widget&utm_campaign=chart&utm_term=BTCUSD".replace(/BTC/, response.data.symbol);
-
-                this.setState({
-                    coin: response.data,
-                    priceWidget,
-                });
+            this.setState({
+                coin: storedCoin,
+                priceWidget,
             });
+        } else {
+            axios
+                .get<ICoin>(`${Config.API_SERVER}/coin/${this.props.coinID}`)
+                .then((response) => {
+
+                    const priceWidget = "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_fd207&symbol=BTCUSD&interval=D&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=%5B%5D&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_medium=widget&utm_campaign=chart&utm_term=BTCUSD".replace(/BTC/, response.data.symbol);
+
+                    AsyncStorage.setItem(`@CoinMarketNews:coin${this.props.coinID}`, JSON.stringify(response.data));
+
+                    this.setState({
+                        coin: response.data,
+                        priceWidget,
+                    });
+                }).catch(() => {
+                    return
+                });
+        }
     }
 }
 
