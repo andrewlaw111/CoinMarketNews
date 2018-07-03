@@ -377,7 +377,7 @@ const style = (darkMode: boolean) => StyleSheet.create({
         color: (darkMode) ? "#F8F8F8" : "#000",
     },
     textButton: {
-        color: (Platform.OS === "ios") ? (darkMode) ? "#F8F8F8" : "#000" : (darkMode) ? "#F8F8F8" : "#fff",
+        color: (darkMode) ? "#F8F8F8" : "#fff",
     },
     textSegmentButton: {
         color: (darkMode) ? "#007aff" : "#000",
