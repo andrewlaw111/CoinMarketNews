@@ -70,18 +70,18 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                     </CardItem>
                     <CardItem
                         footer={true}
-                        style={[this.styles.cardItem, { justifyContent: "space-between" }]}
+                        style={[this.styles.cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
                     >
-                        <View>
+                        <View style={{flex: 0.3, }}>
                             <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                         </View>
-                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                        <View style={{ flex: 0.7, flexDirection: "row", justifyContent: "flex-end", }}>
+                            <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", }}>
 
                                 {/* tslint:disable-next-line:jsx-no-multiline-js */}
                                 {info.item.coins && info.item.coins.map((coin: string, key: number) => {
                                     return (
-                                        <View key={key} >
+                                        <View key={key} style={{marginBottom: 5}} >
                                             <TouchableOpacity onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}>
                                                 <FastImage
                                                     style={this.styles.newsIcons}
