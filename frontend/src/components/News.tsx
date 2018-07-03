@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Moment from 'react-moment';
 
 import { Body, Card, CardItem, StyleProvider, Text, Content, Spinner, Icon } from "native-base";
-import { FlatList, Linking, StyleSheet, TouchableOpacity, View, RefreshControl, Platform } from "react-native";
+import { FlatList, Linking, StyleSheet, TouchableOpacity, View, RefreshControl, Platform, ScrollView } from "react-native";
 
 import getTheme from "../../native-base-theme/components";
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -33,12 +33,15 @@ export interface INewsListState {
 class PureNewsList extends React.Component<INewsListProps, INewsListState> {
     public styles: typeof styles;
 
+    public scroller: ScrollView;
+
     public static navigatorStyle = {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
     };
     public constructor(props: INewsListProps) {
         super(props);
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             refreshing: false,
         };
@@ -125,16 +128,18 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
         }
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <View style={this.styles.news}>
-                    <FlatList
-                        data={this.props.news}
-                        renderItem={this.renderNewsList}
-                        keyExtractor={this.keyExtractor}
-                        style={this.styles.newsList}
-                        refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
-                        ListEmptyComponent={listEmptyComponent()}
-                    />
-                </View>
+                <ScrollView ref={(scroller) => { this.scroller = scroller }}>
+                    <View style={this.styles.news}>
+                        <FlatList
+                            data={this.props.news}
+                            renderItem={this.renderNewsList}
+                            keyExtractor={this.keyExtractor}
+                            style={this.styles.newsList}
+                            refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                            ListEmptyComponent={listEmptyComponent()}
+                        />
+                    </View>
+                </ScrollView>
             </StyleProvider>
         );
 
@@ -193,6 +198,15 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                 refreshing: false
             });
         });
+    }
+
+    public onNavigatorEvent(event: any) {
+        if (event.id === 'bottomTabSelected') {
+
+        }
+        if (event.id === 'bottomTabReselected') {
+            this.scroller.scrollTo({ x: 0, y: 0, animated: true });
+        }
     }
 }
 
