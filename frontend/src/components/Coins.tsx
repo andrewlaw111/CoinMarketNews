@@ -41,12 +41,8 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         statusBarBlur: true,
     };
 
-    public scroller_favourite: ScrollView | undefined;
-    public scroller_market: ScrollView | undefined;
-
     public constructor(props: ICoinsListProps) {
         super(props);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             coins: this.props.coins.slice(),
             setting: "000",
@@ -127,19 +123,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             });
         });
     }
-    public onNavigatorEvent(event: any) {
-        if (event.id === 'bottomTabSelected') {
-
-        }
-        if (event.id === 'bottomTabReselected') {
-            if (this.scroller_favourite !== undefined) {
-                this.scroller_favourite.scrollTo({ x: 0, y: 0, animated: true });
-            }
-            if (this.scroller_market !== undefined) {
-                this.scroller_market.scrollTo({ x: 0, y: 0, animated: true });
-            }
-        }
-    }
+    
 }
 
 const mapStateToProps = (state: IRootState) => {

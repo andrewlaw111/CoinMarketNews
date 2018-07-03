@@ -37,22 +37,21 @@ interface ICoinListProps {
 export interface ICoinListState {
     numberOfCoins: number
     refreshing: boolean;
-    searching: boolean;
-    searchedCoins: ICoinPrice[];
+    // searching: boolean;
+    // searchedCoins: ICoinPrice[];
     cryptoCurrencyName: string;
     fiatCurrencyName: string;
-    showCancel: boolean;
-    showSearch: boolean;
+    // showCancel: boolean;
+    // showSearch: boolean;
 }
 class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
-    public cryptoCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>&#xf15a; </Text>;
-    public fiatCurrency = <Text style={styles(this.props.appSettings.darkMode).coinPrice}>$ </Text>;
     public windowHeight = Dimensions.get("window").height;
     public textInput: TextInput;
     public searchInput: string = "";
-    public offset = 0;
+    // public offset = 0;
     public flatListFavourite: FlatList<ICoinPrice>;
     public flatListMarket: FlatList<ICoinPrice>;
+    public waitingForFetch = false;
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
@@ -69,11 +68,11 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         this.state = {
             refreshing: false,
             numberOfCoins: 100,
-            searching: false,
-            searchedCoins: [],
+            // searching: false,
+            // searchedCoins: [],
             cryptoCurrencyName: "BTC",
-            showCancel: false,
-            showSearch: true,
+            // showCancel: false,
+            // showSearch: true,
             fiatCurrencyName: "USD",
         };
     }
@@ -91,33 +90,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     // public renderSearchBar() {
     //     if (this.state.showSearch) {
     //         return (
-    //             <View>
-    //                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: (this.props.appSettings.darkMode) ? "#343a44" : "#F8F8F8", height: 50, }}>
-    //                     <TextInput
-    //                         style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, }}
-    //                         clearButtonMode={"always"}
-    //                         onChangeText={this.onChangeTextHandler}
-    //                         onFocus={this.onFocusHandler}
-    //                         onBlur={this.onBlurHandler}
-    //                         underlineColorAndroid="transparent"
-    //                         placeholder="Search"
-    //                         ref={input => { this.textInput = input }}
-    //                     // value={this.state.text}
-    //                     />
-    //                     <TouchableOpacity style={{ marginLeft: 5 }} onPress={this.onPressCancel}>{(this.state.showCancel) ? <Text>Cancel</Text> : null}</TouchableOpacity>
-    //                 </View>
-    //                 <View style={{ height: (this.state.searching) ? this.windowHeight - 227 : 0 }}>
-    //                     <FlatList
-    //                         data={this.state.searchedCoins}
-    //                         extraData={this.props.favourites}
-    //                         initialNumToRender={15}
-    //                         renderItem={this.renderCoinList}
-    //                         keyExtractor={this.keyExtractor}
-    //                         style={[styles(this.props.appSettings.darkMode).coinList,]}
-    //                         getItemLayout={this.getItemLayout}
-    //                     />
-    //                 </View>
-    //             </View >
+    //           
     //         )
     //     } else {
     //         return null
@@ -180,11 +153,11 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                     onEndReached={this.endReached}
                                     onEndReachedThreshold={0.5}
-                                    onScroll={this.onScroll}
-                                    scrollEnabled={!this.state.searching}
+                                    // onScroll={this.onScroll}
+                                    // scrollEnabled={!this.state.searching}
                                     ListEmptyComponent={spinner()}
                                     ref={(flatList) => { this.flatListMarket = flatList }}
-                                // ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
+                                    ListFooterComponent={spinner()}
                                 />
                             )
                     }
@@ -194,89 +167,22 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
 
     }
     private endReached = () => {
-        console.log('end');
-        // const newNumberOfCoins = this.state.numberOfCoins + 100;
-        // getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
-        //     this.setState({
-        //         numberOfCoins: newNumberOfCoins,
-        //     })
-        // })
-    }
-    private getItemLayout = (data: any, index: number) => ({ length: 70, offset: 70 * index, index });
-    private keyExtractor = (item: ICoinPrice) => item.id.toString();
-    private onBlurHandler = () => {
-        if (this.state.searchedCoins.length > 0) {
-            return
-        } else {
-            this.textInput.clear()
-            this.setState({
-                showCancel: false
-            }, () => {
-                if (Platform.OS === "android") {
-                    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-                }
-                let animationConfig = { ...LayoutAnimation.Presets.spring };
-                animationConfig.duration = 720;
 
-                LayoutAnimation.configureNext(animationConfig);
+        if (!this.waitingForFetch) {
+            this.waitingForFetch = true;
 
+            const newNumberOfCoins = this.state.numberOfCoins + 100;
+            getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
                 this.setState({
-                    searching: false
-                })
+                    numberOfCoins: newNumberOfCoins,
+                });
+                this.waitingForFetch = false;
             })
         }
     }
-    private onChangeTextHandler = (searchInput: string) => {
-        this.searchInput = searchInput;
-        if (searchInput.length > 1) {
-            if (searchInput.length > 2 && this.state.searchedCoins.length === 0) {
-                return
-            } else {
-                axios
-                    .get<ICoinPrice[]>(
-                        `${Config.API_SERVER}/price/search`,
-                        {
-                            headers: {
-                                token: this.props.user.token,
-                                searchInput: searchInput,
-                                fiat: this.state.fiatCurrencyName,
-                                crypto: this.state.cryptoCurrencyName,
-                            }
-                        }
-                    )
-                    .then((response) => {
-                        if (this.searchInput.length > 1) {
-                            this.setState({
-                                searchedCoins: response.data
-                            });
-                        }
-                    });
-            }
-        } else {
-            this.setState({
-                searchedCoins: []
-            });
-        }
-    }
-    private onFocusHandler = () => {
-        this.setState({
-            showCancel: true
-        }, () => {
-            if (Platform.OS === "android") {
-                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-            }
+    private getItemLayout = (data: any, index: number) => ({ length: 71, offset: 71 * index, index });
+    private keyExtractor = (item: ICoinPrice) => item.id.toString();
 
-            let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
-            animationConfig.duration = 400;
-
-            LayoutAnimation.configureNext(animationConfig);
-
-            this.setState({
-                searching: true
-            })
-        })
-
-    }
     private onNavigatorEvent = (event: any) => {
         // if (event.id === 'bottomTabSelected') {
 
@@ -303,33 +209,6 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         });
     }
 
-    private onPressCancel = () => {
-        this.setState({
-            searchedCoins: []
-        }, () => {
-            this.textInput.clear();
-            this.textInput.blur();
-            this.onBlurHandler();
-        })
-    }
-    private onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        if (Platform.OS === "android") {
-            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-        }
-
-        if (this.offset - event.nativeEvent.contentOffset.y > 5) {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            this.setState({
-                showSearch: true
-            })
-        } else if (event.nativeEvent.contentOffset.y - this.offset > 30) {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            this.setState({
-                showSearch: false
-            })
-        }
-        this.offset = event.nativeEvent.contentOffset.y
-    }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
