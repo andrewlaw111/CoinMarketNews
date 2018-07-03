@@ -64,16 +64,17 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
         if (event.type == 'NavBarButtonPress') {
             if (event.id == 'like') {
                 Promise.all([
+                    IonIcons.getImageSource("ios-star", 24, "orange"),
                     IonIcons.getImageSource("ios-star", 24, "grey"),
                 ]).then((sources) => {
                     this.props.navigator.setButtons({
                         rightButtons: [{
-                            buttonColor: (this.state.favourite) ? "gold" : "grey",
                             buttonFontSize: 18,
+                            disableIconTint: true,
                             buttonFontWeight: "600",
                             id: "like",
                             showAsAction: "ifRoom",
-                            icon: sources[0],
+                            icon: (this.state.favourite) ? sources[0] : sources[1],
                         }],
                     })
                 })

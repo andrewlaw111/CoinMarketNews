@@ -163,7 +163,6 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
                         icon: (Platform.OS === "ios") ? sources[0] : null,
                     }],
                     rightButtons: [{
-                        // buttonColor: (this.props.favourite) ? "orange" : "grey",
                         buttonFontSize: 18,
                         disableIconTint: true,
                         buttonFontWeight: "600",
@@ -174,8 +173,6 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
 
                 },
                 navigatorStyle: {
-                    // navBarButtonColor: (this.props.favourite) ? "orange" : "grey",
-                    // navBarRightButtonColor: (this.props.favourite) ? "orange" : "grey", // navBarRightButtonColor not working ?!
                 },
                 passProps: { appSettings: this.props.appSettings, coinID: item.id, coinPrice: item, favourite: this.props.favourite },
                 screen: "CoinMarketNews.CoinsPage",
