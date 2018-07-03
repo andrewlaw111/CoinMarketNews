@@ -223,7 +223,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             }
             let animationConfig = { ...LayoutAnimation.Presets.easeInEaseOut };
             animationConfig.duration = 40;
-    
+
             LayoutAnimation.configureNext(animationConfig);
 
             this.setState({
@@ -302,27 +302,22 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         })
     }
     private onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        if (this.offset - event.nativeEvent.contentOffset.y > 6) {
-            if (Platform.OS === "android") {
-                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-            }
-
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            this.offset = event.nativeEvent.contentOffset.y,
-                this.setState({
-                    showSearch: true
-                })
-        } else if (event.nativeEvent.contentOffset.y - this.offset > 6) {
-            if (Platform.OS === "android") {
-                UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-            }
-
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            this.offset = event.nativeEvent.contentOffset.y,
-                this.setState({
-                    showSearch: false
-                })
+        if (Platform.OS === "android") {
+            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
         }
+
+        if (this.offset - event.nativeEvent.contentOffset.y > 5) {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            this.setState({
+                showSearch: true
+            })
+        } else if (event.nativeEvent.contentOffset.y - this.offset > 30) {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            this.setState({
+                showSearch: false
+            })
+        }
+        this.offset = event.nativeEvent.contentOffset.y
     }
 }
 
