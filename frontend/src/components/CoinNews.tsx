@@ -60,7 +60,7 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                             {info.item.title}
                         </Text>
                     </CardItem>
-                    <CardItem bordered={true}  style={styles(this.props.darkMode).cardItem}>
+                    <CardItem bordered={true} style={styles(this.props.darkMode).cardItem}>
                         <Body>
                             <Text style={styles(this.props.darkMode).newsText} numberOfLines={3}>
                                 {info.item.content}
@@ -71,7 +71,7 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                         footer={true}
                         style={[styles(this.props.darkMode).cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
                     >
-                        <View style={{ flexDirection: "row", justifyContent: "flex-start", marginTop:5 }}>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-start", marginTop: 5 }}>
                             <View>
                                 {/* tslint:disable-next-line:jsx-no-multiline-js */}
                                 {(info.item.counter > 1) ?
@@ -85,7 +85,7 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                                     )}
                             </View>
                             <View>
-                                <Moment style={[styles(this.props.darkMode).newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                                <Moment style={[styles(this.props.darkMode).newsText, { color: (this.props.darkMode) ? "#fff" : "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                             </View>
                         </View>
                     </CardItem>
