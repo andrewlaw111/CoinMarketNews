@@ -53,7 +53,6 @@ export const removeCoinFavourite = (coinID: number, token: string) => {
     //         },
 
     // )
-    console.log("remove")
     return {
         coinID,
         type: REMOVE_COIN_FAVOURITE,
@@ -70,7 +69,6 @@ export const loadFavourites = async () => {
 };
 
 export const addCoinFavourite = (coinID: number, token: string) => {
-    console.log("add")
     // if (token) {
     //     axios
     //         .post(
