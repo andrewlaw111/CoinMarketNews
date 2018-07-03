@@ -91,7 +91,7 @@ export default class CoinService {
                     if (!(price.coinmarketcap_id in this.prices)) {
                         this.prices[price.coinmarketcap_id] = [];
                     }
-                    // TODO: adapt decimals for each currency ( 3 = BTC ) => 8 decimals
+                    // TODO?: adapt decimals for each currency ( 3 = BTC ) => 8 decimals
                     price.price = (price.currency_id == 6) ? parseFloat(price.price).toFixed(8) : parseFloat(price.price);
                     price.volume_24h = parseFloat(price.volume_24h);
                     price.market_cap = parseFloat(price.market_cap);
@@ -103,6 +103,7 @@ export default class CoinService {
                 // console.log(price_array);
                 return knex.select('id', 'coinmarketcap_id', 'name', 'symbol', 'rank')
                     .from('coin')
+                    .whereNotNull('rank')
                     .orderBy("rank", "asc")
                     .then((coins: ICoin[]) => {
                         return this.priceList = coins;
@@ -119,11 +120,16 @@ export default class CoinService {
         map_symbol_id["HKD"] = 5;
         map_symbol_id["BTC"] = 6;
         map_symbol_id["ETH"] = 7;
-        const nb = parseInt(start) + parseInt(limit);
-        const priceList = this.priceList.slice(parseInt(start), nb);
+        const startInt = parseInt(start);
+        const nb = startInt + parseInt(limit);
+        const priceList = this.priceList.slice(startInt, nb);
         for (const coin of priceList) {
-            coin.price_fiat = this.prices[coin.coinmarketcap_id][map_symbol_id[fiat]];
-            coin.price_crypto = this.prices[coin.coinmarketcap_id][map_symbol_id[crypto]];
+            if (coin.coinmarketcap_id in this.prices && map_symbol_id[fiat] in this.prices[coin.coinmarketcap_id]) {
+                coin.price_fiat = this.prices[coin.coinmarketcap_id][map_symbol_id[fiat]];
+            }
+            if (coin.coinmarketcap_id in this.prices && map_symbol_id[crypto] in this.prices[coin.coinmarketcap_id]) {
+                coin.price_crypto = this.prices[coin.coinmarketcap_id][map_symbol_id[crypto]];
+            }
         };
         return priceList;
     }

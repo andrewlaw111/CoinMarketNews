@@ -115,7 +115,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                                 onPress={this.changeCurrency.bind(this, "fiat")}
                                 active={(this.state.fiatCurrency) ? true : false}
                             >
-                                <Text style={(Platform.OS === "android") ? (this.state.fiatCurrency) ? style(this.props.darkMode).text : style(this.props.darkMode).activeButtonTextAndroid : null /*{ color: (this.props.darkMode) ? "#F8F8F8" : "#000" }*/}>
+                                <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButtonActive : style(this.props.darkMode).textSegmentButton}>
                                     {this.props.appSettings.fiatCurrency}
                                 </Text>
                             </Button>
@@ -125,7 +125,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                                 onPress={this.changeCurrency.bind(this, "crypto")}
                                 active={(this.state.fiatCurrency) ? false : true}
                             >
-                                <Text style={(Platform.OS === "android") ? (this.state.fiatCurrency) ? style(this.props.darkMode).text : style(this.props.darkMode).activeButtonTextAndroid : null /*{ color: (this.props.darkMode) ? "#F8F8F8" : "#000" }*/}>
+                                <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButton : style(this.props.darkMode).textSegmentButtonActive}>
                                     {this.props.appSettings.cryptoCurrency}
                                 </Text>
                             </Button>
@@ -144,10 +144,10 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                         </KeyboardAvoidingView>
                         <View style={style(this.props.darkMode).buttonsView}>
                             <Button style={style(this.props.darkMode).buttons} onPress={this.handleAdd}>
-                                <Text style={style(this.props.darkMode).text}>Add Alert</Text>
+                                <Text style={style(this.props.darkMode).textButton}>Add Alert</Text>
                             </Button>
-                            <Button onPress={this.closeModal} style={style(this.props.darkMode).buttons}>
-                                <Text style={style(this.props.darkMode).text}>Close</Text>
+                            <Button style={style(this.props.darkMode).buttons} onPress={this.closeModal}>
+                                <Text style={style(this.props.darkMode).textButton}>Close</Text>
                             </Button>
                         </View>
                     </View>
@@ -257,9 +257,9 @@ const style = (darkMode: boolean) => StyleSheet.create({
         backgroundColor: "transparent",
     },
     buttons: {
-        backgroundColor: "#2874F0",
+        backgroundColor: ((Platform.OS === "android") ? "#3f78ba" : "#007aff"),
         borderColor: (darkMode) ? "#F8F8F8" : "#454951",
-        borderWidth: 2,
+        // borderWidth: 2,
         borderRadius: 5,
         marginTop: 10,
         marginBottom: 10,
@@ -313,12 +313,22 @@ const style = (darkMode: boolean) => StyleSheet.create({
     text: {
         color: (darkMode) ? "#F8F8F8" : "#000",
     },
+    textButton: {
+        color: (darkMode) ? "#F8F8F8" : "#fff",
+    },
+    textSegmentButton: {
+        color: (darkMode) ? "#007aff" : "#000",
+    },
+    textSegmentButtonActive: {
+        color: (darkMode) ? ((Platform.OS === "android") ? "#3f78ba" : "#007aff") : "#F8F8F8",
+    },
     textInput: {
         height: 40,
         backgroundColor: "#F8F8F8",
         borderColor: 'gray',
         borderRadius: 5,
         borderWidth: 1,
-        flex: 1
+        flex: 1,
+        paddingLeft: 4,
     }
 })

@@ -75,16 +75,29 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                         footer={true}
                         style={[this.styles.cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
                     >
-                        <View style={{flex: 0.3, }}>
-                            <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
-                        </View>
-                        <View style={{ flex: 0.7, flexDirection: "row", justifyContent: "flex-end", }}>
-                            <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", }}>
-
+                        <View style={{ flexDirection: "row", justifyContent: "flex-start", marginTop:5 }}>
+                            <View>
                                 {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                                {info.item.coins && info.item.coins.map((coin: string, key: number) => {
+                                {(info.item.counter > 1) ?
+                                    (
+                                        <View style={{ flexDirection: "row", marginRight: 3, alignItems: "center" }}>
+                                            <Text style={this.styles.newsCounter}>{info.item.counter} </Text>
+                                            <Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" />
+                                        </View>
+                                    ) : (
+                                        null
+                                    )}
+                            </View>
+                            <View>
+                                <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                            {/* tslint:disable-next-line:jsx-no-multiline-js */}
+                            {info.item.coins && info.item.coins.map((coin: string, key: number) => {
+                                if (key < 6) {
                                     return (
-                                        <View key={key} style={{marginBottom: 5}} >
+                                        <View key={key}>
                                             <TouchableOpacity onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}>
                                                 <FastImage
                                                     style={this.styles.newsIcons}
@@ -94,20 +107,8 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                                             </TouchableOpacity>
                                         </View>
                                     )
-                                })}
-                            </View>
-                            <View>
-                                {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                                {(info.item.counter > 1) ?
-                                    (
-                                        <View style={{ flexDirection: "row", marginRight: 3 }}>
-                                            <Text style={this.styles.newsCounter}>{info.item.counter} </Text>
-                                            <Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" />
-                                        </View>
-                                    ) : (
-                                        null
-                                    )}
-                            </View>
+                                }
+                            })}
                         </View>
                     </CardItem>
                 </TouchableOpacity>
@@ -259,7 +260,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     newsCounterIcon: {
         width: 13,
         color: "#ffa236",
-        fontSize: 17,
+        fontSize: 15,
     },
     newsSourceIcon: {
         width: 30,
@@ -269,7 +270,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     newsIcons: {
         width: 25,
         height: 25,
-        marginRight: 13,
+        marginRight: 6,
         backgroundColor: "grey",
         borderRadius: 50,
     }

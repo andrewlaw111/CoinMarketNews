@@ -60,7 +60,7 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                             {info.item.title}
                         </Text>
                     </CardItem>
-                    <CardItem style={styles(this.props.darkMode).cardItem}>
+                    <CardItem bordered={true}  style={styles(this.props.darkMode).cardItem}>
                         <Body>
                             <Text style={styles(this.props.darkMode).newsText} numberOfLines={3}>
                                 {info.item.content}
@@ -69,40 +69,23 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                     </CardItem>
                     <CardItem
                         footer={true}
-                        style={[styles(this.props.darkMode).cardItem, { justifyContent: "space-between" }]}
+                        style={[styles(this.props.darkMode).cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
                     >
-                        <View>
-                            <Moment style={[styles(this.props.darkMode).newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
-                        </View>
-                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-
-                                {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                                {info.item.coins && info.item.coins.map((coin: string, key: number) => {
-                                    return (
-                                        <View key={key} >
-                                            <TouchableOpacity onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}>
-                                                <FastImage
-                                                    style={styles(this.props.darkMode).newsIcons}
-                                                    source={{ uri: `${Config.API_SERVER}/icon/${coin.toLocaleLowerCase()}.png` }}
-                                                    resizeMode={FastImage.resizeMode.contain}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                    )
-                                })}
-                            </View>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-start", marginTop:5 }}>
                             <View>
                                 {/* tslint:disable-next-line:jsx-no-multiline-js */}
                                 {(info.item.counter > 1) ?
                                     (
-                                        <View style={{ flexDirection: "row", marginRight: 3 }}>
+                                        <View style={{ flexDirection: "row", marginRight: 3, alignItems: "center" }}>
                                             <Text style={styles(this.props.darkMode).newsCounter}>{info.item.counter} </Text>
                                             <Icon style={styles(this.props.darkMode).newsCounterIcon} type="Ionicons" name="ios-flame" />
                                         </View>
                                     ) : (
                                         null
                                     )}
+                            </View>
+                            <View>
+                                <Moment style={[styles(this.props.darkMode).newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                             </View>
                         </View>
                     </CardItem>
@@ -235,17 +218,17 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     newsCounterIcon: {
         width: 13,
         color: "#ffa236",
-        fontSize: 17,
+        fontSize: 15,
     },
     newsSourceIcon: {
         width: 30,
         height: 30,
-        marginRight: 6,
+        marginRight: 8,
     },
     newsIcons: {
-        width: 20,
-        height: 20,
-        marginLeft: 8,
+        width: 25,
+        height: 25,
+        marginRight: 6,
         backgroundColor: "grey",
         borderRadius: 50,
     }

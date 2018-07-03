@@ -90,7 +90,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                 <View>
                     <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: (this.props.appSettings.darkMode) ? "#343a44" : "#F8F8F8", height: 50, }}>
                         <TextInput
-                            style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, }}
+                            style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, paddingLeft: 4}}
                             clearButtonMode={"always"}
                             onChangeText={this.onChangeTextHandler}
                             onFocus={this.onFocusHandler}
