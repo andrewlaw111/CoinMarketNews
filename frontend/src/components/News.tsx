@@ -89,7 +89,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                                     )}
                             </View>
                             <View>
-                                <Moment style={[this.styles.newsText, { color: "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                                <Moment style={[this.styles.newsText, { color: (this.props.appSettings.darkMode) ? "#fff" : "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                             </View>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
