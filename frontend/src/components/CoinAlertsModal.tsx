@@ -6,6 +6,7 @@ import { IRootState } from '../redux/store';
 import { addAlerts, removeAlerts, editAlert } from '../redux/actions/alerts';
 import { connect } from 'react-redux';
 import { lightItemsBorder, darkItemsBorder } from './styles/colours';
+import { isIphoneX } from "react-native-iphone-x-helper";
 
 interface ICoinAlertsModalProps {
     appSettings: ISettings;
@@ -269,7 +270,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                 // Animate value over time
                 this.state.pan.y, // The value to drive
                 {
-                    toValue: -620, // Animate to final value of 1
+                    toValue: (isIphoneX()) ? -Dimensions.get("window").height + 245 : -Dimensions.get("window").height + 220, // Animate to final value of 1
                 }
             ).start(() => {
                 this.setState({
