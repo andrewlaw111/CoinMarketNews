@@ -41,8 +41,8 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         statusBarBlur: true,
     };
 
-    public scroller_favourite: ScrollView;
-    public scroller_market: ScrollView;
+    public scroller_favourite: ScrollView | undefined;
+    public scroller_market: ScrollView | undefined;
 
     public constructor(props: ICoinsListProps) {
         super(props);
@@ -136,8 +136,12 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
 
         }
         if (event.id === 'bottomTabReselected') {
-            this.scroller_favourite.scrollTo({ x: 0, y: 0, animated: true });
-            this.scroller_market.scrollTo({ x: 0, y: 0, animated: true });
+            if(this.scroller_favourite !== undefined) {
+                this.scroller_favourite.scrollTo({ x: 0, y: 0, animated: true });
+            }
+            if(this.scroller_market !== undefined) {
+                this.scroller_market.scrollTo({ x: 0, y: 0, animated: true });
+            }
         }
     }
 }
