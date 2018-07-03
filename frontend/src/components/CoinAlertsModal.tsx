@@ -187,10 +187,11 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             {
                 toValue: -320, // Animate to final value of 1
             }
-        ).start(); // Start the animation
-        this.setState({
-            modalOpen: true,
-        })
+        ).start(() => {
+            this.setState({
+                modalOpen: true,
+            })
+        }); // Start the animation
     }
     public closeModal = () => {
         Animated.timing(
@@ -199,12 +200,13 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             {
                 toValue: 0, // Animate to final value of 1
             }
-        ).start(); // Start the animation
-        this.setState({
-            alertAmountCrypto: this.props.coinPrice.price_crypto.price.toString(),
-            alertAmountFiat: this.props.coinPrice.price_fiat.price.toString(),
-            modalOpen: false,
-        })
+        ).start(() => {
+            this.setState({
+                alertAmountCrypto: this.props.coinPrice.price_crypto.price.toString(),
+                alertAmountFiat: this.props.coinPrice.price_fiat.price.toString(),
+                modalOpen: false,
+            })
+        }); // Start the animation
     }
     public handleAdd = () => {
         let alert: IAlerts;
