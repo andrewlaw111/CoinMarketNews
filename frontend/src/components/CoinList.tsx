@@ -51,6 +51,8 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     public textInput: TextInput;
     public searchInput: string = "";
     public offset = 0;
+    public flatListFavourite: FlatList<ICoinPrice>;
+    public flatListMarket: FlatList<ICoinPrice>;
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
@@ -63,6 +65,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     }
     public constructor(props: ICoinListProps) {
         super(props);
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             refreshing: false,
             numberOfCoins: 100,
@@ -74,7 +77,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             fiatCurrencyName: "USD",
         };
     }
-    
+
     public renderCoinList = (info: { item: ICoinPrice, index: number }) => {
         const favourite = this.props.favourites.indexOf(info.item.id) > -1;
         if (info.item.price_crypto.percent_change_1h === null || info.item.price_crypto.percent_change_24h === null || info.item.price_crypto.percent_change_7d === null || info.item.price_fiat.percent_change_1h === null || info.item.price_fiat.percent_change_24h === null || info.item.price_fiat.percent_change_7d === null) {
@@ -85,41 +88,41 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             <CoinListItem key={info.item.id} item={info.item} favourite={favourite} navigator={this.props.navigator} setting={this.props.setting} />
         )
     }
-    public renderSearchBar() {
-        if (this.state.showSearch) {
-            return (
-                <View>
-                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: (this.props.appSettings.darkMode) ? "#343a44" : "#F8F8F8", height: 50, }}>
-                        <TextInput
-                            style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, }}
-                            clearButtonMode={"always"}
-                            onChangeText={this.onChangeTextHandler}
-                            onFocus={this.onFocusHandler}
-                            onBlur={this.onBlurHandler}
-                            underlineColorAndroid="transparent"
-                            placeholder="Search"
-                            ref={input => { this.textInput = input }}
-                        // value={this.state.text}
-                        />
-                        <TouchableOpacity style={{ marginLeft: 5 }} onPress={this.onPressCancel}>{(this.state.showCancel) ? <Text>Cancel</Text> : null}</TouchableOpacity>
-                    </View>
-                    <View style={{ height: (this.state.searching) ? this.windowHeight - 227 : 0 }}>
-                        <FlatList
-                            data={this.state.searchedCoins}
-                            extraData={this.props.favourites}
-                            initialNumToRender={15}
-                            renderItem={this.renderCoinList}
-                            keyExtractor={this.keyExtractor}
-                            style={[styles(this.props.appSettings.darkMode).coinList,]}
-                            getItemLayout={this.getItemLayout}
-                        />
-                    </View>
-                </View >
-            )
-        } else {
-            return null
-        }
-    }
+    // public renderSearchBar() {
+    //     if (this.state.showSearch) {
+    //         return (
+    //             <View>
+    //                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: (this.props.appSettings.darkMode) ? "#343a44" : "#F8F8F8", height: 50, }}>
+    //                     <TextInput
+    //                         style={{ flex: 0.95, backgroundColor: "#FFFFFF", borderColor: 'gray', borderWidth: 1, borderRadius: 7, height: 40, }}
+    //                         clearButtonMode={"always"}
+    //                         onChangeText={this.onChangeTextHandler}
+    //                         onFocus={this.onFocusHandler}
+    //                         onBlur={this.onBlurHandler}
+    //                         underlineColorAndroid="transparent"
+    //                         placeholder="Search"
+    //                         ref={input => { this.textInput = input }}
+    //                     // value={this.state.text}
+    //                     />
+    //                     <TouchableOpacity style={{ marginLeft: 5 }} onPress={this.onPressCancel}>{(this.state.showCancel) ? <Text>Cancel</Text> : null}</TouchableOpacity>
+    //                 </View>
+    //                 <View style={{ height: (this.state.searching) ? this.windowHeight - 227 : 0 }}>
+    //                     <FlatList
+    //                         data={this.state.searchedCoins}
+    //                         extraData={this.props.favourites}
+    //                         initialNumToRender={15}
+    //                         renderItem={this.renderCoinList}
+    //                         keyExtractor={this.keyExtractor}
+    //                         style={[styles(this.props.appSettings.darkMode).coinList,]}
+    //                         getItemLayout={this.getItemLayout}
+    //                     />
+    //                 </View>
+    //             </View >
+    //         )
+    //     } else {
+    //         return null
+    //     }
+    // }
     public render() {
         const favouriteCoins = this.props.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
         const spinner = () => {
@@ -163,6 +166,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                 getItemLayout={this.getItemLayout}
                                 refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                 ListEmptyComponent={noFavourites()}
+                                ref={(flatList) => { this.flatListFavourite = flatList }}
                             />
                         ) : (
                                 <FlatList
@@ -174,11 +178,12 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     style={[styles(this.props.appSettings.darkMode).coinList,]}
                                     getItemLayout={this.getItemLayout}
                                     refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
-                                    // onEndReached={this.endReached}
-                                    // onEndReachedThreshold={0.8}
+                                    onEndReached={this.endReached}
+                                    onEndReachedThreshold={0.5}
                                     onScroll={this.onScroll}
                                     scrollEnabled={!this.state.searching}
                                     ListEmptyComponent={spinner()}
+                                    ref={(flatList) => { this.flatListMarket = flatList }}
                                 // ListFooterComponent={<TouchableOpacity style={styles(this.props.appSettings.darkMode).listItem} ><Text >More Coins</Text></TouchableOpacity>}
                                 />
                             )
@@ -189,7 +194,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
 
     }
     private endReached = () => {
-        // console.log('end');
+        console.log('end');
         // const newNumberOfCoins = this.state.numberOfCoins + 100;
         // getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
         //     this.setState({
@@ -271,6 +276,19 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             })
         })
 
+    }
+    private onNavigatorEvent = (event: any) => {
+        // if (event.id === 'bottomTabSelected') {
+
+        // }
+        if (event.id === 'bottomTabReselected') {
+            if (typeof this.flatListFavourite !== "undefined" && this.props.coins.length > 0 && this.props.favouriteTab) {
+                this.flatListFavourite.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
+            }
+            else if (typeof this.flatListMarket !== "undefined" && this.props.coins.length > 0) {
+                this.flatListMarket.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
+            }
+        }
     }
     private onRefresh = () => {
         const newNumberOfCoins = this.state.numberOfCoins + 100;
