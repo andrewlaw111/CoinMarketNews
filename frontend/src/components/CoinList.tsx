@@ -39,6 +39,7 @@ export interface ICoinListState {
     coins: ICoinPrice[];
     numberOfCoins: number
     refreshing: boolean;
+    missingAdded: boolean;
     // searching: boolean;
     // searchedCoins: ICoinPrice[];
     cryptoCurrencyName: string;
@@ -72,6 +73,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             refreshing: false,
             numberOfCoins: 100,
             coins: this.props.coins,
+            missingAdded: false,
             // searching: false,
             // searchedCoins: [],
             cryptoCurrencyName: "BTC",
@@ -106,7 +108,6 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     // }
     public render() {
         const favouriteCoins = this.state.coins.filter((coin: ICoinPrice) => this.props.favourites.indexOf(coin.id) > -1);
-        console.log(this.props.coins);
         const missingFavourites = this.props.favourites.filter((favourite) => {
             let favouriteMissing = true
             favouriteCoins.forEach((coin) => {
@@ -116,7 +117,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             })
             return favouriteMissing
         });
-        if (missingFavourites.length > 0) { this.addMissingCoins(missingFavourites) };
+        if (!this.state.missingAdded && this.state.coins.length > 0 && missingFavourites.length > 0) { this.addMissingCoins(missingFavourites) };
         const spinner = () => {
             return (
                 <View style={styles(this.props.appSettings.darkMode).coinListComponent}>
@@ -186,6 +187,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
 
     }
     public addMissingCoins = (coins: number[]) => {
+        console.error("add")
         Promise.all(coins.map((favourite) => {
             return axios
                 .get<ICoinPrice>(`${Config.API_SERVER}/price/${favourite}`, {
@@ -205,6 +207,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         })
         ).then((favourites) => {
             this.props.addMissingFavourites(favourites);
+            this.setState({missingAdded: true})
         })
     }
     private endReached = () => {
