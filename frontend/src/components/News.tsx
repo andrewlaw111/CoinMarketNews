@@ -64,7 +64,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                             {info.item.title}
                         </Text>
                     </CardItem>
-                    <CardItem style={this.styles.cardItem}>
+                    <CardItem bordered={true} style={this.styles.cardItem}>
                         <Body>
                             <Text style={this.styles.newsText} numberOfLines={3}>
                                 {info.item.content}
@@ -73,7 +73,6 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                     </CardItem>
                     <CardItem
                         footer={true}
-                        bordered={true}
                         style={[this.styles.cardItem, { justifyContent: "space-between" }]}
                     >
                         <View>
@@ -183,6 +182,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                 screen: "CoinMarketNews.CoinsPage",
                 title: selectedCoin.name,
             });
+            //SelectedCoin needs to be fixed
         }).catch((err) => {
             console.error(err)
         })

@@ -25,7 +25,9 @@ interface ICoinsPageProps {
     appSettings: ISettings;
     coinID: number;
     coinPrice: ICoinPrice;
+    coins: ICoinPrice[];
     favourite: boolean;
+    favourites: number[];
     user: IUser;
     navigator: Navigator;
     addCoinFavourite: (coinID: number, token: string) => void;
@@ -133,7 +135,7 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
                             tabStyle={{ backgroundColor: backgroundColour }}
                             textStyle={{ color: textColour }}
                         >
-                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinNews coin={this.state.coin} darkMode={this.props.appSettings.darkMode} />}
+                            {(typeof this.state.coin === "undefined") ? this.renderNoConnection() : <CoinNews appSettings={this.props.appSettings} coin={this.state.coin} coins={this.props.coins} favourites={this.props.favourites} darkMode={this.props.appSettings.darkMode} navigator={this.props.navigator} />}
                         </Tab>
                         <Tab
                             heading="Price"
@@ -183,6 +185,7 @@ const mapDispatchToProps = (dispatch: any) => {
 const mapStateToProps = (state: IRootState) => {
     return {
         coins: state.coins.coins,
+        favourites: state.favourites.favourites,
         user: state.user.user,
     };
 };
