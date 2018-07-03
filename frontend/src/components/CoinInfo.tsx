@@ -247,7 +247,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         height: 28,
     },
     link: {
-        color: (darkMode) ? "#2a6496" : "#000",
+        color: (darkMode) ? "#fff" : "#000",
         marginLeft: 10,
     },
     cardText: {
