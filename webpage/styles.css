@@ -5,7 +5,7 @@ html {
 }
 
 h1 {
-    color: #ffffff;
+    color: #F8F8F8;
     font-size: 36px;
     font-weight: bold;
 }
@@ -41,13 +41,77 @@ header {
 }
 
 .jumbotron .container-fluid.heading-panel .app-heading p.heading-subtitle {
-    color: #ffffff;
+    color: #F8F8F8;
 }
 
-.jumbotron .container-fluid.heading-panel .app-image {}
+.jumbotron .container-fluid.heading-panel .app-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .jumbotron .container p {
     margin-bottom: 40px;
     font-size: 18px;
     max-width: 800px;
+}
+.jumbotron .store-badges {
+    display: flex;
+    justify-content: center;
+}
+.jumbotron .store-badge-apple {
+    margin: 10px 9px;
+}
+section.features-section {
+    padding: 40px 15px 40px 15px;
+    background-color: #2f343f;
+    color: #F8F8F8
+}
+
+section h2 {
+    color: #F8F8F8
+}
+
+section hr {
+    border-color: #585858
+}
+
+section.features-section div.icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0 20px 0;
+}
+
+section.features-section div.icon svg {
+    color: #ffffff
+}
+
+section.features-section div.icon .feature-icon {
+    margin-bottom: 24px;
+}
+
+section.features-section div.icon h3.icon-title {
+    max-width: 340px;
+}
+
+div.section-row {
+    margin-top: 40px
+}
+
+footer {
+    padding: 40px 15px 160px 15px;
+    background-color: #F8F8F8;
+}
+
+footer div.contact-icons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+footer .icon-description {
+    margin-top: 14px
 }
