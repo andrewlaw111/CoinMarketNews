@@ -111,7 +111,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
             {
                 link: this.props.coin.whitepaper_link,
                 name: 'Whitepaper',
-                linkIcon: (this.props.darkMode) ? "website_white" : "website",
+                linkIcon: (this.props.darkMode) ? "whitepaper_white" : "whitepaper",
                 linkType: "Whitepaper",
             },
             {
