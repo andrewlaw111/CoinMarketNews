@@ -134,7 +134,7 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
     public render() {
         return (
             <View style={styles(this.props.appSettings.darkMode).listItem}>
-                <TouchableOpacity onPress={this.handlePress.bind(this, this.props.item)} delayPressIn={0}>
+                <TouchableOpacity onPress={this.handlePress.bind(this, this.props.item)}>
                     <View style={styles(this.props.appSettings.darkMode).listCoin} >
                         {this.renderItemIcon()}
                         {this.renderItemLeft()}

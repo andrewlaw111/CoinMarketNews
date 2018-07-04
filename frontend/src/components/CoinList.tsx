@@ -1,9 +1,9 @@
-import React from "react";
+import React, { RefObject } from "react";
 import Config from "react-native-config";
 import { connect } from "react-redux";
 
 import { Icon, Text, StyleProvider, Spinner } from "native-base";
-import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions, ScrollView, Slider } from "react-native";
+import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions, ScrollView, Slider, ListView } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
@@ -33,6 +33,7 @@ interface ICoinListProps {
     addMissingFavourites: (favourites: ICoinPrice[]) => void;
     addCoinFavourite: (coinID: number, token: string) => void;
     removeCoinFavourite: (coinID: number, token: string) => void;
+    setRef: RefObject<FlatList<ICoinPrice>>
 }
 
 export interface ICoinListState {
@@ -52,8 +53,6 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     public textInput: TextInput;
     public searchInput: string = "";
     // public offset = 0;
-    public flatListFavourite: FlatList<ICoinPrice>;
-    public flatListMarket: FlatList<ICoinPrice>;
     public waitingForFetch = false;
 
     public currencySymbols: { [key: string]: string } = {
@@ -68,7 +67,6 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
 
     public constructor(props: ICoinListProps) {
         super(props);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             refreshing: false,
             numberOfCoins: 100,
@@ -162,7 +160,8 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                 // refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
 
                                 ListEmptyComponent={noFavourites()}
-                                ref={(flatList) => { this.flatListFavourite = flatList }}
+                                // tslint:disable-next-line:jsx-no-multiline-js
+                                ref={this.props.setRef}
                             />
                         ) : (
                                 <FlatList
@@ -181,7 +180,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     // onScroll={this.onScroll}
                                     // scrollEnabled={!this.state.searching}
                                     ListEmptyComponent={spinner()}
-                                    ref={(flatList) => { this.flatListMarket = flatList }}
+                                    ref={this.props.setRef}
                                     ListFooterComponent={(this.props.setting[0] === "0") ? spinner() : null}
                                 />
                             )
@@ -221,6 +220,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     //         this.setState({ missingAdded: true })
     //     })
     // }
+
     private endReached = () => {
 
         if (!this.waitingForFetch) {
@@ -242,19 +242,19 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
     private getItemLayout = (data: any, index: number) => ({ length: 71, offset: 71 * index, index });
     private keyExtractor = (item: ICoinPrice) => item.id.toString();
 
-    private onNavigatorEvent = (event: any) => {
-        // if (event.id === 'bottomTabSelected') {
+    // private onNavigatorEvent = (event: any) => {
+    //     // if (event.id === 'bottomTabSelected') {
 
-        // }
-        if (event.id === 'bottomTabReselected') {
-            if (typeof this.flatListFavourite !== "undefined" && this.state.coins.length > 0 && this.props.favouriteTab) {
-                this.flatListFavourite.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
-            }
-            else if (typeof this.flatListMarket !== "undefined" && this.props.coins.length > 0) {
-                this.flatListMarket.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
-            }
-        }
-    }
+    //     // }
+    //     if (event.id === 'bottomTabReselected') {
+    //         if (typeof this.flatListFavourite !== "undefined" && this.state.coins.length > 0 && this.props.favouriteTab) {
+    //             this.flatListFavourite.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
+    //         }
+    //         else if (typeof this.flatListMarket !== "undefined" && this.props.coins.length > 0) {
+    //             this.flatListMarket.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
+    //         }
+    //     }
+    // }
     private onRefresh = () => {
         // const newNumberOfCoins = this.state.numberOfCoins + 100;
         this.setState({
