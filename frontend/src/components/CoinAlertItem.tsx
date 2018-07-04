@@ -57,7 +57,7 @@ class PureAlertItem extends React.PureComponent<IRenderAlertsProps, IRenderAlert
                 </View>
                 <View style={{ flexDirection: "row" }}>
                     <Switch value={this.props.alert.active} onValueChange={this.handleValueChange.bind(this, this.props.alert)} style={{ marginRight: 15 }} />
-                    <Icon type="FontAwesome" name="trash-o" onPress={this.handleDelete.bind(this, this.props.alert)} />
+                    <Icon type="Entypo" style={(this.props.darkMode) ? { color: "white" } : { color: "black" }} name="cross" onPress={this.handleDelete.bind(this, this.props.alert)} />
                 </View>
             </Animated.View>
         )
@@ -70,7 +70,7 @@ class PureAlertItem extends React.PureComponent<IRenderAlertsProps, IRenderAlert
         Animated.timing(this.state.animatedValue, {
             toValue: 300,
             duration: 1000,
-        }).start(()=> this.props.removeAlerts(alert, this.props.user.token));
+        }).start(() => this.props.removeAlerts(alert, this.props.user.token));
     }
 }
 
