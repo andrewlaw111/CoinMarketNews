@@ -80,8 +80,12 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
 
                     <View >
                         <View style={styles(this.props.darkMode).NewsAlertsView}>
+                        <View style={styles(this.props.darkMode).newsAlertTextView}>
                             <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
+                        </View>
+                        <View style={styles(this.props.darkMode).switch} >
                             <Switch value={this.state.newsAlerts} onValueChange={this.handlenewsAlertChange} />
+                            </View>
                         </View>
                         <ScrollView style={{ marginBottom: 40 }}>
                             <FlatList
