@@ -1,11 +1,11 @@
-import React from "react";
+import React, { RefObject } from "react";
 import Config from "react-native-config";
 import { isIphoneX } from "react-native-iphone-x-helper";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
 import { Container, Tab, Tabs, StyleProvider } from "native-base";
-import { Platform, SafeAreaView, ScrollView, RefreshControl, View, } from "react-native";
+import { Platform, SafeAreaView, ScrollView, RefreshControl, View, FlatList, } from "react-native";
 
 import CoinOptions from "./CoinsOptions";
 import { ICoinPrice, IUser, ISettings } from "../models";
@@ -31,11 +31,15 @@ interface ICoinsListProps {
 
 export interface ICoinsListState {
     coins: ICoinPrice[];
+    favouriteTab: boolean;
     setting: string,
     refreshing: boolean;
 }
 
 class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
+    public favouriteRef: RefObject<FlatList<ICoinPrice>>;
+    public marketRef: RefObject<FlatList<ICoinPrice>>;
+
     public static navigatorStyle = {
         navBarHidden: true,
         statusBarBlur: true,
@@ -43,8 +47,13 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
 
     public constructor(props: ICoinsListProps) {
         super(props);
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        this.favouriteRef = React.createRef<FlatList<ICoinPrice>>();
+        this.marketRef = React.createRef<FlatList<ICoinPrice>>();
+
         this.state = {
             coins: this.props.coins.slice(),
+            favouriteTab: true,
             setting: "000",
             refreshing: false
         };
@@ -65,7 +74,10 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             textColour = "#000"
         }
         return (
-            <Tabs initialPage={0} >
+            <Tabs
+                initialPage={0}
+                onChangeTab={this.changeTab}
+            >
                 <Tab
                     heading="Favourites"
                     activeTabStyle={{ backgroundColor: backgroundColour }}
@@ -74,7 +86,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.favouriteRef} />
                 </Tab>
                 <Tab
                     heading="Market"
@@ -84,7 +96,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} />
+                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.marketRef} />
                 </Tab>
             </Tabs>
         )
@@ -102,7 +114,11 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             </StyleProvider >
         );
     }
-
+    private changeTab = () => {
+        this.setState({
+            favouriteTab: !this.state.favouriteTab
+        })
+    }
     private handleOptionsPress = (options: string) => {
         const setting: string = getSettingID(options, this.state.setting);
         const coins = sortCoins(setting, this.state.coins.slice());
@@ -119,6 +135,20 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         this.setState({
             coins
         })
+    }
+    private onNavigatorEvent = (event: any) => {
+        // if (event.id === 'bottomTabSelected') {
+
+        // }
+        if (event.id === 'bottomTabReselected') {
+
+            if (typeof this.favouriteRef !== "undefined" && this.state.coins.length > 0 && this.state.favouriteTab) {
+                this.favouriteRef.current.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
+            }
+            else if (typeof this.marketRef !== "undefined" && this.props.coins.length > 0) {
+                this.marketRef.current.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
+            }
+        }
     }
     private onRefresh = () => {
         this.setState({

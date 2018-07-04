@@ -7,6 +7,7 @@ import { addAlerts, removeAlerts, editAlert } from '../redux/actions/alerts';
 import { connect } from 'react-redux';
 import { lightItemsBorder, darkItemsBorder } from './styles/colours';
 import { isIphoneX } from "react-native-iphone-x-helper";
+import { changeSettings } from '../redux/actions/settings';
 
 interface ICoinAlertsModalProps {
     appSettings: ISettings;
@@ -15,6 +16,7 @@ interface ICoinAlertsModalProps {
     alerts: IAlerts[];
     user: IUser;
     addAlerts: (alert: IAlerts, token: string) => void;
+    changeSettings: (settings: ISettings) => void;
 }
 
 interface ICoinAlertsModalState {
@@ -264,6 +266,10 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
         }
         this.props.addAlerts(alert, this.props.user.token)
         this.closeModal()
+
+        const settings = { ...this.props.appSettings };
+        settings.pushNotifications = true;
+        this.props.changeSettings(settings)
     }
     public onFocus = () => {
         if (Platform.OS === "ios") {
@@ -300,6 +306,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
 const mapDispatchToProps = (dispatch: any) => {
     return {
         addAlerts: (alert: IAlerts, token: string) => dispatch(addAlerts(alert, token)),
+        changeSettings: (settings: ISettings) => dispatch(changeSettings(settings)),
     };
 };
 
