@@ -35,14 +35,9 @@ var CronJob = cron.CronJob;
 if (process.env.CRON_COIN_PRICE === "true") {
     // new CoinPriceUpdate();   // dev only
     // every hour at 10 minutes
-    let CRON_COIN_PRICE = true;
     new CronJob('0 10 * * * *', function () {
-        if (CRON_COIN_PRICE) {
-            new CoinPriceUpdate();
-            CRON_COIN_PRICE = false;
-        }
+        new CoinPriceUpdate();
     }, function () {
-        CRON_COIN_PRICE = true;
     }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_COIN_INFOS === "true") {
@@ -51,40 +46,25 @@ if (process.env.CRON_COIN_INFOS === "true") {
 if (process.env.CRON_PRICE === "true") {
     // new PriceUpdate();   // dev only
     // every hour at 50 minutes
-    let CRON_COIN_PRICE = true;
     new CronJob('0 50 * * * *', function () {
-        if (CRON_COIN_PRICE) {
-            new PriceUpdate();
-            CRON_COIN_PRICE = false;
-        }
+        new PriceUpdate();
     }, function () {
-        CRON_COIN_PRICE = true;
     }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_PRICE_ALERT === "true") {
     // new PriceAlert();   // dev only
-    // every 5 minutes at 30 sec
-    let CRON_COIN_PRICE = true;
-    new CronJob('30 */5 * * * *', function () {
-        if (CRON_COIN_PRICE) {
-            new PriceAlert();
-            CRON_COIN_PRICE = false;
-        }
+    // every hour at 15
+    new CronJob('0 15 * * * *', function () {
+        new PriceAlert();
     }, function () {
-        CRON_COIN_PRICE = true;
     }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_LIKE === "true") {
     // new LikeUpdate();   // dev only
-    // every 20 minutes at 3 sec
-    let CRON_LIKE = true;
-    new CronJob('3 */20 * * * *', function () {
-        if (CRON_LIKE) {
-            new LikeUpdate();
-            CRON_LIKE = false;
-        }
+    // every 20 minutes at 30 sec
+    new CronJob('30 */20 * * * *', function () {
+        new LikeUpdate();
     }, function () {
-        CRON_LIKE = true;
     }, true, 'America/Los_Angeles');
 }
 if (process.env.CRON_NEWS === "true") {
