@@ -144,28 +144,24 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                 linkIcon: "telegram",
                 linkType: "Telegram",
             }
-            
+
         ];
         return links.map((link, index) => {
             if (link.link && link.link != 'n/a') {
                 return (
-                    <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7, justifyContent: "space-between" }}>
+                    <CardItem key={index} button={true} style={this.styles.Card} onPress={this.handleLinkPress.bind(this, link.link)}>
                         <FastImage
                             style={this.styles.linkIcon}
                             source={{ uri: `${Config.API_SERVER}/media-icons/${link.linkIcon}.png` }}
                             resizeMode={FastImage.resizeMode.contain}
                         />
-                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                        {/* <Text style={this.styles.cardText} >
-                            {link.linkType}
-                        </Text>
-                        <Right>
-                        </Right>
-                        */}
-                        <Text style={[this.styles.cardText, this.styles.link]} onPress={this.handleLinkPress.bind(this, link.link)}>
+                        <Text style={[this.styles.cardText, this.styles.link]}>
                             {link.name}
                         </Text>
-                    </View>
+                        <Right style={{ flex: 1 }}>
+                            <Icon name="arrow-forward" />
+                        </Right>
+                    </CardItem>
                 );
             } else {
                 return null;
@@ -200,11 +196,7 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                                 <CardItem header={true} bordered={true} style={this.styles.cardItem}>
                                     <Text style={this.styles.cardHeader}>Links</Text>
                                 </CardItem>
-                                <CardItem style={this.styles.cardItem}>
-                                    <Body style={this.styles.coinInfoStats}>
-                                        {this.renderCoinLinks()}
-                                    </Body>
-                                </CardItem>
+                                {this.renderCoinLinks()}
                             </Card>
                         ) : (
                                 null
@@ -254,7 +246,7 @@ const styleTemplate = (darkMode: boolean) => StyleSheet.create({
         color: (darkMode) ? "#F8F8F8" : "#000",
     },
     cardHeader: {
-        color:"#007aff",
+        color: "#007aff",
     },
     coinInfoStats: {
         flex: 1,

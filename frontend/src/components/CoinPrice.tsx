@@ -42,48 +42,48 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
             style: [styles(this.props.darkMode).coinInfoStatsText,]
         },
         {
+            stat: `${this.props.coinPrice.price_fiat.percent_change_1h}%`,
+            statType: `1 hour change`,
+            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_1h >= 0) ? "green" : "red" }]
+        },
+        {
+            stat: `${this.props.coinPrice.price_fiat.percent_change_24h}%`,
+            statType: `1 day change`,
+            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_24h >= 0) ? "green" : "red" }]
+        },
+        {
+            stat: `${this.props.coinPrice.price_fiat.percent_change_7d}%`,
+            statType: `1 week change`,
+            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_7d >= 0) ? "green" : "red" }]
+        },
+        {
             stat: `${this.props.coinPrice.price_crypto.price}`,
             statType: `Price in ${this.props.appSettings.cryptoCurrency}`,
             style: [styles(this.props.darkMode).coinInfoStatsText, { fontFamily: "Font Awesome 5 Brands" },]
         },
         {
-            stat: `${this.props.coinPrice.price_fiat.percent_change_1h}%`,
-            statType: `${this.props.appSettings.fiatCurrency} 1 hour % change`,
-            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_1h >= 0) ? "green" : "red" }]
-        },
-        {
             stat: `${this.props.coinPrice.price_crypto.percent_change_1h}%`,
-            statType: `${this.props.appSettings.cryptoCurrency} 1 hour % change`,
+            statType: `1 hour change`,
             style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_crypto.percent_change_1h >= 0) ? "green" : "red" }]
         },
         {
-            stat: `${this.props.coinPrice.price_fiat.percent_change_24h}%`,
-            statType: `${this.props.appSettings.fiatCurrency} 24 hour % change`,
-            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_24h >= 0) ? "green" : "red" }]
-        },
-        {
             stat: `${this.props.coinPrice.price_crypto.percent_change_24h}%`,
-            statType: `${this.props.appSettings.cryptoCurrency} 24 hour % change`,
+            statType: `1 day change`,
             style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_crypto.percent_change_24h >= 0) ? "green" : "red" }]
         },
         {
-            stat: `${this.props.coinPrice.price_fiat.percent_change_7d}%`,
-            statType: `${this.props.appSettings.fiatCurrency} 7 day % change`,
-            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_7d >= 0) ? "green" : "red" }]
-        },
-        {
             stat: `${this.props.coinPrice.price_crypto.percent_change_7d}%`,
-            statType: `${this.props.appSettings.cryptoCurrency} 7 day % change`,
+            statType: `1 week change`,
             style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_crypto.percent_change_7d >= 0) ? "green" : "red" }]
         },
         {
             stat: `${this.currencySymbols[this.props.appSettings.fiatCurrency]} ${this.props.coinPrice.price_fiat.market_cap}`,
-            statType: `${this.props.appSettings.fiatCurrency} market capitalization`,
-            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.market_cap >= 0) ? "green" : "red" }]
+            statType: `Market Cap`,
+            style: [styles(this.props.darkMode).coinInfoStatsText]
         },
         {
-            stat: `${this.props.coinPrice.price_fiat.volume_24h.toFixed(2)}`,
-            statType: `${this.props.appSettings.fiatCurrency} 24 hour volume`,
+            stat: `${this.currencySymbols[this.props.appSettings.fiatCurrency]} ${this.props.coinPrice.price_fiat.volume_24h.toFixed(0)}`,
+            statType: `Volume (24h)`,
             style: [styles(this.props.darkMode).coinInfoStatsText]
         }
     ];
@@ -107,14 +107,14 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
                                 <View style={styles(this.props.darkMode).coinInfoStats}>
                                     {/*tslint:disable-next-line:jsx-no-multiline-js*/}
                                     {this.stats.map((stat, index) => {
-                                        if (stat.stat) {
+                                        if (stat.stat && !(this.props.coin.symbol === 'BTC' && index > 3 && index < 8)) {
                                             return (
                                                 <View key={index} style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
-                                                    <Text style={styles(this.props.darkMode).coinInfoStatsText} >
+                                                    <Text style={[styles(this.props.darkMode).coinInfoStatsText, (index === 1 || index === 2 || index === 3 || index === 5 || index === 6 || index === 7) ? styles(this.props.darkMode).coinInfoStatsTextRight : null]} >
                                                         {stat.statType}
                                                     </Text>
                                                     {/*tslint:disable-next-line:jsx-no-multiline-js*/}
-                                                    {(index === 1) ? (
+                                                    {(index === 4) ? (
                                                         (this.props.appSettings.cryptoCurrency === "BTC") ? (
                                                             <Text style={stat.style}> &#xf15a; {stat.stat}</Text>
                                                         ) : (
@@ -181,6 +181,9 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     coinInfoStatsText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
     },
+    coinInfoStatsTextRight: {
+        marginLeft: 40,
+    },
     price: {
         backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
         flex: 1,
@@ -193,6 +196,6 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     webView: {
         borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
-        height: (Dimensions.get("window").height - 140  ) / 2,
+        height: (Dimensions.get("window").height - 140) / 2,
     },
 })
