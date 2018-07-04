@@ -2,7 +2,7 @@ import React from "react";
 
 import { connect } from "react-redux";
 import { ICoinPrice, ISettings, IUser } from "../models";
-import { View, TouchableOpacity, Platform } from "react-native";
+import { View, TouchableOpacity, Platform, Dimensions } from "react-native";
 import { styles } from "./styles/CoinsStyles";
 import displayCoinOptions from "./functions/CoinsRenderSettings";
 import IonIcons from "react-native-vector-icons/Ionicons";
@@ -31,6 +31,7 @@ export interface ICoinListState {
 }
 class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListState> {
     public heartColour: string;
+    public small_device = Dimensions.get("window").width < 380;
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",
@@ -101,9 +102,9 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
     public renderItemLeft() {
         return (
             <View style={styles(this.props.appSettings.darkMode).listCoinBody}>
-                <View style={styles(this.props.appSettings.darkMode).listCoinName}>
-                    <Text style={styles(this.props.appSettings.darkMode).coinName}>{this.props.item.name}</Text>
-                    <Text style={styles(this.props.appSettings.darkMode).coinSymbol}>{this.props.item.symbol}</Text>
+                <View style={[styles(this.props.appSettings.darkMode).listCoinName, { justifyContent: "space-between" }]}>
+                    <Text style={[styles(this.props.appSettings.darkMode).coinName]}>{this.props.item.name}</Text>
+                    <Text style={[styles(this.props.appSettings.darkMode).coinSymbol]}>{this.props.item.symbol}</Text>
                 </View>
                 <View style={styles(this.props.appSettings.darkMode).listCoinName}>
                     {(this.props.setting[1] === '1') ? this.cryptoCurrency : this.fiatCurrency}
@@ -115,11 +116,11 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
     public renderItemRight() {
         return (
             <View style={styles(this.props.appSettings.darkMode).listCoinRight}>
-                <View style={{ alignItems: "flex-end" }}>
+                <View style={{ alignItems: "flex-end", paddingRight: (this.small_device) ? 5 : 10 }}>
                     <Text note={true} style={{ color: this.priceColour, fontSize: 18 }}>{this.percentageChange}%</Text>
                 </View>
                 <TouchableOpacity
-                    style={{ alignItems: "flex-end", height: 70, justifyContent: "center", paddingRight: 10, right: -10, width: 50 }}
+                    style={{ alignItems: "flex-end", height: 70, justifyContent: "center" }}
                     onPress={this.handlePressHeart.bind(this, this.props.item.id, this.props.user.token)}
                 >
                     <Icon
