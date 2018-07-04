@@ -9,6 +9,8 @@ import { lightItemsBorder, darkItemsBorder } from './styles/colours';
 import { isIphoneX } from "react-native-iphone-x-helper";
 import { changeSettings } from '../redux/actions/settings';
 import OneSignal from "react-native-onesignal";
+import axios from 'axios';
+import Config from 'react-native-config';
 
 interface ICoinAlertsModalProps {
     appSettings: ISettings;
@@ -272,6 +274,20 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
         settings.pushNotifications = true;
         this.props.changeSettings(settings)
         OneSignal.sendTag("user_id", this.props.user.id.toString());
+        axios
+                .patch(
+                    `${Config.API_SERVER}/user`,
+                    {
+                        data: {
+                            notifications: settings.pushNotifications
+                        }
+                    },
+                    {
+                        headers: {
+                            token: this.props.user.token,
+                        }
+                    }
+                )
     }
     public onFocus = () => {
         if (Platform.OS === "ios") {

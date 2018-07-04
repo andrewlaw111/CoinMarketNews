@@ -29,10 +29,11 @@ var message = {
     contents: { "en": notification_message },
     ios_badgeType: 'Increase',
     ios_badgeCount: 1,
-    buttons:[{"id": "read-more-button", "text": "Read more", "icon": "http://i.imgur.com/MIxJp1L.png", "url": "https://www.google.com.hk/search?q=onesignal"}],
+    // buttons:[{"id": "read-more-button", "text": "Read more", "icon": "http://i.imgur.com/MIxJp1L.png", "url": "https://www.google.com.hk/search?q=onesignal"}],
     url: 'https://www.google.com.hk/search?q=onesignal',
     filters: [
-        {"field": "tag", "key": "user_id", "relation": "=", "value": 130}
+        {"field": "tag", "key": "user_id", "relation": "=", "value": 133},
+        //{ "operator": "OR" }, { "field": "tag", "key": "user_id", "relation": "=", "value": 133 }
     ]
 };
 
