@@ -58,7 +58,7 @@ module.exports = () => {
 
                     axios.post(ONESIGNAL_URI, message, config)
                         .then(function (response) {
-                            // console.log('notification sent: ' + notification_message);
+                            console.log('notification sent: ' + notification_message);
                             // console.log(response);
                             const price_alert_update = {};
                             price_alert_update.active = false;
