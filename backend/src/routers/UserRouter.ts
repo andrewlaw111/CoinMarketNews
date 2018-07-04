@@ -28,13 +28,13 @@ export default class UserRouter {
         return router;
     }
     private getUser = (req: express.Request, res: express.Response) => {
-        console.log('Get user')
+        // console.log('Get user')
         return this.userService.getUser(req.headers.token)
             .then((data: IUser) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
     }
     private changeNotifications = (req: express.Request, res: express.Response) => {
-        console.log(req.headers)
+        // console.log(req.headers)
         return this.userService.changeNotifications(req.headers.token, req.body.data.notifications)
             .then((data: any) => res.json(data))
             .catch((err: express.Errback) => res.status(500).json(err));
