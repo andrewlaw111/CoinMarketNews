@@ -1,5 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { darkItemsBorder, lightItemsBorder, darkBackground, lightBackground, darkFont, lightFont, darkItems, lightItems } from "./colours";
+
+const small_device = Dimensions.get("window").width < 380;
 
 const styles = (darkMode: boolean) => StyleSheet.create({
     settingsItem: {
@@ -29,7 +31,7 @@ const styles = (darkMode: boolean) => StyleSheet.create({
     },
     SettingsIconWrapper: {
         width: 40,
-        marginRight: 20,
+        marginRight: (small_device) ? 10 : 20,
         alignItems: "center"
     },
     settingsRight: {
