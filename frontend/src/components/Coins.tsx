@@ -102,7 +102,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         )
     }
     public render() {
-        console.log(this.props.coins)
+        // console.log(this.props.coins)
 
         return (
             <StyleProvider style={getTheme(commonColour)}>

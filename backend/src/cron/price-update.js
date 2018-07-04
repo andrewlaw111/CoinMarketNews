@@ -6,9 +6,9 @@ module.exports = () => {
     console.log('PriceUpdate CRON start -------');
 
     let q = new Queue(function (p, callback) {
-        console.log('Fetching price: ' + p.start);
+        // console.log('Fetching price: ' + p.start);
         const url = `https://api.coinmarketcap.com/v2/ticker/?convert=${p.currency.symbol}&start=${p.start}&limit=${p.limit}&structure=array`;
-        console.log(url);
+        // console.log(url);
         axios.get(url)
             .then(function (response) {
                 callback(null, response);
@@ -21,12 +21,12 @@ module.exports = () => {
     knex.select()
         .from("currency")
         .then((currencies) => {
-            console.log(currencies);
+            // console.log(currencies);
             return knex('coin').count()
                 .then((coins) => {
                     //console.log(coins);
                     const num_cryptocurrencies = parseInt(coins[0].count);
-                    console.log(num_cryptocurrencies);
+                    // console.log(num_cryptocurrencies);
                     const limit = 100;
                     let start = 1;
                     while (start < num_cryptocurrencies) {
@@ -46,7 +46,7 @@ module.exports = () => {
                                                 }
                                             });
                                     }
-                                    console.log(currency.symbol + ' price updated');
+                                    // console.log(currency.symbol + ' price updated');
                                 })
                                 .on('failed', function (error) {
                                     console.log('task faild');

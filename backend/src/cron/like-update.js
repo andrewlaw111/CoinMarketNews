@@ -31,7 +31,7 @@ module.exports = () => {
                                 .where({ id: json.news.id })
                                 .update({ counter: json.data.share.share_count }).then((data) => {
                                     if (data) {
-                                        console.log(json.news.id + ' counter updated : ' + json.data.share.share_count);
+                                        // console.log(json.news.id + ' counter updated : ' + json.data.share.share_count);
                                     }
                                 });
                         }

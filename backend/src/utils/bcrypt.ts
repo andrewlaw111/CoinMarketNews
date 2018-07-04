@@ -22,11 +22,11 @@ export const checkPassword = (plainTextPassword: string, hashedPassword: string)
     return new Promise((resolve, reject) => {
         bcrypt.compare(plainTextPassword, hashedPassword, (err, match) => {
             if (err) {
-                console.log('reject');
+                // console.log('reject');
                 reject(err);
             } else {
-                console.log(hashedPassword);
-                console.log('resolve');
+                // console.log(hashedPassword);
+                // console.log('resolve');
                 resolve(match);
             }
         });

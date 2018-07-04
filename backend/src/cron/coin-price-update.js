@@ -6,7 +6,7 @@ module.exports = () => {
     console.log('CoinPriceUpdate CRON start -------');
 
     let q = new Queue(function (start, callback) {
-        console.log('Fetching price: ' + start);
+        // console.log('Fetching price: ' + start);
         axios.get(`https://api.coinmarketcap.com/v2/ticker/?&start=${start}&limit=100&structure=array`)
             .then((response) => {
                 // console.log(response.data.data);
@@ -57,7 +57,7 @@ module.exports = () => {
     knex('coin').count()
         .then((coins) => {
             const num_cryptocurrencies = parseInt(coins[0].count);
-            console.log(num_cryptocurrencies);
+            // console.log(num_cryptocurrencies);
             const limit = 100;
             let start = 1;
             while (start < num_cryptocurrencies) {

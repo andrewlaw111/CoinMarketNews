@@ -34,7 +34,7 @@ module.exports = () => {
             .andWhere('price_alert.upper', '=', (lower_or_higher === '>'))
             .andWhere('price.price', lower_or_higher, knex.raw('price_alert.price_point'))
             .then((alerts) => {
-                console.log(alerts);
+                // console.log(alerts);
                 for (const alert of alerts) {
                     const price_point = (alert.fiat === true) ? parseInt(alert.price_point) : alert.price_point;
                     const price = (alert.fiat === true) ? parseInt(alert.price) : alert.price;
@@ -42,7 +42,7 @@ module.exports = () => {
                     const notification_title = 'CoinMarketNews - ' + alert.symbol + ' price alert';
                     const notification_message = alert.symbol + ' ' + lower_or_higher + ' ' + price_point + ' ' + alert.currency + ': ' + price + ' ' + alert.currency;
 
-                    console.log(notification_message);
+                    // console.log(notification_message);
 
                     var message = {
                         app_id: ONESIGNAL_APP_ID,
@@ -50,7 +50,7 @@ module.exports = () => {
                         contents: { "en": notification_message },
                         ios_badgeType: 'Increase',
                         ios_badgeCount: 1,
-                        included_segments: ["All"],
+                        // included_segments: ["All"],
                         filters: [
                             { "field": "tag", "key": "user_id", "relation": "=", "value": alert.user_id }
                         ]
@@ -58,7 +58,7 @@ module.exports = () => {
 
                     axios.post(ONESIGNAL_URI, message, config)
                         .then(function (response) {
-                            console.log('notification sent: ' + notification_message);
+                            // console.log('notification sent: ' + notification_message);
                             // console.log(response);
                             const price_alert_update = {};
                             price_alert_update.active = false;
@@ -66,7 +66,7 @@ module.exports = () => {
                                 .where({ id: alert.id })
                                 .update(price_alert_update).then((data) => {
                                     if (data) {
-                                        console.log('alert ' + alert.id + ' desactivated');
+                                        // console.log('alert ' + alert.id + ' desactivated');
                                     }
                                 });
                         })

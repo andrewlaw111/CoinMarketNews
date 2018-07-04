@@ -35,6 +35,17 @@ class PureSettings extends React.Component<ISettingsProps>{
         statusBarBlur: true,
     };
 
+    // componentDidMount() {
+    //     OneSignal.addEventListener("received", this.onOpened);
+    // }
+
+    // onOpened = (notification: any) => {
+    //     console.log(notification.notification.isAppInFocus)
+    //     if (notification.notification.isAppInFocus === true && !notification.action.ActionID) {    // user clicked cancel
+    //         alert('cancel');    // to not show URL
+    //     }
+    // }
+
     public renderCryptoPicker() {
         const options = ["BTC", "ETH", "Cancel"]
         const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
@@ -46,11 +57,11 @@ class PureSettings extends React.Component<ISettingsProps>{
             });
         if (Platform.OS === "ios") {
             return (
-                <TouchableOpacity onPress={IOSPicker} style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                <TouchableOpacity onPress={IOSPicker} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                     <Text style={{ color: "#0076FF" }}>
                         {this.props.appSettings.cryptoCurrency}
                     </Text>
-                    <Icon style={{ fontSize: 24, marginLeft:6, marginTop:2 }} name="ios-arrow-down-outline" />
+                    <Icon style={{ fontSize: 24, marginLeft: 6, marginTop: 2 }} name="ios-arrow-down-outline" />
                 </TouchableOpacity>
 
             )
@@ -78,11 +89,11 @@ class PureSettings extends React.Component<ISettingsProps>{
             });
         if (Platform.OS === "ios") {
             return (
-                <TouchableOpacity onPress={IOSPicker} style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                <TouchableOpacity onPress={IOSPicker} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                     <Text style={{ color: "#0076FF" }}>
                         {this.props.appSettings.fiatCurrency}
                     </Text>
-                    <Icon style={{ fontSize: 24, marginLeft:6, marginTop:2 }} name="ios-arrow-down-outline" />
+                    <Icon style={{ fontSize: 24, marginLeft: 6, marginTop: 2 }} name="ios-arrow-down-outline" />
                 </TouchableOpacity>
             )
         }
@@ -298,7 +309,6 @@ class PureSettings extends React.Component<ISettingsProps>{
         const settings = { ...this.props.appSettings };
         settings.pushNotifications = !settings.pushNotifications;
         if (settings.pushNotifications === true) {
-            OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
             OneSignal.sendTag("user_id", this.props.user.id.toString());
         }
         this.props.changeSettings(settings)

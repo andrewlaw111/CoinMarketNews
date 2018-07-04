@@ -24,7 +24,7 @@ module.exports = () => {
                 } else {
                     const update_coin = {};
                     // console.log($.html());
-                    console.log('-----');
+                    // console.log('-----');
 
                     const about = $('.coin-description').clone().children('strong, a').remove().end().text().trim();
                     if (about != '') {
@@ -77,18 +77,18 @@ module.exports = () => {
                         }
                     });
 
-                    console.log(update_coin);
+                    // console.log(update_coin);
 
                     if (Object.keys(update_coin).length !== 0) {
                         knex('coin')
                             .where('id', '=', res.options.coin.id)
                             .update(update_coin).then((data) => {
                                 if (data) {
-                                    console.log(res.options.coin.name + ' infos updated');
+                                    // console.log(res.options.coin.name + ' infos updated');
                                 }
                             });
                     } else {
-                        console.log('NO INFO for ' + res.options.coin.name + ' !!!');
+                        // console.log('NO INFO for ' + res.options.coin.name + ' !!!');
                     }
 
                 }
@@ -102,7 +102,7 @@ module.exports = () => {
         .whereNull('type')
         .orderBy('rank', 'asc')
         .then((coins) => {
-            console.log(coins);
+            // console.log(coins);
 
             const coin_fix = [];    // manually fix URL problems
             coin_fix['MIOTA'] = 'IOT';

@@ -37,11 +37,11 @@ module.exports = () => {
                         if (data.length > 0) {
                             console.log('news already in DB');
                         } else {
-                            console.log();
-                            console.log(item.title);
-                            console.log(sanitizeHtml(item.description, { allowedTags: [] }));
-                            console.log(item.link);
-                            console.log(item.pubDate);
+                            // console.log();
+                            // console.log(item.title);
+                            // console.log(sanitizeHtml(item.description, { allowedTags: [] }));
+                            // console.log(item.link);
+                            // console.log(item.pubDate);
                             const news = {};
                             news.title = item.title.trim();
                             news.content = sanitizeHtml(item.description, { allowedTags: [] }).trim();
@@ -57,7 +57,7 @@ module.exports = () => {
                                     }
                                     axios.get('https://graph.facebook.com/?id=' + news.link)
                                         .then(function (json) {
-                                            console.log(json.data);
+                                            // console.log(json.data);
                                             if (json) {
                                                 news.counter = json.data.share.share_count;
                                             }
@@ -66,8 +66,8 @@ module.exports = () => {
                                                 .returning('id')
                                                 .then((insert_news_ok) => {
                                                     if (insert_news_ok) {
-                                                        console.log('news added to DB');
-                                                        console.log(insert_news_ok);
+                                                        // console.log('news added to DB');
+                                                        // console.log(insert_news_ok);
                                                         const coin_news = []
                                                         coins.map(function (coin) {
                                                             if (news.title.includes(coin.name) || (coin.symbol.length > 2 && news.title.includes(coin.symbol))) {
@@ -77,15 +77,15 @@ module.exports = () => {
                                                             }
                                                             // TODO: same for content ?
                                                         });
-                                                        console.log(coin_news);
+                                                        // console.log(coin_news);
                                                         if (coin_news.length > 0) {
                                                             knex("coin_news")
                                                                 .insert(coin_news)
                                                                 .returning('id')
                                                                 .then((insert_coin_news_ok) => {
                                                                     if (insert_coin_news_ok) {
-                                                                        console.log('coin news added to DB');
-                                                                        console.log(insert_coin_news_ok[0]);
+                                                                        // console.log('coin news added to DB');
+                                                                        // console.log(insert_coin_news_ok[0]);
                                                                     }
                                                                 });
                                                         }
@@ -102,7 +102,7 @@ module.exports = () => {
 
             knex('source')
                 .then(function (sources) {
-                    console.log(sources);
+                    // console.log(sources);
                     for (const source of sources) {
                         feeder.add({
                             url: source.feed,
@@ -121,12 +121,12 @@ module.exports = () => {
             .andWhere('alert', '=', true)
             .andWhere('users.notifications', '=', true)
             .then(function (ids) {
-                console.log(ids);
+                // console.log(ids);
                 if (ids.length > 0) {
                     const notification_title = 'CoinMarketNews - ' + coin.symbol + ' news alert';
                     const notification_message = news.title;
 
-                    console.log(notification_message);
+                    // console.log(notification_message);
 
                     const filters = [];
 
@@ -143,13 +143,13 @@ module.exports = () => {
                         headings: { "en": notification_title },
                         contents: { "en": notification_message },
                         url: news.link,
-                        included_segments: ["All"],
+                        // included_segments: ["All"],
                         filters: filters
                     };
-                    console.log(message);
+                    // console.log(message);
                     axios.post(ONESIGNAL_URI, message, config)
                         .then(function (response) {
-                            console.log('notification sent: ' + notification_message);
+                            // console.log('notification sent: ' + notification_message);
                         })
                         .catch(function (error) {
                             console.log('error: ' + error);
