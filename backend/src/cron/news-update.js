@@ -146,10 +146,10 @@ module.exports = () => {
                         // included_segments: ["All"],
                         filters: filters
                     };
-                    // console.log(message);
+                    console.log(message);
                     axios.post(ONESIGNAL_URI, message, config)
                         .then(function (response) {
-                            // console.log('notification sent: ' + notification_message);
+                            console.log('notification sent: ' + notification_message);
                         })
                         .catch(function (error) {
                             console.log('error: ' + error);

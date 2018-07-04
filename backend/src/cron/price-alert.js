@@ -42,8 +42,6 @@ module.exports = () => {
                     const notification_title = 'CoinMarketNews - ' + alert.symbol + ' price alert';
                     const notification_message = alert.symbol + ' ' + lower_or_higher + ' ' + price_point + ' ' + alert.currency + ': ' + price + ' ' + alert.currency;
 
-                    // console.log(notification_message);
-
                     var message = {
                         app_id: ONESIGNAL_APP_ID,
                         headings: { "en": notification_title },
@@ -56,9 +54,11 @@ module.exports = () => {
                         ]
                     };
 
+                    console.log(message);
+
                     axios.post(ONESIGNAL_URI, message, config)
                         .then(function (response) {
-                            // console.log('notification sent: ' + notification_message);
+                            console.log('notification sent: ' + notification_message);
                             // console.log(response);
                             const price_alert_update = {};
                             price_alert_update.active = false;
