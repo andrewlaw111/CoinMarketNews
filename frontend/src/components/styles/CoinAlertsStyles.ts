@@ -21,6 +21,13 @@ const styles = (darkMode: boolean) => StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: "#F8F8F8",
     },
+    newsAlertTextView: {
+        flex: 0.8,
+        flexWrap: "wrap",
+    },
+    switch:{
+        flex: 0.2
+    },
     text: {
         color: (darkMode) ? "#F8F8F8" : "#000"
     }
