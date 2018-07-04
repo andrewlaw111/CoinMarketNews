@@ -17,6 +17,8 @@ import RenderAlerts from "./CoinAlertItem";
 import AlertItem from "./CoinAlertItem";
 import { changeSettings } from "../redux/actions/settings";
 import OneSignal from "react-native-onesignal";
+import Config from "react-native-config";
+import axios from "axios";
 
 interface ICoinsAlertsProps {
     alerts: IAlerts[];
@@ -110,8 +112,22 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
         } else {
             const settings = { ...this.props.appSettings };
             settings.pushNotifications = true;
+            this.props.changeSettings(settings);
             OneSignal.sendTag("user_id", this.props.user.id.toString());
-            this.props.changeSettings(settings)
+            axios
+                .patch(
+                    `${Config.API_SERVER}/user`,
+                    {
+                        data: {
+                            notifications: settings.pushNotifications
+                        }
+                    },
+                    {
+                        headers: {
+                            token: this.props.user.token,
+                        }
+                    }
+                )
 
             this.props.addNewsAlert(this.props.coin.id, this.props.user.token)
             this.setState({
