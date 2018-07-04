@@ -256,13 +256,13 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         }
     }
     private onRefresh = () => {
-        const newNumberOfCoins = this.state.numberOfCoins + 100;
+        // const newNumberOfCoins = this.state.numberOfCoins + 100;
         this.setState({
             refreshing: true
         });
-        getCoins(this.props.appSettings, 1, 5).then(() => {
+        getCoins(this.props.appSettings, 0, 2000).then(() => {
             this.setState({
-                numberOfCoins: newNumberOfCoins,    // COMMENT : should be calculated with this.propw.coins.length()
+                // numberOfCoins: newNumberOfCoins,    // COMMENT : should be calculated with this.propw.coins.length()
                 refreshing: false
             });
         });
