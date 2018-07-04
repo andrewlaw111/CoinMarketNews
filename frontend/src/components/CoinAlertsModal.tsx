@@ -165,12 +165,12 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                     ) : (
                             <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
                                 <TouchableOpacity onPress={this.handleIOSPress}>
-                                    <Animated.View style={style(this.props.darkMode).alertArrow} >
+                                    <View style={style(this.props.darkMode).alertArrow} >
                                         {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
-                                    </Animated.View>
-                                    <Animated.View style={style(this.props.darkMode).modalHeading}>
+                                    </View>
+                                    <View style={style(this.props.darkMode).modalHeading}>
                                         <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
-                                    </Animated.View>
+                                    </View>
                                 </TouchableOpacity>
 
                                 {this.renderForm()}
