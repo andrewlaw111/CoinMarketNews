@@ -50,7 +50,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         };
     }
     public componentWillReceiveProps(nextProps: ICoinsListProps) {
-
         this.setState({
             coins: nextProps.coins
         })

@@ -123,7 +123,7 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                     }
                 });
 
-                store.dispatch(updateCoinSuccess(coins));
+                store.dispatch(loadCoinSuccess(coins));
                 cacheSorts(coins);
             }).catch(async (err) => {
                 console.error(err);
