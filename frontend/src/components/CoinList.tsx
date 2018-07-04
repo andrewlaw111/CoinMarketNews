@@ -158,7 +158,9 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                 keyExtractor={this.keyExtractor}
                                 style={styles(this.props.appSettings.darkMode).coinList}
                                 getItemLayout={this.getItemLayout}
-                                refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
+                                refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                                // refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
+
                                 ListEmptyComponent={noFavourites()}
                                 ref={(flatList) => { this.flatListFavourite = flatList }}
                             />
@@ -171,7 +173,9 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     keyExtractor={this.keyExtractor}
                                     style={[styles(this.props.appSettings.darkMode).coinList,]}
                                     getItemLayout={this.getItemLayout}
-                                    refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
+                                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+
+                                    // refreshControl={(Platform.OS === "ios") ? <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} /> : null}
                                     onEndReached={this.endReached}
                                     onEndReachedThreshold={0.5}
                                     // onScroll={this.onScroll}
@@ -252,13 +256,11 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         }
     }
     private onRefresh = () => {
-        const newNumberOfCoins = this.state.numberOfCoins + 100;
         this.setState({
             refreshing: true
         });
-        getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
+        getCoins(this.props.appSettings, 0, 2000).then(() => {
             this.setState({
-                numberOfCoins: newNumberOfCoins,    // COMMENT : should be calculated with this.propw.coins.length()
                 refreshing: false
             });
         });
