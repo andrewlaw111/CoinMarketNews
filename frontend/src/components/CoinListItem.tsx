@@ -31,7 +31,7 @@ export interface ICoinListState {
 }
 class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListState> {
     public heartColour: string;
-    public small_device = Dimensions.get("window").width < 380;
+    public small_device = Dimensions.get("window").width < 350;
 
     public currencySymbols: { [key: string]: string } = {
         USD: "$",

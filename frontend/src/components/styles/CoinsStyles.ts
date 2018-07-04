@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { darkBackground, lightBackground, darkFont, lightFont, darkItems, lightItems, darkItemsBorder, lightItemsBorder } from "./colours";
 
-const small_device = Dimensions.get("window").width < 380;
+const small_device = Dimensions.get("window").width < 350;
 
 export const styles = (darkMode: boolean) => StyleSheet.create({
     coinList: {

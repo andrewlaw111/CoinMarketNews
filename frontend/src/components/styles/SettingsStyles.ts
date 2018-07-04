@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { darkItemsBorder, lightItemsBorder, darkBackground, lightBackground, darkFont, lightFont, darkItems, lightItems } from "./colours";
 
-const small_device = Dimensions.get("window").width < 380;
+const small_device = Dimensions.get("window").width < 350;
 
 const styles = (darkMode: boolean) => StyleSheet.create({
     settingsItem: {

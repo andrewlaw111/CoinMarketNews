@@ -28,7 +28,7 @@ interface ICoinAlertsModalState {
 class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAlertsModalState> {
     private panResponder: PanResponderInstance;
 
-    public small_device = Dimensions.get("window").width < 380;
+    public small_device = Dimensions.get("window").width < 350;
 
     constructor(props: ICoinAlertsModalProps) {
         super(props);
