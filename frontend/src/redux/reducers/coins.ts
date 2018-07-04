@@ -30,7 +30,6 @@ export const coinReducer = (state: ICoinState = defaultCoinState, action: CoinAc
         })
         return duplicate
       });
-      console.log("newCoins", currentCoins.concat(newCoins));
       return {
         coins: state.coins.concat(newCoins)
       };

@@ -98,7 +98,6 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
     }
 
     public renderNoConnection() {
-        console.log("no connection");
         return (
             <View style={this.styles.pageBackground}>
                 <Spinner />

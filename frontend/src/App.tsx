@@ -57,7 +57,6 @@ Promise.all([
     FontAwesomeIcon.getImageSource("cog", 30, "#3db9f7"),
     loadSettings()
         .then((settings: ISettings) => {
-            console.log(settings);
             if (settings) {
                 setColour(settings.darkMode)
             } else {
