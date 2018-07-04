@@ -309,7 +309,6 @@ class PureSettings extends React.Component<ISettingsProps>{
         const settings = { ...this.props.appSettings };
         settings.pushNotifications = !settings.pushNotifications;
         if (settings.pushNotifications === true) {
-            OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
             OneSignal.sendTag("user_id", this.props.user.id.toString());
         }
         this.props.changeSettings(settings)
