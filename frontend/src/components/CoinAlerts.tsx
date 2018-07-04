@@ -15,6 +15,7 @@ import { editAlert, removeAlerts, addNewsAlert, removeNewsAlert } from "../redux
 import styles from "./styles/CoinAlertsStyles";
 import RenderAlerts from "./CoinAlertItem";
 import AlertItem from "./CoinAlertItem";
+import { changeSettings } from "../redux/actions/settings";
 
 interface ICoinsAlertsProps {
     alerts: IAlerts[];
@@ -26,6 +27,7 @@ interface ICoinsAlertsProps {
     newsAlerts: INewsAlert[];
     user: IUser;
     addNewsAlert: (coinID: number, token: string) => void;
+    changeSettings: (settings: ISettings) => void;
     removeNewsAlert: (coinID: number, token: string) => void;
 }
 interface ICoinsAlertsState {
@@ -101,6 +103,9 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
                 newsAlerts: false
             })
         } else {
+            const settings = { ...this.props.appSettings };
+            settings.pushNotifications = true;
+            this.props.changeSettings(settings)
 
             this.props.addNewsAlert(this.props.coin.id, this.props.user.token)
             this.setState({
@@ -113,6 +118,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
 const mapDispatchToProps = (dispatch: any) => {
     return {
         addNewsAlert: (coinID: number, token: string) => dispatch(addNewsAlert(coinID, token)),
+        changeSettings: (settings: ISettings) => dispatch(changeSettings(settings)),
         removeNewsAlert: (coinID: number, token: string) => dispatch(removeNewsAlert(coinID, token)),
     };
 };
