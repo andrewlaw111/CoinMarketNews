@@ -143,7 +143,7 @@ module.exports = () => {
                         headings: { "en": notification_title },
                         contents: { "en": notification_message },
                         url: news.link,
-                        included_segments: ["All"],
+                        // included_segments: ["All"],
                         filters: filters
                     };
                     console.log(message);

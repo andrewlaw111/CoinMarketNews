@@ -50,7 +50,7 @@ module.exports = () => {
                         contents: { "en": notification_message },
                         ios_badgeType: 'Increase',
                         ios_badgeCount: 1,
-                        included_segments: ["All"],
+                        // included_segments: ["All"],
                         filters: [
                             { "field": "tag", "key": "user_id", "relation": "=", "value": alert.user_id }
                         ]
