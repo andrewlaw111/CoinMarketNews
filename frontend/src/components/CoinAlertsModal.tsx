@@ -28,6 +28,8 @@ interface ICoinAlertsModalState {
 class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAlertsModalState> {
     private panResponder: PanResponderInstance;
 
+    public small_device = Dimensions.get("window").width < 380;
+
     constructor(props: ICoinAlertsModalProps) {
         super(props);
         this.state = {
@@ -164,13 +166,12 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                         </Animated.View>
                     ) : (
                             <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
-                                <TouchableOpacity onPress={this.handleIOSPress}>
-                                    <View style={style(this.props.darkMode).alertArrow} >
-                                        {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
-                                    </View>
-                                    <View style={style(this.props.darkMode).modalHeading}>
-                                        <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
-                                    </View>
+
+                                <TouchableOpacity style={style(this.props.darkMode).alertArrow} onPress={this.handleIOSPress}>
+                                    {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
+                                </TouchableOpacity>
+                                <TouchableOpacity style={style(this.props.darkMode).modalHeading} onPress={this.handleIOSPress}>
+                                    <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
                                 </TouchableOpacity>
 
                                 {this.renderForm()}
@@ -270,7 +271,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                 // Animate value over time
                 this.state.pan.y, // The value to drive
                 {
-                    toValue: (isIphoneX()) ? -Dimensions.get("window").height + 245 : -Dimensions.get("window").height + 220, // Animate to final value of 1
+                    toValue: (isIphoneX()) ? -Dimensions.get("window").height + 245 : (this.small_device) ? -Dimensions.get("window").height + 155 : -Dimensions.get("window").height + 220, // Animate to final value of 1
                 }
             ).start(() => {
                 this.setState({
