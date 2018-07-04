@@ -1,5 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { darkBackground, lightBackground, darkFont, lightFont, darkItems, lightItems, darkItemsBorder, lightItemsBorder } from "./colours";
+
+const small_device = Dimensions.get("window").width < 350;
 
 export const styles = (darkMode: boolean) => StyleSheet.create({
     coinList: {
@@ -14,7 +16,7 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
         color: (darkMode) ? darkFont : lightFont,
         fontSize: 18,
         fontWeight: "bold",
-        marginRight: 10,
+        marginRight: (small_device) ? 5 : 10,
     },
     coinPrice: {
         color: (darkMode) ? "#C2C2C2" : "#666",
@@ -32,9 +34,9 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     coinThumbnail: {
         backgroundColor: "grey",
         margin: 0,
-        width: 50,
-        height: 50,
-        borderRadius:50,
+        width:  (small_device) ? 40 : 50,
+        height:  (small_device) ? 40 : 50,
+        borderRadius:  (small_device) ? 40 : 50,
     },
     listCoin: {
         backgroundColor: (darkMode) ? darkItems : lightItems,
@@ -42,27 +44,27 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
         flexDirection: "row",
     },
     listCoinBody: {
-        flex: 0.44,
+        flex: 0.46,
         justifyContent: "center",
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: (small_device) ? 5 : 10,
+        paddingRight: (small_device) ? 5 : 10,
     },
     listCoinLeft: {
         alignItems: "center",
         flex: 0.26,
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingLeft: 10,
+        paddingLeft: (small_device) ? 5 : 10,
     },
     listCoinName: {
         flexDirection: "row",
     },
     listCoinRight: {
         alignItems: "center",
-        flex: 0.30,
+        flex: 0.28,
         flexDirection: "row",
         justifyContent: "flex-end",
-        paddingRight: 10,
+        paddingRight: (small_device) ? 5 : 10,
     },
     listCoinRightText: {
     },
