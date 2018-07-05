@@ -71,16 +71,18 @@ if (process.env.CRON_NEWS === "true") {
     new NewsUpdate();   // detects new news automatically
 }
 
-const chart = fs.readFileSync('./public/chart.html', "utf8");
+// const chart = fs.readFileSync('./public/chart.html', "utf8");
 
-app.use('/chart/*', function (req, res) {
-    const symbol = req.params[0].toUpperCase();
-    if (symbol != '') {
-        // console.log(symbol);
-        res.send(chart.replace(/BTC/, symbol));
-    }
-    res.send('');
-});
+// app.use('/chart/*', function (req, res) {
+//     const symbol = req.params[0].toUpperCase();
+//     if (symbol != '') {
+//         // console.log(symbol);
+//         res.send(chart.replace(/BTC/, symbol));
+//     }
+//     res.send('');
+// });
+
+
 
 app.use('/source-icons', express.static('public/source-icons'));
 app.use('/media-icons', express.static('public/media-icons'));
@@ -91,6 +93,7 @@ app.use('/icon', function (req, res) {
     fs.writeFileSync('./public/cryptocurrency-icons/' + coinName + '.png', icon);
     // res.send(icon);
     res.sendFile(path.join(__dirname + '/../public/cryptocurrency-icons/' + coinName + '.png'));
+    console.log('a');
 });
 
 app.use("/login", new LoginRouter().router());
@@ -98,6 +101,9 @@ app.use("/coin", new CoinRouter(coinService).router());
 app.use("/news", new NewsRouter(newsService).router());
 app.use("/price", new PriceRouter(priceService).router());
 app.use("/user", new UserRouter(userService).router());
+
+app.use('/', express.static('public/'));
+
 
 server.listen(8000);
 // tslint:disable-next-line:no-console
