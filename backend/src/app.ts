@@ -109,9 +109,7 @@ app.use('/', function (req, res, next) {
     else {
         next();
     }
-});
-
-app.get('/', express.static('public/'));
+}, express.static('public/'));
 
 server.listen(8000);
 // tslint:disable-next-line:no-console
