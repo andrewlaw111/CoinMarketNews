@@ -15,21 +15,21 @@ h1 {
 header .jumbotron {
     background: linear-gradient(170deg, #2f343f, rgb(196, 95, 7) 76%, rgb(196, 95, 7));
     border-radius: 0;
-    height: 100vh;
-}
-
-.jumbotron {
-    background-color: transparent;
-    height: 100%;
     margin: 0;
+    height: 100vh;
     display: flex;
     align-items: center;
 }
 
-.jumbotron .container-fluid.heading-panel {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+@media screen and (max-width: 992px) {
+    header .jumbotron {
+        height: auto;
+    }
+}
+
+.jumbotron .container-fluid.heading-panel .row {
+    width: 100%;
+    margin: auto;
 }
 
 .jumbotron .container-fluid.heading-panel .app-icon {
@@ -69,6 +69,53 @@ header .jumbotron {
 
 .jumbotron .store-badge-apple {
     margin: 10px 9px;
+}
+
+.screenshot-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100%;
+    width: 100%;
+    min-height: 704px;
+    max-width: 800px;
+}
+
+@media screen and (max-width: 592px) {
+    .app-screenshots {
+        /* display: none; */
+    }
+    .screenshot-wrapper>.iphone-image {
+        width: 50%;
+        height: auto;
+    }
+    .screenshot-wrapper>.android-image {
+        width: 40%;
+        height: auto;
+    }
+    .screenshot-wrapper>.iPad-image {
+        width: 80%;
+        height: auto;
+    }
+}
+
+.app-screenshots {
+    position: absolute;
+}
+
+.iphone-image {
+    z-index: 3;
+    transform: translate(-50%, 0);
+}
+
+.android-image {
+    z-index: 2;
+    transform: translate(60%, 1%);
+}
+
+.iPad-image {
+    z-index: 1;
+    transform: translate(0, -6%);
 }
 
 section.features-section {
@@ -118,6 +165,7 @@ footer {
 footer hr {
     border-color: #585858
 }
+
 footer div.contact-icons {
     display: flex;
     flex-direction: column;
