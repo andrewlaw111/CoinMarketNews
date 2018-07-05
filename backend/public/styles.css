@@ -70,7 +70,7 @@ header .jumbotron {
     max-width: 360px;
 }
 
-@media screen and (max-width:452) {
+@media screen and (max-width:452px) {
     .jumbotron .store-badges {
         max-width: 200px;
     }
