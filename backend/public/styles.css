@@ -65,6 +65,15 @@ header .jumbotron {
 .jumbotron .store-badges {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 360px;
+}
+
+@media screen and (max-width:452) {
+    .jumbotron .store-badges {
+        max-width: 200px;
+    }
 }
 
 .jumbotron .store-badge-apple {
@@ -81,9 +90,17 @@ header .jumbotron {
     max-width: 800px;
 }
 
+@media screen and (max-width: 414px) {
+    .screenshot-wrapper {
+        height: 25rem;
+        min-height: 0px;
+    }
+}
+
 @media screen and (max-width: 592px) {
-    .app-screenshots {
-        /* display: none; */
+    .screenshot-wrapper {
+        height: 33rem;
+        min-height: 0px;
     }
     .screenshot-wrapper>.iphone-image {
         width: 50%;
