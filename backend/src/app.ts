@@ -84,10 +84,10 @@ if (process.env.CRON_NEWS === "true") {
 
 
 
-app.get('/source-icons', express.static('public/source-icons'));
-app.get('/media-icons', express.static('public/media-icons'));
-app.get('/icon', express.static('public/cryptocurrency-icons'));
-app.get('/icon', function (req, res) {
+app.use('/source-icons', express.static('public/source-icons'));
+app.use('/media-icons', express.static('public/media-icons'));
+app.use('/icon', express.static('public/cryptocurrency-icons'));
+app.use('/icon', function (req, res) {
     const coinName = req.path.replace(/\//, '').replace(/\.png/, '').toUpperCase();
     const icon = text2png(' \n' + coinName + ' \n', { textColor: 'white', font: '70px Futura', padding: 60 });
     fs.writeFileSync('./public/cryptocurrency-icons/' + coinName + '.png', icon);
