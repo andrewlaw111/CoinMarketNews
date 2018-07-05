@@ -102,7 +102,7 @@ app.use("/news", new NewsRouter(newsService).router());
 app.use("/price", new PriceRouter(priceService).router());
 app.use("/user", new UserRouter(userService).router());
 
-app.get('/', function (req, res, next) {
+app.use('/', function (req, res, next) {
     if (req.host.match(/^www/) == null) {
         res.redirect('https://www.coinmarketnews.app' + req.url, 301);
     }
