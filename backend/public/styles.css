@@ -135,3 +135,9 @@ footer .copyright-footnote {
     font-size: 14px;
     color: #777777;
 }
+
+.qr-code-modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
