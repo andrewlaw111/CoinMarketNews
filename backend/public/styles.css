@@ -70,7 +70,7 @@ header .jumbotron {
     max-width: 360px;
 }
 
-@media screen and (max-width:452) {
+@media screen and (max-width:1024px) {
     .jumbotron .store-badges {
         max-width: 200px;
     }
@@ -99,7 +99,7 @@ header .jumbotron {
 
 @media screen and (max-width: 592px) {
     .screenshot-wrapper {
-        height: 33rem;
+        height: 28rem;
         min-height: 0px;
     }
     .screenshot-wrapper>.iphone-image {
@@ -113,6 +113,7 @@ header .jumbotron {
     .screenshot-wrapper>.iPad-image {
         width: 80%;
         height: auto;
+        margin-left: 42px;
     }
 }
 
@@ -131,6 +132,7 @@ header .jumbotron {
 }
 
 .iPad-image {
+    margin-left: 78px;
     z-index: 1;
     transform: translate(0, -6%);
 }
