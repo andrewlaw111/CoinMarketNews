@@ -105,8 +105,9 @@ app.use("/user", new UserRouter(userService).router());
 app.use('/', function (req, res, next) {
     if (req.hostname.match(/^www/) == null) {
         res.redirect(301, 'https://www.coinmarketnews.app' + req.url);
-    }
-    else if (req.url == '/download' || req.url == '/download/') {
+    } else if (req.url == '/support' || req.url == '/support/') {
+        res.redirect(301, 'https://www.coinmarketnews.app');
+    } else if (req.url == '/download' || req.url == '/download/') {
         res.redirect(301, 'http://onelink.to/r6hy6s');   // redirect to Play Store (android), App Store (iOS), or https://www.coinmarketnews.app (default)
     } else {
         next();
