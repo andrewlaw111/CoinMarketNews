@@ -86,7 +86,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.favouriteRef} />
+                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.favouriteRef} sortCoins={this.sortCoins} />
                 </Tab>
                 <Tab
                     heading="Market"
@@ -96,7 +96,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     textStyle={{ color: textColour }}
                 >
                     <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.marketRef} />
+                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.marketRef} sortCoins={this.sortCoins} />
                 </Tab>
             </Tabs>
         )
@@ -160,7 +160,12 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
             });
         });
     }
-
+    private sortCoins = () => {
+        const coins = sortCoins(this.state.setting, this.state.coins.slice());
+        this.setState({
+            coins,
+        })
+    }
 }
 
 const mapStateToProps = (state: IRootState) => {

@@ -1,16 +1,14 @@
 import React, { RefObject } from "react";
-import Config from "react-native-config";
 import { connect } from "react-redux";
 
-import { Icon, Text, StyleProvider, Spinner } from "native-base";
-import { FlatList, TouchableOpacity, View, RefreshControl, Platform, TextInput, NativeSyntheticEvent, NativeScrollEvent, Animated, UIManager, LayoutAnimation, Dimensions, ScrollView, Slider, ListView } from "react-native";
+import { Text, StyleProvider, Spinner } from "native-base";
+import { FlatList, View, RefreshControl, TextInput, Dimensions, } from "react-native";
 
 import { ICoinPrice, IUser, ISettings } from "../models";
 import { addCoinFavourite, removeCoinFavourite } from "../redux/actions/favourites";
 import { IRootState } from "../redux/store";
 
 import { styles } from "./styles/CoinsStyles";
-import displayCoinOptions from "./functions/CoinsRenderSettings";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -18,10 +16,8 @@ import commonColour from '../../native-base-theme/variables/commonColor';
 import { getCoins } from "../redux/actions/coins";
 import { Navigator } from "react-native-navigation";
 import CoinListItem from "./CoinListItem";
-import { darkBackground } from "./styles/colours";
-import Coins from "./Coins";
-import axios from "axios";
 
+const startingNumberOfCoins = 20;
 interface ICoinListProps {
     coins: ICoinPrice[];
     favouriteTab: boolean;
@@ -33,6 +29,7 @@ interface ICoinListProps {
     addMissingFavourites: (favourites: ICoinPrice[]) => void;
     addCoinFavourite: (coinID: number, token: string) => void;
     removeCoinFavourite: (coinID: number, token: string) => void;
+    sortCoins: () => void;
     setRef: RefObject<FlatList<ICoinPrice>>
 }
 
@@ -69,7 +66,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         super(props);
         this.state = {
             refreshing: false,
-            numberOfCoins: 100,
+            numberOfCoins: startingNumberOfCoins,
             coins: this.props.coins,
             missingAdded: false,
             // searching: false,
@@ -167,7 +164,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                 <FlatList
                                     data={(this.props.setting[0] === "0") ? this.props.coins.slice(0, this.state.numberOfCoins) : top200}
                                     extraData={this.props.favourites}
-                                    initialNumToRender={15}
+                                    initialNumToRender={20}
                                     renderItem={this.renderCoinList}
                                     keyExtractor={this.keyExtractor}
                                     style={[styles(this.props.appSettings.darkMode).coinList,]}
@@ -181,7 +178,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
                                     // scrollEnabled={!this.state.searching}
                                     ListEmptyComponent={spinner()}
                                     ref={this.props.setRef}
-                                    ListFooterComponent={(this.props.setting[0] === "0") ? spinner() : null}
+                                    ListFooterComponent={(this.props.setting[0] === "0") ? (this.props.coins.length > 0) ? spinner() : null : null}
                                 />
                             )
                     }
@@ -226,7 +223,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
         if (!this.waitingForFetch) {
             this.waitingForFetch = true;
 
-            const newNumberOfCoins = this.state.numberOfCoins + 100;
+            const newNumberOfCoins = this.state.numberOfCoins + 20;
             // getCoins(this.props.appSettings, this.state.numberOfCoins, 100).then(() => {
             //     this.setState({
             //         numberOfCoins: newNumberOfCoins,
@@ -261,6 +258,7 @@ class PureCoinList extends React.Component<ICoinListProps, ICoinListState> {
             refreshing: true
         });
         getCoins(this.props.appSettings, 0, 2000).then(() => {
+            this.props.sortCoins();
             this.setState({
                 // numberOfCoins: newNumberOfCoins,    // COMMENT : should be calculated with this.propw.coins.length()
                 refreshing: false

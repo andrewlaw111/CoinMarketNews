@@ -7,7 +7,6 @@
         "allowJs": true,
         "jsx": "react",
         "moduleResolution": "node",
-        // "no-console": false,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noImplicitAny": true,
