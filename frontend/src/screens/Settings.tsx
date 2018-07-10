@@ -1,25 +1,26 @@
 import React from "react";
 
-import { Card, CardItem, Content, Icon, Text, StyleProvider, Button } from "native-base";
-import { Image, View, StyleSheet, TouchableOpacity, Switch, Picker, Platform, ActionSheetIOS, StatusBar } from "react-native";
-
+import { Content, Icon, StyleProvider, Text } from "native-base";
+import {
+    ActionSheetIOS, Image, Picker, Platform, Switch, TouchableOpacity, View,
+} from "react-native";
 
 import { connect } from "react-redux";
-import { IRootState } from "../redux/store";
+import { ICoinPrice, ISettings, IUser } from "../models";
 import { changeSettings } from "../redux/actions/settings";
-import { ISettings, ICoinPrice, IUser } from "../models";
+import { IRootState } from "../redux/store";
 
-import getTheme from '../../native-base-theme/components';
-import commonColour from '../../native-base-theme/variables/commonColor';
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
+import getTheme from "../../native-base-theme/components";
+import commonColour from "../../native-base-theme/variables/commonColor";
 
-import Config from "react-native-config";
 import axios from "axios";
-import { Navigator, Navigation } from "react-native-navigation";
+import Config from "react-native-config";
+import { Navigation, Navigator } from "react-native-navigation";
 
 import OneSignal from "react-native-onesignal";
 import { getCoins } from "../redux/actions/coins";
-import styles from "./styles/SettingsStyles";
+import styles from "../styles/SettingsStyles";
 
 interface ISettingsProps {
     coins: ICoinPrice[];
@@ -29,7 +30,7 @@ interface ISettingsProps {
     changeSettings: (settings: ISettings) => void;
 }
 
-class PureSettings extends React.Component<ISettingsProps>{
+class PureSettings extends React.Component<ISettingsProps> {
     public static navigatorStyle = {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
@@ -41,72 +42,81 @@ class PureSettings extends React.Component<ISettingsProps>{
 
     // onOpened = (notification: any) => {
     //     console.log(notification.notification.isAppInFocus)
-    //     if (notification.notification.isAppInFocus === true && !notification.action.ActionID) {    // user clicked cancel
+    //     if (notification.notification.isAppInFocus === true && !notification.action.ActionID)
+    // {    // user clicked cancel
     //         alert('cancel');    // to not show URL
     //     }
     // }
 
     public renderCryptoPicker() {
-        const options = ["BTC", "ETH", "Cancel"]
+        const options = ["BTC", "ETH", "Cancel"];
         const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
-            options: options,
             cancelButtonIndex: 2,
+            options,
         },
             (buttonIndex) => {
                 this.handleCryptoCurrencyValueChange(options[buttonIndex], buttonIndex);
             });
         if (Platform.OS === "ios") {
             return (
-                <TouchableOpacity onPress={IOSPicker} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <TouchableOpacity
+                    onPress={IOSPicker}
+                    style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}
+                >
                     <Text style={{ color: "#0076FF" }}>
                         {this.props.appSettings.cryptoCurrency}
                     </Text>
                     <Icon style={{ fontSize: 24, marginLeft: 6, marginTop: 2 }} name="ios-arrow-down-outline" />
                 </TouchableOpacity>
 
-            )
-        }
-        else {
+            );
+        } else {
             return (
                 <Picker
                     selectedValue={this.props.appSettings.cryptoCurrency}
                     style={styles(this.props.appSettings.darkMode).picker}
                     onValueChange={this.handleCryptoCurrencyValueChange}
                 >
-                    {options.map((option: string, index: number) => <Picker.Item key={index} label={option} value={option} />)}
+                    {options.map((option: string, index: number) => {
+                        return <Picker.Item key={index} label={option} value={option} />;
+                    })}
                 </Picker>
-            )
+            );
         }
     }
     public renderFiatPicker() {
-        const options = ["USD", "EUR", "CAD", "GBP", "HKD", "Cancel"]
+        const options = ["USD", "EUR", "CAD", "GBP", "HKD", "Cancel"];
         const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
-            options: options,
             cancelButtonIndex: 5,
+            options,
         },
             (buttonIndex) => {
                 this.handleFiatCurrencyValueChange(options[buttonIndex], buttonIndex);
             });
         if (Platform.OS === "ios") {
             return (
-                <TouchableOpacity onPress={IOSPicker} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <TouchableOpacity
+                    onPress={IOSPicker}
+                    style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}
+                >
                     <Text style={{ color: "#0076FF" }}>
                         {this.props.appSettings.fiatCurrency}
                     </Text>
                     <Icon style={{ fontSize: 24, marginLeft: 6, marginTop: 2 }} name="ios-arrow-down-outline" />
                 </TouchableOpacity>
-            )
-        }
-        else {
+            );
+        } else {
             return (
                 <Picker
                     selectedValue={this.props.appSettings.fiatCurrency}
                     style={styles(this.props.appSettings.darkMode).picker}
                     onValueChange={this.handleFiatCurrencyValueChange}
                 >
-                    {options.map((option: string, index: number) => <Picker.Item key={index} label={option} value={option} />)}
+                    {options.map((option: string, index: number) => {
+                        return <Picker.Item key={index} label={option} value={option} />;
+                    })}
                 </Picker>
-            )
+            );
         }
     }
 
@@ -118,10 +128,18 @@ class PureSettings extends React.Component<ISettingsProps>{
 
                     <View style={styles(this.props.appSettings.darkMode).settingsItem}>
                         <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
-                            <Icon type="FontAwesome" name="dollar" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                            <Icon
+                                type="FontAwesome"
+                                name="dollar"
+                                style={styles(this.props.appSettings.darkMode).SettingsIcon}
+                            />
                         </View>
                         <View style={styles(this.props.appSettings.darkMode).settingsRight}>
-                            <Text style={styles(this.props.appSettings.darkMode).settingsText}>Preferred  Fiat Currency</Text>
+                            <Text
+                                style={styles(this.props.appSettings.darkMode).settingsText}
+                            >
+                                Preferred  Fiat Currency
+                            </Text>
 
                             {this.renderFiatPicker()}
                         </View>
@@ -130,10 +148,17 @@ class PureSettings extends React.Component<ISettingsProps>{
 
                     <View style={styles(this.props.appSettings.darkMode).settingsItem}>
                         <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
-                            <Image source={require("../coin.png")} style={styles(this.props.appSettings.darkMode).CoinIcon} />
+                            <Image
+                                source={require("../coin.png")}
+                                style={styles(this.props.appSettings.darkMode).CoinIcon}
+                            />
                         </View>
                         <View style={styles(this.props.appSettings.darkMode).settingsRight}>
-                            <Text style={styles(this.props.appSettings.darkMode).settingsText}>Preferred Crypto Currency</Text>
+                            <Text
+                                style={styles(this.props.appSettings.darkMode).settingsText}
+                            >
+                                Preferred Crypto Currency
+                            </Text>
 
                             {this.renderCryptoPicker()}
                         </View>
@@ -141,7 +166,11 @@ class PureSettings extends React.Component<ISettingsProps>{
 
                     <View style={styles(this.props.appSettings.darkMode).settingsItem}>
                         <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
-                            <Icon type="FontAwesome" name="bell" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                            <Icon
+                                type="FontAwesome"
+                                name="bell"
+                                style={styles(this.props.appSettings.darkMode).SettingsIcon}
+                            />
                         </View>
                         <View style={styles(this.props.appSettings.darkMode).settingsRight}>
                             <Text style={styles(this.props.appSettings.darkMode).settingsText}>Push notifications</Text>
@@ -149,9 +178,18 @@ class PureSettings extends React.Component<ISettingsProps>{
                                 {/* tslint:disable-next-line:jsx-no-multiline-js*/}
                                 {(Platform.OS === "ios") ?
                                     (
-                                        <Switch value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
+                                        <Switch
+                                            value={this.props.appSettings.pushNotifications}
+                                            // tslint:disable-next-line:max-line-length
+                                            onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)}
+                                        />
                                     ) : (
-                                        <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.pushNotifications} onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)} />
+                                        <Switch
+                                            onTintColor="#3f78ba"
+                                            thumbTintColor="#2d5a8e" value={this.props.appSettings.pushNotifications}
+                                            // tslint:disable-next-line:max-line-length
+                                            onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)}
+                                        />
                                     )}
                             </View>
                         </View>
@@ -159,7 +197,11 @@ class PureSettings extends React.Component<ISettingsProps>{
 
                     <View style={styles(this.props.appSettings.darkMode).settingsItem}>
                         <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
-                            <Icon type="FontAwesome" name="moon-o" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                            <Icon
+                                type="FontAwesome"
+                                name="moon-o"
+                                style={styles(this.props.appSettings.darkMode).SettingsIcon}
+                            />
                         </View>
                         <View style={styles(this.props.appSettings.darkMode).settingsRight}>
                             <Text style={styles(this.props.appSettings.darkMode).settingsText}>Dark Mode</Text>
@@ -167,27 +209,33 @@ class PureSettings extends React.Component<ISettingsProps>{
                                 {/* tslint:disable-next-line:jsx-no-multiline-js*/}
                                 {(Platform.OS === "ios") ?
                                     (
-                                        <Switch value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
+                                        <Switch
+                                            value={this.props.appSettings.darkMode}
+                                            onValueChange={this.handleDarkModeValueChange}
+                                        />
                                     ) : (
-                                        <Switch onTintColor="#3f78ba" thumbTintColor="#2d5a8e" value={this.props.appSettings.darkMode} onValueChange={this.handleDarkModeValueChange} />
+                                        <Switch
+                                            onTintColor="#3f78ba"
+                                            thumbTintColor="#2d5a8e"
+                                            value={this.props.appSettings.darkMode}
+                                            onValueChange={this.handleDarkModeValueChange}
+                                        />
                                     )}
                             </View>
                         </View>
                     </View>
-                    {/*tslint:disable-next-line:jsx-no-multiline-js*/}
-                    {/* <Card style={styles(this.props.appSettings.darkMode).Card}>
-                        <TouchableOpacity  style={styles(this.props.appSettings.darkMode).settingsItem}>
-                                <View style={styles(this.props.appSettings.darkMode).CardLeft}>
-                                    <View>
-                                    <Icon type="FontAwesome" name="user" style={styles</View>(this.props.appSettings.darkMode).SettingsIcon} />
-
-                                    <Text style={styles(this.props.appSettings.darkMode).settingsText}>Account</Text>
-                                </View>
-                        </TouchableOpacity>
-                    </Card> */}
-                    <TouchableOpacity style={[styles(this.props.appSettings.darkMode).settingsItem, { justifyContent: "flex-start", height: 50, }]}>
+                    <TouchableOpacity
+                        style={[
+                            styles(this.props.appSettings.darkMode).settingsItem,
+                            { justifyContent: "flex-start", height: 50 },
+                        ]}
+                    >
                         <View style={styles(this.props.appSettings.darkMode).SettingsIconWrapper}>
-                            <Icon type="FontAwesome" name="info" style={styles(this.props.appSettings.darkMode).SettingsIcon} />
+                            <Icon
+                                type="FontAwesome"
+                                name="info"
+                                style={styles(this.props.appSettings.darkMode).SettingsIcon}
+                            />
                         </View>
                         <Text style={styles(this.props.appSettings.darkMode).settingsText}>CoinMarketNews v1.0</Text>
 
@@ -198,7 +246,7 @@ class PureSettings extends React.Component<ISettingsProps>{
     }
     private handleCryptoCurrencyValueChange = (itemValue: string, itemIndex: number) => {
         if (itemIndex === 2) {
-            return
+            return;
         } else {
             const settings = { ...this.props.appSettings };
             settings.cryptoCurrency = itemValue;
@@ -210,32 +258,41 @@ class PureSettings extends React.Component<ISettingsProps>{
         const settings = { ...this.props.appSettings };
         settings.darkMode = !settings.darkMode;
 
-        let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string }
-        let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string };
+        let colours: {
+            backgroundColor: string,
+            navBarTextColor: string,
+            screenBackgroundColor: string,
+            statusBarTextColorScheme: string,
+        };
+        let tabBarColours: {
+            tabBarButtonColor: string,
+            tabBarSelectedButtonColor: string,
+            tabBarBackgroundColor: string,
+        };
         if (settings.darkMode) {
             colours = {
                 backgroundColor: "#343a44",
                 navBarTextColor: "#FFF",
                 screenBackgroundColor: "#454951",
                 statusBarTextColorScheme: "light",
-            }
+            };
             tabBarColours = {
+                tabBarBackgroundColor: "#343a44",
                 tabBarButtonColor: "#FFF",
                 tabBarSelectedButtonColor: "#2874F0",
-                tabBarBackgroundColor: "#343a44"
-            }
+            };
         } else {
             colours = {
                 backgroundColor: "#F8F8F8",
                 navBarTextColor: "#000",
                 screenBackgroundColor: "#F8F8F8",
                 statusBarTextColorScheme: "dark",
-            }
+            };
             tabBarColours = {
+                tabBarBackgroundColor: "#F8F8F8",
                 tabBarButtonColor: "#343a44",
                 tabBarSelectedButtonColor: "#2874F0",
-                tabBarBackgroundColor: "#F8F8F8"
-            }
+            };
         }
         Promise.all([
             FontAwesomeIcon.getImageSource("newspaper-o", 26, "#3db9f7"),
@@ -267,41 +324,42 @@ class PureSettings extends React.Component<ISettingsProps>{
                         },
                     ],
                     tabsStyle: {
-                        tabBarButtonColor: tabBarColours.tabBarButtonColor,
-                        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
-                        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
                         initialTabIndex: 2,
-                        navBarTextColor: colours.navBarTextColor,
                         navBarBackgroundColor: colours.backgroundColor,
+                        navBarTextColor: colours.navBarTextColor,
                         screenBackgroundColor: colours.screenBackgroundColor,
                         statusBarTextColorScheme: colours.statusBarTextColorScheme,
-                    },
-                    appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
+                        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
                         tabBarButtonColor: tabBarColours.tabBarButtonColor,
                         tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
-                        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                    },
+                    appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
                         initialTabIndex: 2,
+                        keepStyleAcrossPush: false,
                         navBarBackgroundColor: colours.backgroundColor,
                         navBarTextColor: colours.navBarTextColor,
                         screenBackgroundColor: colours.screenBackgroundColor,
                         statusBarColor: colours.backgroundColor,
                         statusBarTextColorScheme: colours.statusBarTextColorScheme,
-                        keepStyleAcrossPush: false,
+                        tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                        tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                        tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
                     },
-                    animationType: "fade"
-                })
-                this.props.changeSettings(settings)
+                    animationType: "fade",
+                });
+                this.props.changeSettings(settings);
             }).catch((err) => {
+                // tslint:disable-next-line:no-console
                 console.log("error", err);
             });
     }
     private handleFiatCurrencyValueChange = (itemValue: string, itemIndex: number) => {
         if (itemIndex === 5) {
-            return
+            return;
         } else {
             const settings = { ...this.props.appSettings };
             settings.fiatCurrency = itemValue;
-            this.props.changeSettings(settings)
+            this.props.changeSettings(settings);
             getCoins(settings);
         }
     }
@@ -311,21 +369,21 @@ class PureSettings extends React.Component<ISettingsProps>{
         if (settings.pushNotifications === true) {
             OneSignal.sendTag("user_id", this.props.user.id.toString());
         }
-        this.props.changeSettings(settings)
+        this.props.changeSettings(settings);
         axios
             .patch(
                 `${Config.API_SERVER}/user`,
                 {
                     data: {
-                        notifications: settings.pushNotifications
-                    }
+                        notifications: settings.pushNotifications,
+                    },
                 },
                 {
                     headers: {
-                        token
-                    }
-                }
-            )
+                        token,
+                    },
+                },
+        );
     }
 }
 
@@ -337,8 +395,8 @@ const mapDispatchToProps = (dispatch: any) => {
 
 const mapStateToProps = (state: IRootState) => {
     return {
-        coins: state.coins.coins,
         appSettings: state.settings.settings,
+        coins: state.coins.coins,
         user: state.user.user,
     };
 };

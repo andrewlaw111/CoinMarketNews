@@ -1,19 +1,17 @@
 import axios from "axios";
 import React from "react";
+import Moment from "react-moment";
 import Config from "react-native-config";
-import Moment from 'react-moment';
 
-import { Body, Card, CardItem, Container, Text, StyleProvider, Content, Spinner, Icon } from "native-base";
-import { FlatList, Linking, StyleSheet, TouchableOpacity, View, Platform } from "react-native";
+import { Body, Card, CardItem, Container, Icon, StyleProvider, Text } from "native-base";
+import { FlatList, Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 
-import getTheme from '../../native-base-theme/components';
-import commonColour from '../../native-base-theme/variables/commonColor';
+import getTheme from "../../native-base-theme/components";
+import commonColour from "../../native-base-theme/variables/commonColor";
 
-import { ICoin, INews, ISettings, ICoinPrice } from "../models";
-import { IRootState } from "../redux/store";
-import IonIcons from "react-native-vector-icons/Ionicons";
 import FastImage from "react-native-fast-image";
 import { Navigator } from "react-native-navigation";
+import { ICoin, ICoinPrice, INews, ISettings } from "../models";
 
 interface ICoinsNewsProps {
     appSettings: ISettings;
@@ -69,7 +67,12 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                     </CardItem>
                     <CardItem
                         footer={true}
-                        style={[styles(this.props.darkMode).cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
+                        style={
+                            [
+                                styles(this.props.darkMode).cardItem,
+                                { justifyContent: "space-between", alignItems: "flex-start" },
+                            ]
+                        }
                     >
                         <View style={{ flexDirection: "row", justifyContent: "flex-start", marginTop: 5 }}>
                             <View>
@@ -77,15 +80,32 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                                 {(info.item.counter > 1) ?
                                     (
                                         <View style={{ flexDirection: "row", marginRight: 3, alignItems: "center" }}>
-                                            <Text style={styles(this.props.darkMode).newsCounter}>{info.item.counter} </Text>
-                                            <Icon style={styles(this.props.darkMode).newsCounterIcon} type="Ionicons" name="ios-flame" />
+                                            <Text
+                                                style={styles(this.props.darkMode).newsCounter}
+                                            >
+                                                {info.item.counter}
+                                            </Text>
+                                            <Icon
+                                                style={styles(this.props.darkMode).newsCounterIcon}
+                                                type="Ionicons"
+                                                name="ios-flame"
+                                            />
                                         </View>
                                     ) : (
                                         null
                                     )}
                             </View>
                             <View>
-                                <Moment style={[styles(this.props.darkMode).newsText, { color: (this.props.darkMode) ? "#fff" : "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                                <Moment
+                                    style={[
+                                        styles(this.props.darkMode).newsText,
+                                        { color: (this.props.darkMode) ? "#fff" : "#313131" },
+                                    ]}
+                                    element={Text}
+                                    fromNow={true}
+                                >
+                                    {info.item.created_at}
+                                </Moment>
                             </View>
                         </View>
                     </CardItem>
@@ -101,16 +121,16 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                 keyExtractor={this.keyExtractor}
                 style={styles(this.props.darkMode).newsList}
             />
-        )
+        );
     }
     public renderNoNews() {
         return (
-            <View style={[styles(this.props.darkMode).news,{justifyContent:"center", alignItems: "center"}]}>
-                 <Text style={[styles(this.props.darkMode).cardText, {marginTop:7}]}>
+            <View style={[styles(this.props.darkMode).news, { justifyContent: "center", alignItems: "center" }]}>
+                <Text style={[styles(this.props.darkMode).cardText, { marginTop: 7 }]}>
                     No news was found, please check again later.
                 </Text>
             </View>
-        )
+        );
     }
     public render() {
         return (
@@ -135,104 +155,68 @@ export default class CoinNews extends React.Component<ICoinsNewsProps, ICoinsNew
                     });
                 }
             })
-            .catch((data) => {
-            })
+            .catch((err) => {
+                // tslint:disable-next-line:no-console
+                console.log(err);
+            });
     }
     private handleLinkPress = (link: string) => {
         Linking.openURL(link);
-    }
-    private handlePressIcon = (coins_id: number) => {
-        const selectedCoin = this.props.coins.find((coin) => coin.id === coins_id)
-        const favourite = (this.props.favourites.indexOf(coins_id) > -1) ? true : false
-
-        Promise.all([
-            IonIcons.getImageSource("ios-arrow-back", 20, "#FFF"),
-            IonIcons.getImageSource("ios-star", 24, "grey"),
-        ]).then((sources) => {
-            this.props.navigator.showModal({
-                navigatorButtons: {
-                    leftButtons: [{
-                        buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : (Platform.OS === "ios") ? "#2874F0" : "#333",
-                        buttonFontSize: 18,
-                        buttonFontWeight: "600",
-                        id: "back",
-                        showAsAction: "ifRoom",
-                        title: "back",
-                        icon: (Platform.OS === "ios") ? sources[0] : null,
-                    }],
-                    rightButtons: [{
-                        buttonColor: (favourite) ? "gold" : "grey",
-                        buttonFontSize: 18,
-                        buttonFontWeight: "600",
-                        id: "like",
-                        showAsAction: "ifRoom",
-                        icon: sources[1],
-                    }],
-
-                },
-                navigatorStyle: {},
-                passProps: { appSettings: this.props.appSettings, coinID: coins_id, coinPrice: selectedCoin, favourite },
-                screen: "CoinMarketNews.CoinsPage",
-                title: selectedCoin.name,
-            });
-        }).catch((err) => {
-            console.error(err)
-        })
     }
     private keyExtractor = (item: INews) => item.id.toString();
 }
 
 const styles = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
     },
     cardItem: {
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        paddingRight: 10,
-        paddingLeft: 10,
-        paddingTop: 10,
         paddingBottom: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 10,
     },
     cardText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
     },
     headingText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
-        fontWeight: 'bold',
         fontSize: 14,
+        fontWeight: "bold",
         paddingRight: 25,
         // textDecorationLine: "underline",
     },
     news: {
         backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
     },
-    newsList: {
-        // paddingBottom: 20,
-    },
-    newsText: {
-        color: (darkMode) ? "#F8F8F8" : "#a3a3a2",
-        fontSize: 14,
-    },
     newsCounter: {
         color: "#ffa236",
         fontSize: 14,
     },
     newsCounterIcon: {
-        width: 13,
         color: "#ffa236",
         fontSize: 15,
-    },
-    newsSourceIcon: {
-        width: 30,
-        height: 30,
-        marginRight: 8,
+        width: 13,
     },
     newsIcons: {
-        width: 25,
-        height: 25,
-        marginRight: 6,
         backgroundColor: "grey",
         borderRadius: 50,
-    }
+        height: 25,
+        marginRight: 6,
+        width: 25,
+    },
+    newsList: {
+        // paddingBottom: 20,
+    },
+    newsSourceIcon: {
+        height: 30,
+        marginRight: 8,
+        width: 30,
+    },
+    newsText: {
+        color: (darkMode) ? "#F8F8F8" : "#a3a3a2",
+        fontSize: 14,
+    },
 });

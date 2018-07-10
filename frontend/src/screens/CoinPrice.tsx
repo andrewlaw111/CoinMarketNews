@@ -1,9 +1,8 @@
 import React from "react";
-import Config from "react-native-config";
 import { connect } from "react-redux";
 
-import { Body, Card, CardItem, Container, StyleProvider, Text } from "native-base";
-import { ScrollView, StyleSheet, View, WebView, Dimensions } from "react-native";
+import { Card, CardItem, StyleProvider, Text } from "native-base";
+import { Dimensions, ScrollView, StyleSheet, View, WebView } from "react-native";
 
 import getTheme from '../../native-base-theme/components';
 import commonColour from '../../native-base-theme/variables/commonColor';
@@ -27,14 +26,14 @@ interface ICoinStats {
 class PureCoinPrice extends React.Component<ICoinPriceProps> {
 
     public currencySymbols: { [key: string]: string } = {
-        USD: "$",
-        EUR: "€",
         CAD: "$",
+        EUR: "€",
         GBP: "£",
         HKD: "$",
+        USD: "$",
         // BTC: "&#xf15a",
         // ETH: "&#xf42e",
-    }
+    };
     public stats: ICoinStats[] = [
         {
             stat: `${this.currencySymbols[this.props.appSettings.fiatCurrency]} ${this.props.coinPrice.price_fiat.price.toFixed(2)}`,
@@ -44,7 +43,7 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
         {
             stat: `${this.props.coinPrice.price_fiat.percent_change_1h}%`,
             statType: `1 hour change`,
-            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_1h >= 0) ? "green" : "red" }]
+            style: [styles(this.props.darkMode).coinInfoStatsText, { color: (this.props.coinPrice.price_fiat.percent_change_1h >= 0) ? "green" : "red" }],
         },
         {
             stat: `${this.props.coinPrice.price_fiat.percent_change_24h}%`,

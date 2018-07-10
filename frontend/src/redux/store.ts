@@ -1,14 +1,14 @@
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import thunk from "redux-thunk";
+import { alertsReducer, IAlertsState } from "./reducers/alerts";
 import { coinReducer, ICoinState } from "./reducers/coins";
 import { favouritesReducer, IFavouritesState } from "./reducers/favourites";
 import { INewsState, newsReducer } from "./reducers/news";
-import { IUserState, userReducer } from "./reducers/user";
 import { ISettingsState, settingsReducer } from "./reducers/settings";
-import { alertsReducer, IAlertsState } from "./reducers/alerts";
+import { IUserState, userReducer } from "./reducers/user";
 
 export interface IRootState {
-    alerts: IAlertsState,
+    alerts: IAlertsState;
     coins: ICoinState;
     favourites: IFavouritesState;
     news: INewsState;

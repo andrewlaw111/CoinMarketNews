@@ -1,10 +1,7 @@
-import axios from "axios";
 import { AsyncStorage } from "react-native";
 
 import { Action } from "redux";
 import { store } from "../store";
-import Config from "react-native-config";
-import { getUser } from "./user";
 
 // Define Actions const and type
 export const ADD_COIN_FAVOURITE = "ADD_COIN_FAVOURITE";
@@ -39,7 +36,7 @@ export const loadCoinFavouritesToStore = (favourites: number[]) => {
     };
 };
 
-export const removeCoinFavourite = (coinID: number, token: string) => {
+export const removeCoinFavourite = (coinID: number) => {
     // axios
     //     .delete(
     //         `${Config.API_SERVER}/user/favourites`,
@@ -68,7 +65,7 @@ export const loadFavourites = async () => {
     }
 };
 
-export const addCoinFavourite = (coinID: number, token: string) => {
+export const addCoinFavourite = (coinID: number) => {
     // if (token) {
     //     axios
     //         .post(

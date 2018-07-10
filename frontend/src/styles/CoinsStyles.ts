@@ -1,9 +1,22 @@
-import { StyleSheet, Dimensions } from "react-native";
-import { darkBackground, lightBackground, darkFont, lightFont, darkItems, lightItems, darkItemsBorder, lightItemsBorder } from "./colours";
+import { Dimensions, StyleSheet } from "react-native";
+import {
+    darkBackground,
+    darkFont,
+    darkItems,
+    darkItemsBorder,
+    lightBackground,
+    lightFont,
+    lightItems,
+    lightItemsBorder,
+} from "./colours";
 
-const small_device = Dimensions.get("window").width < 350;
+const smallDevice = Dimensions.get("window").width < 350;
 
 export const styles = (darkMode: boolean) => StyleSheet.create({
+    NoFavourites: {
+        color: (darkMode) ? darkFont : lightFont,
+        textAlign: "center",
+    },
     coinList: {
         backgroundColor: (darkMode) ? darkBackground : lightBackground,
         flex: 1,
@@ -16,12 +29,12 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
         color: (darkMode) ? darkFont : lightFont,
         fontSize: 18,
         fontWeight: "bold",
-        marginRight: (small_device) ? 5 : 10,
+        marginRight: (smallDevice) ? 5 : 10,
     },
     coinPrice: {
         color: (darkMode) ? "#C2C2C2" : "#666",
-        fontWeight: "bold",
         fontSize: 16,
+        fontWeight: "bold",
     },
     coinSymbol: {
         color: (darkMode) ? "#D8D8D8" : "#666",
@@ -33,10 +46,14 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     },
     coinThumbnail: {
         backgroundColor: "grey",
+        borderRadius: (smallDevice) ? 40 : 50,
+        height: (smallDevice) ? 40 : 50,
         margin: 0,
-        width:  (small_device) ? 40 : 50,
-        height:  (small_device) ? 40 : 50,
-        borderRadius:  (small_device) ? 40 : 50,
+        width: (smallDevice) ? 40 : 50,
+    },
+    cryptoSymbol: {
+        color: (this.props.appSettings.darkMode) ? "#C2C2C2" : "#5E5E5E",
+        fontFamily: "Font Awesome 5 Brands",
     },
     listCoin: {
         backgroundColor: (darkMode) ? darkItems : lightItems,
@@ -46,15 +63,15 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
     listCoinBody: {
         flex: 0.46,
         justifyContent: "center",
-        paddingLeft: (small_device) ? 5 : 10,
-        paddingRight: (small_device) ? 5 : 10,
+        paddingLeft: (smallDevice) ? 5 : 10,
+        paddingRight: (smallDevice) ? 5 : 10,
     },
     listCoinLeft: {
         alignItems: "center",
         flex: 0.26,
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingLeft: (small_device) ? 5 : 10,
+        paddingLeft: (smallDevice) ? 5 : 10,
     },
     listCoinName: {
         flexDirection: "row",
@@ -64,24 +81,20 @@ export const styles = (darkMode: boolean) => StyleSheet.create({
         flex: 0.28,
         flexDirection: "row",
         justifyContent: "flex-end",
-        paddingRight: (small_device) ? 5 : 10,
+        paddingRight: (smallDevice) ? 5 : 10,
     },
     listCoinRightText: {
     },
     listItem: {
-        borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
         backgroundColor: (darkMode) ? darkItems : lightItems,
+        borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
         borderWidth: 0.5,
     },
     listStyle: {
         paddingTop: -100,
     },
-    NoFavourites: {
-        textAlign: "center",
-        color: (darkMode) ? darkFont : lightFont
-    },
     safeAreaView: {
+        backgroundColor: (darkMode) ? "#343a44" : "#F8F8F8",
         flex: 1,
-        backgroundColor: (darkMode) ? "#343a44" : '#F8F8F8'
-    }
+    },
 });

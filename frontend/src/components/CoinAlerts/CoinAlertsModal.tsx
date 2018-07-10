@@ -1,16 +1,32 @@
-import React from 'react';
-import { Text, View, TextInput, StyleSheet, KeyboardAvoidingView, PanResponder, PanResponderInstance, Animated, Dimensions, Platform, TouchableOpacity } from 'react-native';
-import { ICoinPrice, ISettings, IAlerts, IUser } from '../models';
-import { Segment, Button, Icon } from 'native-base';
-import { IRootState } from '../redux/store';
-import { addAlerts, removeAlerts, editAlert } from '../redux/actions/alerts';
-import { connect } from 'react-redux';
-import { lightItemsBorder, darkItemsBorder } from './styles/colours';
+import React from "react";
+
+import {
+    Animated,
+    Dimensions,
+    KeyboardAvoidingView,
+    PanResponder,
+    PanResponderInstance,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
+
+import axios from "axios";
+import { Button, Icon, Segment } from "native-base";
+import Config from "react-native-config";
 import { isIphoneX } from "react-native-iphone-x-helper";
-import { changeSettings } from '../redux/actions/settings';
 import OneSignal from "react-native-onesignal";
-import axios from 'axios';
-import Config from 'react-native-config';
+
+import { IAlerts, ICoinPrice, ISettings, IUser } from "../../models";
+
+import { connect } from "react-redux";
+import { addAlerts } from "../../redux/actions/alerts";
+import { changeSettings } from "../../redux/actions/settings";
+import { IRootState } from "../../redux/store";
+import { darkItemsBorder, lightItemsBorder } from "../../styles/colours";
 
 interface ICoinAlertsModalProps {
     appSettings: ISettings;
@@ -31,9 +47,8 @@ interface ICoinAlertsModalState {
 }
 
 class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAlertsModalState> {
-    private panResponder: PanResponderInstance;
-
-    public small_device = Dimensions.get("window").width < 350;
+    public panResponder: PanResponderInstance;
+    public smallDevice = Dimensions.get("window").width < 350;
 
     constructor(props: ICoinAlertsModalProps) {
         super(props);
@@ -46,46 +61,44 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
         };
         this.panResponder = PanResponder.create({
             // Ask to be the responder:
-            onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-            onMoveShouldSetPanResponder: (evt, gestureState) => true,
-            onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+            onMoveShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponderCapture: () => true,
+            onStartShouldSetPanResponder: () => true,
+            onStartShouldSetPanResponderCapture: () => true,
 
-            onPanResponderGrant: (evt, gestureState) => {
+            onPanResponderGrant: () => {
                 this.state.pan.setOffset({ x: this.state.pan.x._value, y: this.state.pan.y._value });
                 this.state.pan.setValue({ x: 0, y: 0 });
             },
             onPanResponderMove: (e, gestureState) => {
-                Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }])(e, gestureState)
+                Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }])(e, gestureState);
             },
-            onPanResponderTerminationRequest: (evt, gestureState) => false,
-            onPanResponderRelease: (evt, gestureState) => {
+            onPanResponderRelease: () => {
                 this.state.pan.flattenOffset();
                 if (this.state.modalOpen) {
                     if (this.state.pan.y._value < 5 && this.state.pan.y._value > -5) {
-                        this.closeModal()
-                    }
-                    else if (this.state.pan.y._value > -50) {
-                        this.openModal()
+                        this.closeModal();
+                    } else if (this.state.pan.y._value > -50) {
+                        this.openModal();
                     } else {
-                        this.closeModal()
+                        this.closeModal();
                     }
                 } else {
                     if (this.state.pan.y._value < 5 && this.state.pan.y._value > -5) {
-                        this.openModal()
+                        this.openModal();
                     } else if (this.state.pan.y._value < -90) {
-                        this.openModal()
+                        this.openModal();
                     } else {
-                        this.closeModal()
+                        this.closeModal();
                     }
-
                 }
             },
-            onPanResponderTerminate: (evt, gestureState) => {
+            onPanResponderTerminate: () => {
                 // Another component has become the responder, so this gesture
                 // should be cancelled
             },
-            onShouldBlockNativeResponder: (evt, gestureState) => {
+            onPanResponderTerminationRequest: () => false,
+            onShouldBlockNativeResponder: () => {
                 // Returns whether this component should block native components from becoming the JS
                 // responder. Returns true by default. Is currently only supported on android.
                 return true;
@@ -98,22 +111,41 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             <View style={style(this.props.darkMode).modalFormComponentsWrapper}>
                 <Segment style={style(this.props.darkMode).segment}>
                     <Button
-                        style={(Platform.OS === "android") ? [style(this.props.darkMode).segmentButton, { backgroundColor: (this.state.fiatCurrency) ? "#3f78ba" : null }] : null}
+                        style={(Platform.OS === "android") ?
+                            [
+                                style(this.props.darkMode).segmentButton,
+                                { backgroundColor: (this.state.fiatCurrency) ? "#3f78ba" : null },
+                            ] : null
+                        }
                         first={true}
                         onPress={this.changeCurrency.bind(this, "fiat")}
                         active={(this.state.fiatCurrency) ? true : false}
                     >
-                        <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButtonActive : style(this.props.darkMode).textSegmentButton}>
+                        <Text
+                            style={(this.state.fiatCurrency) ? (
+                                style(this.props.darkMode).textSegmentButtonActive
+                            ) : (style(this.props.darkMode).textSegmentButton)}
+                        >
                             {this.props.appSettings.fiatCurrency}
                         </Text>
                     </Button>
                     <Button
-                        style={(Platform.OS === "android") ? [style(this.props.darkMode).segmentButton, { backgroundColor: (this.state.fiatCurrency) ? null : "#3f78ba" }] : null}
+                        style={(Platform.OS === "android") ?
+                            [
+                                style(this.props.darkMode).segmentButton,
+                                { backgroundColor: (this.state.fiatCurrency) ? null : "#3f78ba" },
+                            ] : null}
                         last={true}
                         onPress={this.changeCurrency.bind(this, "crypto")}
                         active={(this.state.fiatCurrency) ? false : true}
                     >
-                        <Text style={(this.state.fiatCurrency) ? style(this.props.darkMode).textSegmentButton : style(this.props.darkMode).textSegmentButtonActive}>
+                        <Text
+                            style={(this.state.fiatCurrency) ? (
+                                style(this.props.darkMode).textSegmentButton
+                            ) : (
+                                    style(this.props.darkMode).textSegmentButtonActive
+                                )}
+                        >
                             {this.props.appSettings.cryptoCurrency}
                         </Text>
                     </Button>
@@ -141,42 +173,84 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                     </Button>
                 </View>
             </View>
-        )
+        );
     }
     public render() {
-        let { pan } = this.state;
+        const { pan } = this.state;
         // Calculate the x and y transform from the pan value
-        let [translateX, translateY] = [pan.x, pan.y];
+        const [, translateY] = [pan.x, pan.y];
 
         return (
             <View
-                style={{ flex: 1, flexDirection: "column", justifyContent: "flex-end", }}
+                style={{ flex: 1, flexDirection: "column", justifyContent: "flex-end" }}
             >
                 { // tslint:disable-next-line:jsx-no-multiline-js
                     (this.state.modalOpen) ? (
-                        <View style={{ bottom: -20, height: Dimensions.get("window").height, }} />
+                        <View style={{ bottom: -20, height: Dimensions.get("window").height }} />
                     ) : null}
                 { // tslint:disable-next-line:jsx-no-multiline-js
                     (Platform.OS === "android") ? (
-                        <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
-                            <Animated.View style={style(this.props.darkMode).alertArrow} {...this.panResponder.panHandlers}>
-                                {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
+                        <Animated.View
+                            style={[
+                                style(this.props.darkMode).modalForm,
+                                {
+                                    transform: [{ translateX: 0 }, { translateY }],
+                                },
+                            ]}
+                        >
+                            <Animated.View
+                                style={style(this.props.darkMode).alertArrow} {...this.panResponder.panHandlers}
+                            >
+                                {(!this.state.modalOpen) ?
+                                    (
+                                        <Icon type="Ionicons" name="ios-arrow-up" />
+                                    ) : (
+                                        <Icon type="Ionicons" name="ios-arrow-down" />
+                                    )
+                                }
                             </Animated.View>
-                            <Animated.View style={style(this.props.darkMode).modalHeading} {...this.panResponder.panHandlers}>
-                                <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
+                            <Animated.View
+                                style={style(this.props.darkMode).modalHeading} {...this.panResponder.panHandlers}
+                            >
+                                <Text style={style(this.props.darkMode).text}>
+                                    Add a Price Alert for {this.props.coinPrice.name}
+                                </Text>
                             </Animated.View>
 
                             {this.renderForm()}
 
                         </Animated.View>
                     ) : (
-                            <Animated.View style={[style(this.props.darkMode).modalForm, { transform: [{ translateX: 0 }, { translateY: translateY }] }]}>
+                            <Animated.View
+                                style={[
+                                    style(this.props.darkMode).modalForm,
+                                    {
+                                        transform: [{ translateX: 0 }, { translateY }],
+                                    },
+                                ]}
+                            >
 
-                                <TouchableOpacity style={style(this.props.darkMode).alertArrow} onPress={this.handleIOSPress}>
-                                    {(!this.state.modalOpen) ? <Icon type="Ionicons" name="ios-arrow-up" /> : <Icon type="Ionicons" name="ios-arrow-down" />}
+                                <TouchableOpacity
+                                    style={style(this.props.darkMode).alertArrow}
+                                    onPress={this.handleIOSPress}
+                                >
+                                    {(!this.state.modalOpen) ?
+                                        (
+                                            <Icon type="Ionicons" name="ios-arrow-up" />
+                                        ) : (
+                                            <Icon type="Ionicons" name="ios-arrow-down" />
+                                        )
+                                    }
                                 </TouchableOpacity>
-                                <TouchableOpacity style={style(this.props.darkMode).modalHeading} onPress={this.handleIOSPress}>
-                                    <Text style={style(this.props.darkMode).text}>Add a Price Alert for {this.props.coinPrice.name}</Text>
+                                <TouchableOpacity
+                                    style={style(this.props.darkMode).modalHeading}
+                                    onPress={this.handleIOSPress}
+                                >
+                                    <Text
+                                        style={style(this.props.darkMode).text}
+                                    >
+                                        Add a Price Alert for {this.props.coinPrice.name}
+                                    </Text>
                                 </TouchableOpacity>
 
                                 {this.renderForm()}
@@ -189,12 +263,12 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
     private changeCurrency = (currency: string) => {
         if (currency === "fiat") {
             this.setState({
-                fiatCurrency: true
-            })
+                fiatCurrency: true,
+            });
         } else {
             this.setState({
-                fiatCurrency: false
-            })
+                fiatCurrency: false,
+            });
         }
     }
     private changeAlertAmount = (amount: string) => {
@@ -202,11 +276,11 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             if (this.state.fiatCurrency) {
                 this.setState({
                     alertAmountFiat: amount,
-                })
+                });
             } else {
                 this.setState({
                     alertAmountCrypto: amount,
-                })
+                });
             }
         }
     }
@@ -217,105 +291,116 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             this.openModal();
         }
     }
+    private closeModal = () => {
+        Animated.timing(
+            // Animate value over time
+            this.state.pan.y, // The value to drive
+            {
+                toValue: 0, // Animate to final value of 1
+            },
+        ).start(() => {
+            this.setState({
+                alertAmountCrypto: this.props.coinPrice.price_crypto.price.toString(),
+                alertAmountFiat: this.props.coinPrice.price_fiat.price.toString(),
+                modalOpen: false,
+            });
+        }); // Start the animation
+    }
+    private handleAdd = () => {
+        let alert: IAlerts;
+        let upper: boolean;
+        if (this.state.fiatCurrency) {
+            upper = (parseFloat(this.state.alertAmountFiat) >= this.props.coinPrice.price_fiat.price) ? true : false;
+            alert = {
+                active: true,
+                coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
+                currency_symbol: this.props.appSettings.fiatCurrency,
+                price_point: parseFloat(this.state.alertAmountFiat),
+                upper,
+            };
+        } else {
+            upper = (
+                (parseFloat(this.state.alertAmountCrypto) >= this.props.coinPrice.price_crypto.price) ? true : false
+            );
+            alert = {
+                active: true,
+                coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
+                currency_symbol: this.props.appSettings.cryptoCurrency,
+                price_point: parseFloat(this.state.alertAmountCrypto),
+                upper,
+            };
+        }
+        this.props.addAlerts(alert, this.props.user.token);
+        this.closeModal();
+
+        const settings = { ...this.props.appSettings };
+        settings.pushNotifications = true;
+        this.props.changeSettings(settings);
+        OneSignal.sendTag("user_id", this.props.user.id.toString());
+        axios
+            .patch(
+                `${Config.API_SERVER}/user`,
+                {
+                    data: {
+                        notifications: settings.pushNotifications,
+                    },
+                },
+                {
+                    headers: {
+                        token: this.props.user.token,
+                    },
+                },
+        );
+    }
     private openModal = () => {
         Animated.timing(
             // Animate value over time
             this.state.pan.y, // The value to drive
             {
                 toValue: -320, // Animate to final value of 1
-            }
+            },
         ).start(() => {
             this.setState({
                 modalOpen: true,
-            })
+            });
         }); // Start the animation
     }
-    public closeModal = () => {
-        Animated.timing(
-            // Animate value over time
-            this.state.pan.y, // The value to drive
-            {
-                toValue: 0, // Animate to final value of 1
-            }
-        ).start(() => {
-            this.setState({
-                alertAmountCrypto: this.props.coinPrice.price_crypto.price.toString(),
-                alertAmountFiat: this.props.coinPrice.price_fiat.price.toString(),
-                modalOpen: false,
-            })
-        }); // Start the animation
-    }
-    public handleAdd = () => {
-        let alert: IAlerts;
-        let upper: boolean;
-        if (this.state.fiatCurrency) {
-            upper = (parseFloat(this.state.alertAmountFiat) >= this.props.coinPrice.price_fiat.price) ? true : false;
-            alert = {
-                coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
-                currency_symbol: this.props.appSettings.fiatCurrency,
-                price_point: parseFloat(this.state.alertAmountFiat),
-                active: true,
-                upper,
-            }
-        } else {
-            upper = (parseFloat(this.state.alertAmountCrypto) >= this.props.coinPrice.price_crypto.price) ? true : false;
-            alert = {
-                coinmarketcap_id: this.props.coinPrice.coinmarketcap_id,
-                currency_symbol: this.props.appSettings.cryptoCurrency,
-                price_point: parseFloat(this.state.alertAmountCrypto),
-                active: true,
-                upper,
-            }
-        }
-        this.props.addAlerts(alert, this.props.user.token)
-        this.closeModal()
-
-        const settings = { ...this.props.appSettings };
-        settings.pushNotifications = true;
-        this.props.changeSettings(settings)
-        OneSignal.sendTag("user_id", this.props.user.id.toString());
-        axios
-                .patch(
-                    `${Config.API_SERVER}/user`,
-                    {
-                        data: {
-                            notifications: settings.pushNotifications
-                        }
-                    },
-                    {
-                        headers: {
-                            token: this.props.user.token,
-                        }
-                    }
-                )
-    }
-    public onFocus = () => {
+    private onFocus = () => {
         if (Platform.OS === "ios") {
             Animated.timing(
-                // Animate value over time
                 this.state.pan.y, // The value to drive
                 {
-                    toValue: (isIphoneX()) ? -Dimensions.get("window").height + 245 : (this.small_device) ? -Dimensions.get("window").height + 155 : -Dimensions.get("window").height + 220, // Animate to final value of 1
-                }
+                    toValue: (isIphoneX()) ?
+                        (
+                            -Dimensions.get("window").height + 245
+                        ) : (
+                            (this.smallDevice) ?
+                                (
+                                    -Dimensions.get("window").height + 155
+                                ) : (
+                                    -Dimensions.get("window").height + 220
+                                )
+                        ),
+                },
             ).start(() => {
                 this.setState({
                     modalOpen: true,
-                })
+                });
             }); // Start the animation
         }
     }
-    public onBlur = () => {
+    private onBlur = () => {
         if (Platform.OS === "ios") {
             Animated.timing(
                 // Animate value over time
                 this.state.pan.y, // The value to drive
                 {
                     toValue: -320, // Animate to final value of 1
-                }
+                },
             ).start(() => {
                 this.setState({
                     modalOpen: true,
-                })
+                });
             }); // Start the animation
         }
     }
@@ -336,65 +421,63 @@ const mapStateToProps = (state: IRootState) => {
 };
 
 const CoinAlertsModal = connect(mapStateToProps, mapDispatchToProps)(PureCoinAlertsModal);
-export default CoinAlertsModal
+export default CoinAlertsModal;
 
 const style = (darkMode: boolean) => StyleSheet.create({
-    alertArrow: {
-        height: 40,
-        flexDirection: "row",
-        justifyContent: "center",
-        backgroundColor: "transparent",
-    },
-    buttons: {
-        backgroundColor: ((Platform.OS === "android") ? "#3f78ba" : "#007aff"),
-        borderColor: (darkMode) ? "#F8F8F8" : "#454951",
-        // borderWidth: 2,
-        borderRadius: 5,
-        marginTop: 10,
-        marginBottom: 10,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 200
-    },
     activeButtonTextAndroid: {
         color: "#F8F8F8",
+    },
+    alertArrow: {
+        backgroundColor: "transparent",
+        flexDirection: "row",
+        height: 40,
+        justifyContent: "center",
+    },
+    buttons: {
+        alignItems: "center",
+        backgroundColor: ((Platform.OS === "android") ? "#3f78ba" : "#007aff"),
+        borderColor: (darkMode) ? "#F8F8F8" : "#454951",
+        borderRadius: 5,
+        flexDirection: "row",
+        justifyContent: "center",
+        marginBottom: 10,
+        marginTop: 10,
+        width: 200,
     },
     buttonsView: {
         alignItems: "center",
     },
     modalForm: {
-        height: Dimensions.get("window").height + 150,
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        bottom: -Dimensions.get("window").height - 50,
-        paddingBottom: Dimensions.get("window").height - 250,
-        elevation: 20,
-        borderWidth: 1,
         borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
         borderRadius: 10,
+        borderWidth: 1,
+        bottom: -Dimensions.get("window").height - 50,
+        elevation: 20,
+        height: Dimensions.get("window").height + 150,
         marginLeft: 5,
         marginRight: 5,
+        paddingBottom: Dimensions.get("window").height - 250,
         shadowColor: "#000",
         shadowOffset: { width: 15, height: 15 },
         shadowOpacity: 0.1,
         shadowRadius: 10,
     },
     modalFormComponentsWrapper: {
+        alignItems: "center",
         flex: 0.8,
+        justifyContent: "space-between",
         paddingLeft: 20,
         paddingRight: 20,
-        alignItems: "center",
-        justifyContent: "space-between",
     },
     modalHeading: {
+        backgroundColor: "transparent",
         flex: 0.2,
         flexDirection: "row",
-        justifyContent: 'center',
-        backgroundColor: "transparent",
-        // backgroundColor: "green",
+        justifyContent: "center",
     },
     segment: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8"
+        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
     },
     segmentButton: {
         borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
@@ -405,19 +488,19 @@ const style = (darkMode: boolean) => StyleSheet.create({
     textButton: {
         color: (darkMode) ? "#F8F8F8" : "#fff",
     },
+    textInput: {
+        backgroundColor: "#F8F8F8",
+        borderColor: "gray",
+        borderRadius: 5,
+        borderWidth: 1,
+        flex: 1,
+        height: 40,
+        paddingLeft: 4,
+    },
     textSegmentButton: {
         color: (darkMode) ? "#007aff" : "#000",
     },
     textSegmentButtonActive: {
         color: "#F8F8F8",
     },
-    textInput: {
-        height: 40,
-        backgroundColor: "#F8F8F8",
-        borderColor: 'gray',
-        borderRadius: 5,
-        borderWidth: 1,
-        flex: 1,
-        paddingLeft: 4,
-    }
-})
+});

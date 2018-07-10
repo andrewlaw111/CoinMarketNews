@@ -40,7 +40,8 @@ export const getUser = async () => {
                 store.dispatch(loginSuccess(result.data));
                 return result.data;
             }).catch((err) => {
-                console.log(err)
+                // tslint:disable-next-line:no-console
+                console.log(err);
                 // tslint:disable-next-line:no-console
                 console.error(err);
             });
@@ -53,7 +54,8 @@ export const getUser = async () => {
                 store.dispatch(loginSuccess(result.data));
                 // OneSignal.sendTag("user_id", result.data.id)
             }).catch((err) => {
-                console.log(err)
+                // tslint:disable-next-line:no-console
+                console.log(err);
                 // tslint:disable-next-line:no-console
                 console.error(err);
             });
@@ -61,6 +63,6 @@ export const getUser = async () => {
     } catch (error) {
         // tslint:disable-next-line:no-console
         console.log("error", error);
-        return error
+        return error;
     }
 };

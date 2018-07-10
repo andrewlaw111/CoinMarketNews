@@ -50,19 +50,19 @@ export const getNews = async () => {
                         token,
                     },
                 },
-            ).then((result) => {
-                AsyncStorage.setItem("@CoinMarketNews:newsStore", JSON.stringify(result.data));
-                store.dispatch(loadNewsSuccess(result.data));
-            }).catch(async () => {
-                try {
-                    const news = await AsyncStorage.getItem("@CoinMarketNews:newsStore");
-                    if (news !== null) {
-                        store.dispatch(loadNewsSuccess(JSON.parse(news)));
-                    }
-                } catch (error) {
-                    store.dispatch(loadNewsFailure());
+        ).then((result) => {
+            AsyncStorage.setItem("@CoinMarketNews:newsStore", JSON.stringify(result.data));
+            store.dispatch(loadNewsSuccess(result.data));
+        }).catch(async () => {
+            try {
+                const news = await AsyncStorage.getItem("@CoinMarketNews:newsStore");
+                if (news !== null) {
+                    store.dispatch(loadNewsSuccess(JSON.parse(news)));
                 }
-            });
+            } catch (error) {
+                store.dispatch(loadNewsFailure());
+            }
+        });
 
     } catch (error) {
         store.dispatch(loadNewsFailure());

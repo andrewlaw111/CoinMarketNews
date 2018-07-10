@@ -1,8 +1,8 @@
 import { AsyncStorage } from "react-native";
 
 import { Action } from "redux";
-import { store } from "../store";
 import { ISettings } from "../../models";
+import { store } from "../store";
 
 // Define Actions const and type
 export const CHANGE_SETTINGS = "CHANGE_SETTINGS";
@@ -33,7 +33,7 @@ export const changeSettings = (settings: ISettings) => {
 
 export const loadSettingsToStore = (settings: ISettings) => {
     return {
-        settings: settings,
+        settings,
         type: LOAD_SETTINGS,
     };
 };

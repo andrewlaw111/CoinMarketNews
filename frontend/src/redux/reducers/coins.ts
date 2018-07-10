@@ -25,13 +25,13 @@ export const coinReducer = (state: ICoinState = defaultCoinState, action: CoinAc
         let duplicate = true;
         currentCoins.forEach((currentCoin) => {
           if (currentCoin.id === coin.id) {
-            duplicate = false
+            duplicate = false;
           }
-        })
-        return duplicate
+        });
+        return duplicate;
       });
       return {
-        coins: state.coins.concat(newCoins)
+        coins: state.coins.concat(newCoins),
       };
     default:
       return state; // Do not change the state in case of any other actions

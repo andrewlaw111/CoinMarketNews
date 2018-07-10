@@ -1,24 +1,23 @@
 import React, { RefObject } from "react";
+import Moment from "react-moment";
+import Config from "react-native-config";
+import FastImage from "react-native-fast-image";
 import { Navigator } from "react-native-navigation";
+import IonIcons from "react-native-vector-icons/Ionicons";
 import { connect } from "react-redux";
-import Moment from 'react-moment';
 
-import { Body, Card, CardItem, StyleProvider, Text, Content, Spinner, Icon } from "native-base";
-import { FlatList, Linking, StyleSheet, TouchableOpacity, View, RefreshControl, Platform, ScrollView } from "react-native";
+import { Body, Card, CardItem, Content, Icon, Spinner, StyleProvider, Text } from "native-base";
+import { FlatList, Linking, Platform, RefreshControl, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import getTheme from "../../native-base-theme/components";
-import commonColour from '../../native-base-theme/variables/commonColor';
+import commonColour from "../../native-base-theme/variables/commonColor";
 
-import { INews, IUser, ISettings, ICoin, ICoinPrice } from "../models";
-import { IRootState } from "../redux/store";
+import { ICoinPrice, INews, ISettings, IUser } from "../models";
 import { getNews } from "../redux/actions/news";
-import { BlockOverflowProperty } from "csstype";
-import FastImage from "react-native-fast-image";
-import Config from "react-native-config";
-import IonIcons from "react-native-vector-icons/Ionicons";
+import { IRootState } from "../redux/store";
 
 interface INewsListProps {
-    appSettings: ISettings,
+    appSettings: ISettings;
     coins: ICoinPrice[];
     favourites: number[];
     news: INews[];
@@ -31,14 +30,14 @@ export interface INewsListState {
 }
 
 class PureNewsList extends React.Component<INewsListProps, INewsListState> {
-    public styles: typeof styles;
-    public newsRef: RefObject<FlatList<INews>>;
-
     public static navigatorStyle = {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
     };
-    public constructor(props: INewsListProps) {
+    public styles: typeof styles;
+    public newsRef: RefObject<FlatList<INews>>;
+
+    constructor(props: INewsListProps) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.newsRef = React.createRef<FlatList<INews>>();
@@ -81,15 +80,25 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                                 {(info.item.counter > 1) ?
                                     (
                                         <View style={{ flexDirection: "row", marginRight: 3, alignItems: "center" }}>
-                                            <Text style={this.styles.newsCounter}>{info.item.counter} </Text>
-                                            <Icon style={this.styles.newsCounterIcon} type="Ionicons" name="ios-flame" />
+                                            <Text
+                                                style={this.styles.newsCounter}>{info.item.counter}
+                                            </Text>
+                                            <Icon
+                                                style={this.styles.newsCounterIcon}
+                                                type="Ionicons"
+                                                name="ios-flame"
+                                            />
                                         </View>
                                     ) : (
                                         null
                                     )}
                             </View>
                             <View>
-                                <Moment style={[this.styles.newsText, { color: (this.props.appSettings.darkMode) ? "#fff" : "#313131" }]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
+                                <Moment
+                                    style={[
+                                        this.styles.newsText,
+                                        { color: (this.props.appSettings.darkMode) ? "#fff" : "#313131" },
+                                    ]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                             </View>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
@@ -98,15 +107,18 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                                 if (key < 6) {
                                     return (
                                         <View key={key}>
-                                            <TouchableOpacity onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}>
+                                            <TouchableOpacity
+                                                onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}
+                                            >
                                                 <FastImage
                                                     style={this.styles.newsIcons}
+                                                    // tslint:disable-next-line:max-line-length
                                                     source={{ uri: `${Config.API_SERVER}/icon/${coin.toLocaleLowerCase()}.png` }}
                                                     resizeMode={FastImage.resizeMode.contain}
                                                 />
                                             </TouchableOpacity>
                                         </View>
-                                    )
+                                    );
                                 }
                             })}
                         </View>
@@ -125,8 +137,8 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                         <Text>CoinMarketNews is fetching news.</Text>
                     </Content>
                 </View>
-            )
-        }
+            );
+        };
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <View style={this.styles.news}>
@@ -135,7 +147,9 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                         renderItem={this.renderNewsList}
                         keyExtractor={this.keyExtractor}
                         style={this.styles.newsList}
-                        refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                        refreshControl={
+                            <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+                        }
                         ListEmptyComponent={listEmptyComponent()}
                         ref={this.newsRef}
                     />
@@ -148,9 +162,9 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
     private handleLinkPress = (link: string) => {
         Linking.openURL(link);
     }
-    private handlePressIcon = (coins_id: number) => {
-        const selectedCoin = this.props.coins.find((coin) => coin.id === coins_id)
-        const favourite = (this.props.favourites.indexOf(coins_id) > -1) ? true : false
+    private handlePressIcon = (coinsID: number) => {
+        const selectedCoin = this.props.coins.find((coin) => coin.id === coinsID);
+        const favourite = (this.props.favourites.indexOf(coinsID) > -1) ? true : false;
 
         Promise.all([
             IonIcons.getImageSource("ios-arrow-back", 20, "#FFF"),
@@ -159,54 +173,58 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
             this.props.navigator.showModal({
                 navigatorButtons: {
                     leftButtons: [{
-                        buttonColor: (this.props.appSettings.darkMode) ? "#F8F8F8" : (Platform.OS === "ios") ? "#2874F0" : "#333",
+                        buttonColor: (this.props.appSettings.darkMode) ?
+                            "#F8F8F8" : (Platform.OS === "ios") ? "#2874F0" : "#333",
                         buttonFontSize: 18,
                         buttonFontWeight: "600",
+                        icon: (Platform.OS === "ios") ? sources[0] : null,
                         id: "back",
                         showAsAction: "ifRoom",
                         title: "back",
-                        icon: (Platform.OS === "ios") ? sources[0] : null,
                     }],
                     rightButtons: [{
                         buttonColor: (favourite) ? "gold" : "grey",
                         buttonFontSize: 18,
                         buttonFontWeight: "600",
+                        icon: sources[1],
                         id: "like",
                         showAsAction: "ifRoom",
-                        icon: sources[1],
                     }],
 
                 },
                 navigatorStyle: {},
-                passProps: { appSettings: this.props.appSettings, coinID: coins_id, coinPrice: selectedCoin, favourite },
+                passProps: {
+                    appSettings: this.props.appSettings,
+                    coinID: coinsID,
+                    coinPrice: selectedCoin,
+                    favourite,
+                },
                 screen: "CoinMarketNews.CoinsPage",
                 title: selectedCoin.name,
             });
-            //SelectedCoin needs to be fixed
+            // SelectedCoin needs to be fixed
         }).catch((err) => {
-            console.error(err)
-        })
+            // tslint:disable-next-line:no-console
+            console.error(err);
+        });
     }
     private keyExtractor = (item: INews) => item.id.toString();
 
+    private onNavigatorEvent(event: any) {
+        if (event.id === "bottomTabReselected") {
+            this.newsRef.current.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
+        }
+    }
+
     private onRefresh = () => {
         this.setState({
-            refreshing: true
+            refreshing: true,
         });
         getNews().then(() => {
             this.setState({
-                refreshing: false
+                refreshing: false,
             });
         });
-    }
-
-    public onNavigatorEvent(event: any) {
-        if (event.id === 'bottomTabSelected') {
-
-        }
-        if (event.id === 'bottomTabReselected') {
-            this.newsRef.current.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
-        }
     }
 }
 
@@ -225,54 +243,54 @@ export default NewsList;
 
 const styleTemplate = (darkMode: boolean) => StyleSheet.create({
     card: {
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
+        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
     },
     cardItem: {
         backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        paddingRight: 10,
-        paddingLeft: 10,
-        paddingTop: 10,
         paddingBottom: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 10,
     },
     headingText: {
         color: (darkMode) ? "#F8F8F8" : "#000",
-        fontWeight: 'bold',
         fontSize: 14,
+        fontWeight: "bold",
         paddingRight: 25,
         // textDecorationLine: "underline",
     },
     news: {
         backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
     },
-    newsList: {
-        // paddingBottom: 20,
-    },
-    newsText: {
-        color: (darkMode) ? "#F8F8F8" : "#a3a3a2",
-        fontSize: 14,
-    },
     newsCounter: {
         color: "#ffa236",
         fontSize: 14,
     },
     newsCounterIcon: {
-        width: 13,
         color: "#ffa236",
         fontSize: 15,
-    },
-    newsSourceIcon: {
-        width: 30,
-        height: 30,
-        marginRight: 8,
+        width: 13,
     },
     newsIcons: {
-        width: 25,
-        height: 25,
-        marginRight: 6,
         backgroundColor: "grey",
         borderRadius: 50,
-    }
+        height: 25,
+        marginRight: 6,
+        width: 25,
+    },
+    newsList: {
+        // paddingBottom: 20,
+    },
+    newsSourceIcon: {
+        height: 30,
+        marginRight: 8,
+        width: 30,
+    },
+    newsText: {
+        color: (darkMode) ? "#F8F8F8" : "#a3a3a2",
+        fontSize: 14,
+    },
 });
 
 const styles = styleTemplate(false);

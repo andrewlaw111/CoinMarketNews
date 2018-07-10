@@ -11,10 +11,10 @@ const defaultUserState: IUserState = {
         coin_currency_id: 2,
         email: null,
         fiat_currency_id: 1,
-        news_alert: [],
-        price_alert: [],
         id: null,
+        news_alert: [],
         notifications: false,
+        price_alert: [],
         token: null,
     },
 };

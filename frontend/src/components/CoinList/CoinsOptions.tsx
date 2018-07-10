@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, Segment, Col, Grid, Text } from "native-base";
-import { StyleSheet, Platform } from "react-native";
-import { ISettings } from "../models";
 
+import { Button, Col, Grid, Segment, Text } from "native-base";
+
+import { Platform, StyleSheet } from "react-native";
+import { ISettings } from "../../models";
 
 interface ICoinOptionsProps {
     appSettings: ISettings;
@@ -10,7 +11,7 @@ interface ICoinOptionsProps {
     handleOptionsPress: (options: string) => void;
 }
 
-export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
+export default class CoinOptions extends React.PureComponent<ICoinOptionsProps> {
     public render() {
         interface IOptionsButton {
             active: boolean;
@@ -84,11 +85,11 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
                         onPress={this.handlePress.bind(this, button.handler)}
                         key={index}
                     >
-                        <Text style={{ paddingLeft: 0, paddingRight: 0, }}>
+                        <Text style={{ paddingLeft: 0, paddingRight: 0 }}>
                             {button.text}
                         </Text>
                     </Button>
-                )
+                );
             } else {
                 return (
                     <Button
@@ -102,7 +103,7 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
                             {button.text}
                         </Text>
                     </Button>
-                )
+                );
             }
         };
         return (
@@ -131,9 +132,6 @@ export default class CoinOptions extends React.PureComponent<ICoinOptionsProps>{
 }
 
 const styles = (darkMode: boolean, active?: boolean) => StyleSheet.create({
-    coinListFilters: {
-        backgroundColor: (darkMode) ? "#343a44" : "#F8F8F8",
-    },
     buttonText: {
         color: (darkMode) ? "#F8F8F8" : (active) ? "#F8F8F8" : "#6b6b6b",
         paddingLeft: 0,
@@ -146,9 +144,12 @@ const styles = (darkMode: boolean, active?: boolean) => StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5,
     },
+    coinListFilters: {
+        backgroundColor: (darkMode) ? "#343a44" : "#F8F8F8",
+    },
     gridStyle: {
-        flex: 0,
         borderBottomColor: (darkMode) ? "#555" : "#888",
-        borderBottomWidth: 0.5
-    }
-})
+        borderBottomWidth: 0.5,
+        flex: 0,
+    },
+});

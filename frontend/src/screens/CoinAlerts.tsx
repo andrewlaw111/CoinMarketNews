@@ -1,24 +1,25 @@
-import React from "react";
-import { connect } from "react-redux";
-
-import { Container, Text, StyleProvider, Icon, } from "native-base";
-import { View, Switch, FlatList, ScrollView, ToastAndroid, Animated, } from "react-native";
-
-import getTheme from '../../native-base-theme/components';
-import commonColour from '../../native-base-theme/variables/commonColor';
-
-import { ICoin, ICoinPrice, ISettings, IAlerts, IUser, INewsAlert } from "../models";
-import { IRootState } from "../redux/store";
-import { Navigator } from "react-native-navigation";
-import CoinAlertsModal from "./CoinAlertsModal";
-import { editAlert, removeAlerts, addNewsAlert, removeNewsAlert } from "../redux/actions/alerts";
-import styles from "./styles/CoinAlertsStyles";
-import RenderAlerts from "./CoinAlertItem";
-import AlertItem from "./CoinAlertItem";
-import { changeSettings } from "../redux/actions/settings";
-import OneSignal from "react-native-onesignal";
-import Config from "react-native-config";
 import axios from "axios";
+import React from "react";
+import Config from "react-native-config";
+import { Navigator } from "react-native-navigation";
+import OneSignal from "react-native-onesignal";
+import { connect } from "react-redux";
+import styles from "../styles/CoinAlertsStyles";
+
+import { Container, StyleProvider, Text } from "native-base";
+import { FlatList, ScrollView, Switch, View } from "react-native";
+
+import getTheme from "../../native-base-theme/components";
+import commonColour from "../../native-base-theme/variables/commonColor";
+
+import { addNewsAlert, removeNewsAlert } from "../redux/actions/alerts";
+import { changeSettings } from "../redux/actions/settings";
+import { IRootState } from "../redux/store";
+
+import { IAlerts, ICoin, ICoinPrice, INewsAlert, ISettings, IUser } from "../models";
+
+import AlertItem from "../components/CoinAlerts/CoinAlertItem";
+import CoinAlertsModal from "../components/CoinAlerts/CoinAlertsModal";
 
 interface ICoinsAlertsProps {
     alerts: IAlerts[];
@@ -42,23 +43,25 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
         super(props);
         this.state = {
             alerts: this.props.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id),
-            newsAlerts: (this.props.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) ? true : false,
+            newsAlerts: (this.props.newsAlerts.map(
+                (alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) ?
+                true : false,
         };
     }
 
-    componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
-        const alerts = nextProps.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id)
+    public componentWillReceiveProps(nextProps: ICoinsAlertsProps) {
+        const alerts = nextProps.alerts.filter((alert) => alert.coinmarketcap_id === this.props.coin.coinmarketcap_id);
         this.setState({
-            alerts
-        })
-        if (nextProps.newsAlerts.map((alerts) => alerts.coin_id).indexOf(this.props.coin.id) > -1) {
+            alerts,
+        });
+        if (nextProps.newsAlerts.map((newsAlert) => newsAlert.coin_id).indexOf(this.props.coin.id) > -1) {
             this.setState({
-                newsAlerts: true
-            })
+                newsAlerts: true,
+            });
         } else {
             this.setState({
-                newsAlerts: false
-            })
+                newsAlerts: false,
+            });
         }
 
     }
@@ -71,7 +74,7 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
                 coin={this.props.coin}
                 darkMode={this.props.darkMode}
             />
-        )
+        );
     }
     public render() {
         return (
@@ -80,11 +83,15 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
 
                     <View >
                         <View style={styles(this.props.darkMode).NewsAlertsView}>
-                        <View style={styles(this.props.darkMode).newsAlertTextView}>
-                            <Text style={styles(this.props.darkMode).text}>Receive news alerts about {this.props.coin.name}</Text>
-                        </View>
-                        <View style={styles(this.props.darkMode).switch} >
-                            <Switch value={this.state.newsAlerts} onValueChange={this.handlenewsAlertChange} />
+                            <View style={styles(this.props.darkMode).newsAlertTextView}>
+                                <Text
+                                    style={styles(this.props.darkMode).text}
+                                >
+                                    Receive news alerts about {this.props.coin.name}
+                                </Text>
+                            </View>
+                            <View style={styles(this.props.darkMode).switch} >
+                                <Switch value={this.state.newsAlerts} onValueChange={this.handlenewsAlertChange} />
                             </View>
                         </View>
                         <ScrollView style={{ marginBottom: 40 }}>
@@ -95,20 +102,24 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
                             />
                         </ScrollView>
                     </View>
-                    <CoinAlertsModal appSettings={this.props.appSettings} coinPrice={this.props.coinPrice} darkMode={this.props.darkMode} />
+                    <CoinAlertsModal
+                        appSettings={this.props.appSettings}
+                        coinPrice={this.props.coinPrice}
+                        darkMode={this.props.darkMode}
+                    />
                 </Container>
             </StyleProvider>
         );
     }
-    private keyExtractor = (item: IAlerts, index: number) => {
+    private keyExtractor = (item: IAlerts) => {
         return item.id.toString();
     }
     private handlenewsAlertChange = () => {
         if (this.state.newsAlerts) {
-            this.props.removeNewsAlert(this.props.coin.id, this.props.user.token)
+            this.props.removeNewsAlert(this.props.coin.id, this.props.user.token);
             this.setState({
-                newsAlerts: false
-            })
+                newsAlerts: false,
+            });
         } else {
             const settings = { ...this.props.appSettings };
             settings.pushNotifications = true;
@@ -119,20 +130,20 @@ class PureCoinAlerts extends React.Component<ICoinsAlertsProps, ICoinsAlertsStat
                     `${Config.API_SERVER}/user`,
                     {
                         data: {
-                            notifications: settings.pushNotifications
-                        }
+                            notifications: settings.pushNotifications,
+                        },
                     },
                     {
                         headers: {
                             token: this.props.user.token,
-                        }
-                    }
-                )
+                        },
+                    },
+            );
 
-            this.props.addNewsAlert(this.props.coin.id, this.props.user.token)
+            this.props.addNewsAlert(this.props.coin.id, this.props.user.token);
             this.setState({
-                newsAlerts: true
-            })
+                newsAlerts: true,
+            });
         }
     }
 }

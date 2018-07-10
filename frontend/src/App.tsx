@@ -4,10 +4,12 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { getCoins } from "./redux/actions/coins";
 import { loadFavourites } from "./redux/actions/favourites";
 import { getNews } from "./redux/actions/news";
-import { getUser } from "./redux/actions/user";
-import { registerScreens } from "./screens";
 import { loadSettings } from "./redux/actions/settings";
-import { IUser, ISettings } from "./models";
+import { getUser } from "./redux/actions/user";
+
+import { ISettings, IUser } from "./models";
+
+import { registerScreens } from "./screens";
 
 registerScreens(); // this is where you register all of your app's screens
 
@@ -17,7 +19,9 @@ OneSignal.init("155944be-3bde-4703-82f1-2545b31dc1ed");
 
 let tabBarColours: { tabBarButtonColor: string, tabBarSelectedButtonColor: string, tabBarBackgroundColor: string, };
 
-let colours: { backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string }
+let colours: {
+    backgroundColor: string, navBarTextColor: string, screenBackgroundColor: string, statusBarTextColorScheme: string
+};
 function setColour(darkMode: boolean) {
     if (darkMode) {
         colours = {
@@ -25,26 +29,26 @@ function setColour(darkMode: boolean) {
             navBarTextColor: "#FFF",
             screenBackgroundColor: "#454951",
             statusBarTextColorScheme: "light",
-        }
+        };
         tabBarColours = {
+            tabBarBackgroundColor: "#343a44",
             tabBarButtonColor: "#fff",
             tabBarSelectedButtonColor: "#2874F0",
-            tabBarBackgroundColor: "#343a44"
-        }
+        };
     } else {
         colours = {
             backgroundColor: "#F8F8F8",
             navBarTextColor: "#000",
             screenBackgroundColor: "#F8F8F8",
             statusBarTextColorScheme: "dark",
-        }
+        };
         tabBarColours = {
+            tabBarBackgroundColor: "#F8F8F8",
             tabBarButtonColor: "#343a44",
             tabBarSelectedButtonColor: "#2874F0",
-            tabBarBackgroundColor: "#F8F8F8"
-        }
+        };
     }
-};
+}
 // start the app
 Promise.all([
     getUser()
@@ -58,9 +62,9 @@ Promise.all([
     loadSettings()
         .then((settings: ISettings) => {
             if (settings) {
-                setColour(settings.darkMode)
+                setColour(settings.darkMode);
             } else {
-                setColour(false)
+                setColour(false);
             }
             getCoins(settings, 0, 2000);
         }),
@@ -91,27 +95,28 @@ Promise.all([
                 },
             ],
             tabsStyle: {
-                tabBarButtonColor: tabBarColours.tabBarButtonColor,
-                tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
-                tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
-                navBarTextColor: colours.navBarTextColor,
                 navBarBackgroundColor: colours.backgroundColor,
+                navBarTextColor: colours.navBarTextColor,
                 screenBackgroundColor: colours.screenBackgroundColor,
                 statusBarTextColorScheme: colours.statusBarTextColorScheme,
+                tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
             },
             appStyle: { // optional, add this if s if you want to style the tab bar beyond the defaults
-                tabBarButtonColor: tabBarColours.tabBarButtonColor,
-                tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
-                tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                keepStyleAcrossPush: false,
                 navBarBackgroundColor: colours.backgroundColor,
                 navBarTextColor: colours.navBarTextColor,
                 screenBackgroundColor: colours.screenBackgroundColor,
-                statusBarTextColorScheme: colours.statusBarTextColorScheme,
                 statusBarColor: colours.backgroundColor,
-                keepStyleAcrossPush: false,
+                statusBarTextColorScheme: colours.statusBarTextColorScheme,
+                tabBarBackgroundColor: tabBarColours.tabBarBackgroundColor,
+                tabBarButtonColor: tabBarColours.tabBarButtonColor,
+                tabBarSelectedButtonColor: tabBarColours.tabBarSelectedButtonColor,
             },
-            animationType: "none"
-        })
+            animationType: "none",
+        });
     }).catch((err) => {
+        // tslint:disable-next-line:no-console
         console.log("error", err);
     });

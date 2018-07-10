@@ -3,9 +3,9 @@ import { AsyncStorage } from "react-native";
 import Config from "react-native-config";
 
 import { Action } from "redux";
-import { ICoinPrice, IUser, ISettings } from "../../models";
-import { store } from "../store";
 import { cacheSorts } from "../../components/functions/CoinsSort";
+import { ICoinPrice, ISettings } from "../../models";
+import { store } from "../store";
 
 // Define Actions const and type
 export const LOAD_COIN_SUCCESS = "LOAD_COIN_SUCCESS";
@@ -43,12 +43,6 @@ export const loadCoinFailure = (): ILoadCoinFailureAction => {
         type: LOAD_COIN_FAILURE,
     };
 };
-const updateCoinSuccess = (coins: ICoinPrice[]) => {
-    return {
-        coins,
-        type: UPDATE_COIN_SUCCESS,
-    };
-};
 
 export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: number) => {
     try {
@@ -60,8 +54,8 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
             fiatCurrency = settings.fiatCurrency;
             cryptoCurrency = settings.cryptoCurrency;
         } else {
-            fiatCurrency = "USD"
-            cryptoCurrency = "BTC"
+            fiatCurrency = "USD";
+            cryptoCurrency = "BTC";
         }
         if (typeof rangeStart === "undefined") {
             return axios
@@ -69,18 +63,22 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                     `${Config.API_SERVER}/price`,
                     {
                         headers: {
-                            token,
+                            crypto: cryptoCurrency,
                             fiat: fiatCurrency,
-                            crypto: cryptoCurrency
+                            token,
                         },
                     },
             ).then((result) => {
                 AsyncStorage.setItem("@CoinMarketNews:coinsStore", JSON.stringify(result.data));
-                const coins = result.data.filter((coin) => coin.price_crypto.market_cap !== null && coin.price_fiat.market_cap !== null && coin.rank !== null);
+                const coins = result.data.filter((coin) => (
+                    coin.price_crypto.market_cap !== null &&
+                    coin.price_fiat.market_cap !== null &&
+                    coin.rank !== null));
 
                 store.dispatch(loadCoinSuccess(coins));
                 cacheSorts(coins);
             }).catch(async (err) => {
+                // tslint:disable-next-line:no-console
                 console.error(err);
                 try {
                     const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
@@ -90,24 +88,28 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                 } catch (error) {
                     store.dispatch(loadCoinFailure());
                 }
-            })
+            });
         } else {
             return axios
                 .get<ICoinPrice[]>(
                     `${Config.API_SERVER}/price`,
                     {
                         headers: {
-                            token,
-                            fiat: fiatCurrency,
                             crypto: cryptoCurrency,
-                            start: rangeStart,
+                            fiat: fiatCurrency,
                             limit: nb,
+                            start: rangeStart,
+                            token,
                         },
                     },
             ).then((result) => {
                 const coins = result.data.filter((coin) => {
-                    if (coin.rank === null || typeof coin.name === "undefined" || typeof coin.symbol === "undefined" || typeof coin.price_crypto === "undefined" || typeof coin.price_fiat === "undefined") {
-                        return false
+                    if (coin.rank === null ||
+                        typeof coin.name === "undefined" ||
+                        typeof coin.symbol === "undefined" ||
+                        typeof coin.price_crypto === "undefined" ||
+                        typeof coin.price_fiat === "undefined") {
+                        return false;
                     } else {
                         // for (let i in coin.price_fiat) {
                         //     if (typeof coin.price_fiat[i] === "undefined") {
@@ -119,13 +121,14 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                         //         return false
                         //     }
                         // }
-                        return true
+                        return true;
                     }
                 });
 
                 store.dispatch(loadCoinSuccess(coins));
                 cacheSorts(coins);
             }).catch(async (err) => {
+                // tslint:disable-next-line:no-console
                 console.error(err);
                 try {
                     const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
@@ -135,12 +138,11 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                 } catch (error) {
                     store.dispatch(loadCoinFailure());
                 }
-            })
+            });
         }
-        ;
-
     } catch (error) {
-        console.error(error)
+        // tslint:disable-next-line:no-console
+        console.error(error);
         try {
             const coins = await AsyncStorage.getItem("@CoinMarketNews:coinsStore");
             if (coins !== null) {
@@ -150,4 +152,4 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
             store.dispatch(loadCoinFailure());
         }
     }
-}
+};

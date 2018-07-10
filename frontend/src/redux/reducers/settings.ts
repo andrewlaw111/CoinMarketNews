@@ -1,5 +1,5 @@
-import { CHANGE_SETTINGS, SettingsActions, LOAD_SETTINGS } from "../actions/settings";
 import { ISettings } from "../../models";
+import { CHANGE_SETTINGS, LOAD_SETTINGS, SettingsActions  } from "../actions/settings";
 
 export interface ISettingsState {
     settings: ISettings;
@@ -7,10 +7,10 @@ export interface ISettingsState {
 
 const defaultSettingsState: ISettingsState = {
     settings: {
-        fiatCurrency: "USD",
         cryptoCurrency: "BTC",
-        pushNotifications: false,
         darkMode: false,
+        fiatCurrency: "USD",
+        pushNotifications: false,
     },
 };
 

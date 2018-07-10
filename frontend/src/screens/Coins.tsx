@@ -1,26 +1,22 @@
 import React, { RefObject } from "react";
-import Config from "react-native-config";
-import { isIphoneX } from "react-native-iphone-x-helper";
 import { Navigator } from "react-native-navigation";
 import { connect } from "react-redux";
 
-import { Container, Tab, Tabs, StyleProvider } from "native-base";
-import { Platform, SafeAreaView, ScrollView, RefreshControl, View, FlatList, } from "react-native";
+import { StyleProvider, Tab, Tabs } from "native-base";
+import { FlatList, SafeAreaView, View } from "react-native";
 
-import CoinOptions from "./CoinsOptions";
-import { ICoinPrice, IUser, ISettings } from "../models";
+import CoinOptions from "../components/CoinList/CoinsOptions";
+import { ICoinPrice, ISettings, IUser } from "../models";
 import { IRootState } from "../redux/store";
 
-import { styles } from "./styles/CoinsStyles";
-import getSettingID from "./functions/CoinsSettings";
+import getSettingID from "../components/functions/CoinsSettings";
 
 import getTheme from "../../native-base-theme/components";
 import commonColour from "../../native-base-theme/variables/commonColor";
+import { styles } from "../styles/CoinsStyles";
 
-
-import CoinList from "./CoinList";
-import sortCoins, { cacheSorts } from "./functions/CoinsSort";
-import { getCoins } from "../redux/actions/coins";
+import CoinList from "../components/CoinList/CoinList";
+import sortCoins, { cacheSorts } from "../components/functions/CoinsSort";
 
 interface ICoinsListProps {
     appSettings: ISettings;
@@ -32,20 +28,19 @@ interface ICoinsListProps {
 export interface ICoinsListState {
     coins: ICoinPrice[];
     favouriteTab: boolean;
-    setting: string,
+    setting: string;
     refreshing: boolean;
 }
 
 class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
-    public favouriteRef: RefObject<FlatList<ICoinPrice>>;
-    public marketRef: RefObject<FlatList<ICoinPrice>>;
-
     public static navigatorStyle = {
         navBarHidden: true,
         statusBarBlur: true,
     };
+    public favouriteRef: RefObject<FlatList<ICoinPrice>>;
+    public marketRef: RefObject<FlatList<ICoinPrice>>;
 
-    public constructor(props: ICoinsListProps) {
+    constructor(props: ICoinsListProps) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.favouriteRef = React.createRef<FlatList<ICoinPrice>>();
@@ -54,24 +49,24 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         this.state = {
             coins: this.props.coins.slice(),
             favouriteTab: true,
+            refreshing: false,
             setting: "000",
-            refreshing: false
         };
     }
     public componentWillReceiveProps(nextProps: ICoinsListProps) {
         this.setState({
-            coins: nextProps.coins
-        })
+            coins: nextProps.coins,
+        });
     }
     public renderTabs() {
         let backgroundColour: string;
         let textColour: string;
         if (this.props.appSettings.darkMode) {
             backgroundColour = "#343a44";
-            textColour = "#F8F8F8"
+            textColour = "#F8F8F8";
         } else {
             backgroundColour = "#F8F8F8";
-            textColour = "#000"
+            textColour = "#000";
         }
         return (
             <Tabs
@@ -85,21 +80,47 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
                     tabStyle={{ backgroundColor: backgroundColour }}
                     textStyle={{ color: textColour }}
                 >
-                    <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={true} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.favouriteRef} sortCoins={this.sortCoins} />
+                    <CoinOptions
+                        appSettings={this.props.appSettings}
+                        handleOptionsPress={this.handleOptionsPress}
+                        settings={this.state.setting}
+                    />
+                    <CoinList
+                        addMissingFavourites={this.addMissingFavourites}
+                        coins={this.state.coins}
+                        favouriteTab={true}
+                        navigator={this.props.navigator}
+                        setRef={this.favouriteRef}
+                        setting={this.state.setting}
+                        sortCoins={this.sortCoins}
+                        user={this.props.user}
+                    />
                 </Tab>
                 <Tab
                     heading="Market"
                     activeTabStyle={{ backgroundColor: backgroundColour }}
-                    activeTextStyle={{ color: textColour, }}
+                    activeTextStyle={{ color: textColour }}
                     tabStyle={{ backgroundColor: backgroundColour }}
                     textStyle={{ color: textColour }}
                 >
-                    <CoinOptions appSettings={this.props.appSettings} handleOptionsPress={this.handleOptionsPress} settings={this.state.setting} />
-                    <CoinList addMissingFavourites={this.addMissingFavourites} coins={this.state.coins} favouriteTab={false} navigator={this.props.navigator} setting={this.state.setting} user={this.props.user} setRef={this.marketRef} sortCoins={this.sortCoins} />
+                    <CoinOptions
+                        appSettings={this.props.appSettings}
+                        handleOptionsPress={this.handleOptionsPress}
+                        settings={this.state.setting}
+                    />
+                    <CoinList
+                        addMissingFavourites={this.addMissingFavourites}
+                        coins={this.state.coins}
+                        favouriteTab={false}
+                        navigator={this.props.navigator}
+                        setting={this.state.setting}
+                        setRef={this.marketRef}
+                        sortCoins={this.sortCoins}
+                        user={this.props.user}
+                    />
                 </Tab>
             </Tabs>
-        )
+        );
     }
     public render() {
         // console.log(this.props.coins)
@@ -116,8 +137,8 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
     }
     private changeTab = () => {
         this.setState({
-            favouriteTab: !this.state.favouriteTab
-        })
+            favouriteTab: !this.state.favouriteTab,
+        });
     }
     private handleOptionsPress = (options: string) => {
         const setting: string = getSettingID(options, this.state.setting);
@@ -125,7 +146,7 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         this.setState({
             coins,
             setting,
-        })
+        });
 
     }
     private addMissingFavourites = (favourites: ICoinPrice[]) => {
@@ -133,45 +154,34 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         cacheSorts(coins);
         coins = sortCoins(this.state.setting, coins);
         this.setState({
-            coins
-        })
+            coins,
+        });
     }
     private onNavigatorEvent = (event: any) => {
         // if (event.id === 'bottomTabSelected') {
 
         // }
-        if (event.id === 'bottomTabReselected') {
+        if (event.id === "bottomTabReselected") {
 
             if (typeof this.favouriteRef !== "undefined" && this.state.coins.length > 0 && this.state.favouriteTab) {
                 this.favouriteRef.current.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
-            }
-            else if (typeof this.marketRef !== "undefined" && this.props.coins.length > 0) {
+            } else if (typeof this.marketRef !== "undefined" && this.props.coins.length > 0) {
                 this.marketRef.current.scrollToIndex({ index: 0, viewOffset: 0, viewPosition: 0, animated: true });
             }
         }
-    }
-    private onRefresh = () => {
-        this.setState({
-            refreshing: true
-        });
-        getCoins(this.props.appSettings).then(() => {
-            this.setState({
-                refreshing: false
-            });
-        });
     }
     private sortCoins = () => {
         const coins = sortCoins(this.state.setting, this.state.coins.slice());
         this.setState({
             coins,
-        })
+        });
     }
 }
 
 const mapStateToProps = (state: IRootState) => {
     return {
-        coins: state.coins.coins,
         appSettings: state.settings.settings,
+        coins: state.coins.coins,
         user: state.user.user,
     };
 };

@@ -1,6 +1,6 @@
 import { ICoinPrice } from "../../models";
 
-// Format 
+// Format
 // {
 //     Fiat: {
 //         1W, 1D, 1H
@@ -15,7 +15,7 @@ interface IDisplayCoinOptions {
             coinPrice: (item: ICoinPrice) => string;
             percentageChange: (item: ICoinPrice) => string;
         },
-    },
+    };
 }
 const displayCoinOptions: IDisplayCoinOptions = {
     0: {
@@ -31,7 +31,7 @@ const displayCoinOptions: IDisplayCoinOptions = {
         2: {
             coinPrice: (item: ICoinPrice) => `${item.price_fiat.price}`,
             percentageChange: (item: ICoinPrice) => `${(item.price_fiat.percent_change_1h).toFixed(2)}`,
-        }
+        },
     },
     1: {
         0: {
@@ -46,8 +46,8 @@ const displayCoinOptions: IDisplayCoinOptions = {
         2: {
             coinPrice: (item: ICoinPrice) => `${item.price_crypto.price}`,
             percentageChange: (item: ICoinPrice) => `${(item.price_crypto.percent_change_1h).toFixed(2)}`,
-        }
+        },
     },
 };
 
-export default displayCoinOptions
+export default displayCoinOptions;
