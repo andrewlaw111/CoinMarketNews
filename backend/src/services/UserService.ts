@@ -34,7 +34,8 @@ export interface IUserToken extends IUser {
 /* ---------- WIP ----------*/
 export default class UserService {
     public getUser(token: string) {
-        console.log(token)
+        // tslint:disable-next-line:no-console
+        console.log(token);
         return knex
             .select("*")
             .from("users")
@@ -44,37 +45,38 @@ export default class UserService {
                 if (users.length > 0) {
                     const user = users[0];
                     return knex
-                        .select('id', 'coinmarketcap_id', 'currency_id', 'upper', 'price_point', 'active')
+                        .select("id", "coinmarketcap_id", "currency_id", "upper", "price_point", "active")
                         .from("price_alert")
                         .where("user_id", "=", user.user_id)
-                        .then((price_alert: any) => {
-                            const map_id_symbol: any = [];  // TODO: get from DB
-                            map_id_symbol[1] = "USD";
-                            map_id_symbol[2] = "EUR";
-                            map_id_symbol[3] = "CAD";
-                            map_id_symbol[4] = "GBP";
-                            map_id_symbol[5] = "HKD";
-                            map_id_symbol[6] = "BTC";
-                            map_id_symbol[7] = "ETH";
-                            price_alert.map(function (alert: any) {
-                                alert.currency_symbol = map_id_symbol[alert.currency_id];
+                        .then((priceAlert: any) => {
+                            const mapIDSymbol: any = [];  // TODO: get from DB
+                            mapIDSymbol[1] = "USD";
+                            mapIDSymbol[2] = "EUR";
+                            mapIDSymbol[3] = "CAD";
+                            mapIDSymbol[4] = "GBP";
+                            mapIDSymbol[5] = "HKD";
+                            mapIDSymbol[6] = "BTC";
+                            mapIDSymbol[7] = "ETH";
+                            priceAlert.map((alert: any) => {
+                                alert.currency_symbol = mapIDSymbol[alert.currency_id];
                                 delete alert.currency_id;
-                            })
+                            });
                             return knex
-                                .select('id', 'coin_id', 'alert')
+                                .select("id", "coin_id", "alert")
                                 .from("news_alert")
                                 .where("user_id", "=", user.user_id)
-                                .then((news_alert: any) => {
+                                .then((newsAlert: any) => {
                                     const userWithToken: IUserToken = {
                                         coin_currency_id: user.coin_currency_id,
                                         email: user.email,
                                         fiat_currency_id: user.fiat_currency_id,
                                         id: user.user_id,
+                                        news_alert: newsAlert,
                                         notifications: user.notifications,
-                                        price_alert: price_alert,
-                                        news_alert: news_alert,
+                                        price_alert: priceAlert,
                                         token: user.token,
                                     };
+                                    // tslint:disable-next-line:no-console
                                     console.log(userWithToken);
                                     return userWithToken;
                                 });
@@ -84,12 +86,13 @@ export default class UserService {
                 }
             })
             .catch((err: any) => {
+                // tslint:disable-next-line:no-console
                 console.log(err);
                 return this.createUser();
-            })
+            });
     }
     public createUser() {
-        console.log("new user")
+        // console.log("new user")
         return knex
             .insert({ fiat_currency_id: null, coin_currency_id: null, notifications: false })
             .into("users")
@@ -116,64 +119,72 @@ export default class UserService {
                         };
                         return userWithToken;
                     });
-            })
+            });
     }
 
     public changeNotifications(token: string, notifications: boolean) {
-        console.log(notifications);
+        // console.log(notifications);
         return knex
             .select("user_id")
             .from("sessions")
             .where("token", token)
             .then((users: any) => {
-                console.log(users);
+                // console.log(users);
                 return knex("users")
                     .update({
-                        notifications
+                        notifications,
                     })
                     .where("id", users[0].user_id)
                     .then((data: any) => {
                         return data;
                     });
-            })
+            });
     }
-    public createPriceAlert(token: string, coinmarketcap_id: number, currency_symbol: string, upper: boolean, price_point: number, active: boolean) {
+    public createPriceAlert(
+        token: string,
+        coinMarketCapID: number,
+        currencySymbol: string,
+        upper: boolean,
+        pricePoint: number,
+        active: boolean) {
         return knex
             .select("user_id")
             .from("sessions")
             .where("token", token)
             .then((users: any) => {
-                const map_symbol_id: any = [];  // TODO: get from DB
-                map_symbol_id["USD"] = 1;
-                map_symbol_id["EUR"] = 2;
-                map_symbol_id["CAD"] = 3;
-                map_symbol_id["GBP"] = 4;
-                map_symbol_id["HKD"] = 5;
-                map_symbol_id["BTC"] = 6;
-                map_symbol_id["ETH"] = 7;
+                const mapSymbolID: any = [];  // TODO: get from DB
+                mapSymbolID.USD = 1;
+                mapSymbolID.EUR = 2;
+                mapSymbolID.CAD = 3;
+                mapSymbolID.GBP = 4;
+                mapSymbolID.HKD = 5;
+                mapSymbolID.BTC = 6;
+                mapSymbolID.ETH = 7;
                 return knex
                     .insert({
-                        user_id: users[0].user_id,
-                        coinmarketcap_id,
-                        currency_id: map_symbol_id[currency_symbol],
+                        active,
+                        coinmarketcap_id: coinMarketCapID,
+                        currency_id: mapSymbolID[currencySymbol],
+                        price_point: pricePoint,
                         upper,
-                        price_point,
-                        active
+                        user_id: users[0].user_id,
                     })
                     .into("price_alert")
-                    .returning('id')
+                    .returning("id")
                     .then((data: any) => {
-                        console.log('price alert added');
+                        // console.log("price alert added");
                         return data[0];
                     })
                     .catch((err: any) => {
+                        // tslint:disable-next-line:no-console
                         console.log(err);
                         return err;
-                    })
+                    });
             })
             .catch((err: any) => {
-                console.log(err)
-            })
+                // tslint:disable-next-line:no-console
+                console.log(err);
+            });
     }
     public deletePriceAlert(token: string, priceID: number) {
         return knex
@@ -184,21 +195,22 @@ export default class UserService {
                 return knex
                     .delete()
                     .where({
-                        user_id: users[0].user_id,
                         id: priceID,
+                        user_id: users[0].user_id,
                     })
                     .from("price_alert")
                     .then((data: any) => {
-                        console.log('price alert removed');
+                        // console.log("price alert removed");
                         return data;
                     })
                     .catch((err: any) => {
                         return err;
-                    })
+                    });
             })
             .catch((err: any) => {
-                console.log(err)
-            })
+                // tslint:disable-next-line:no-console
+                console.log(err);
+            });
     }
     public updatePriceAlert(token: string, priceID: number, active: boolean) {
         return knex
@@ -208,7 +220,7 @@ export default class UserService {
             .then((users: any) => {
                 return knex("price_alert")
                     .update({
-                        active
+                        active,
                     })
                     .where("user_id", users[0].user_id)
                     .andWhere("id", priceID)
@@ -217,8 +229,9 @@ export default class UserService {
                     });
             })
             .catch((err: any) => {
-                console.log(err)
-            })
+                // tslint:disable-next-line:no-console
+                console.log(err);
+            });
     }
     public createNewsAlert(token: string, coinID: number) {
         return knex
@@ -228,24 +241,27 @@ export default class UserService {
             .then((users: any) => {
                 return knex
                     .insert({
-                        user_id: users[0].user_id,
-                        coin_id: coinID,
                         alert: true,
+                        coin_id: coinID,
+                        user_id: users[0].user_id,
                     })
                     .into("news_alert")
                     .returning("id")
                     .then((data: any) => {
-                        console.log('news alert on');
+                        // tslint:disable-next-line:no-console
+                        console.log("news alert on");
                         return data;
                     })
                     .catch((err: any) => {
+                        // tslint:disable-next-line:no-console
                         console.log(err);
                         return err;
-                    })
+                    });
             })
             .catch((err: any) => {
-                console.log(err)
-            })
+                // tslint:disable-next-line:no-console
+                console.log(err);
+            });
     }
     public deleteNewsAlert(token: string, coinID: number) {
         return knex
@@ -256,20 +272,21 @@ export default class UserService {
                 return knex
                     .delete()
                     .where({
-                        user_id: users[0].user_id,
                         coin_id: coinID,
+                        user_id: users[0].user_id,
                     })
                     .from("news_alert")
                     .then((data: any) => {
-                        console.log('news alert off');
+                        // console.log("news alert off");
                         return data;
                     })
                     .catch((err: any) => {
                         return err;
-                    })
+                    });
             })
             .catch((err: any) => {
-                console.log(err)
+                // tslint:disable-next-line:no-console
+                console.log(err);
 
             });
     }

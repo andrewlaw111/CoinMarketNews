@@ -1,4 +1,4 @@
-import { knex } from "../utils/init-app";
+import { knexType } from "../utils/init-app";
 
 interface ICoin {
     id: number;
@@ -26,8 +26,10 @@ interface ICoin {
 export default class CoinService {
     public lastUpdated: number;
     private coinList: ICoin[];
+    private knex: knexType;
 
-    public constructor() {
+    public constructor(knex: knexType) {
+        this.knex = knex;
         this.lastUpdated = Date.now();
         this.updateCoinList();
     }
@@ -57,10 +59,9 @@ export default class CoinService {
                 const findcoin = this.coinList.find((coin) => coin.id === parseInt(coinID, undefined));
                 resolve(findcoin);
             } else {
-                this.updateCoinList()
-                    .then(() => {
-                        resolve(this.coinList.find((coin) => coin.id === parseInt(coinID, undefined)));
-                    })
+                this.updateCoinList().then(() => {
+                    resolve(this.coinList.find((coin) => coin.id === parseInt(coinID, undefined)));
+                })
                     .catch((err: any) => {
                         reject(err);
                     });
@@ -69,8 +70,8 @@ export default class CoinService {
     }
     private updateCoinList() {
         this.lastUpdated = Date.now();
-        return knex.select('*')
-            .from('coin')
+        return this.knex.select("*")
+            .from("coin")
             .orderBy("rank", "asc")
             .then((coins: ICoin[]) => {
                 return this.coinList = coins;

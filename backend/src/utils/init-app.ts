@@ -13,6 +13,7 @@ export const app = express();
 export const server = new http.Server(app);
 export const auth = authClass();
 export const knex = Knex(knexfile[NODE_ENV]);
+export type knexType = typeof knex;
 
 app.use(bodyParser.urlencoded({
     extended: false,

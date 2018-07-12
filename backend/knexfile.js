@@ -13,6 +13,15 @@ module.exports = {
     },
   },
 
+  testing: {
+    client: 'postgresql',
+    connection: {
+      database: "coinmarketnews-testing",
+      port: 5433,
+      user: "andrew",
+      password: "password"
+    },
+  },
   staging: {
     client: 'postgresql',
     connection: {
