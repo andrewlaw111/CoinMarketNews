@@ -7,7 +7,6 @@ import {
     PanResponder,
     PanResponderInstance,
     Platform,
-    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
@@ -26,7 +25,7 @@ import { connect } from "react-redux";
 import { addAlerts } from "../../redux/actions/alerts";
 import { changeSettings } from "../../redux/actions/settings";
 import { IRootState } from "../../redux/store";
-import { darkItemsBorder, lightItemsBorder } from "../../styles/colours";
+import style from "../../styles/CoinAlertsModalStyles";
 
 interface ICoinAlertsModalProps {
     appSettings: ISettings;
@@ -60,7 +59,6 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
             pan: new Animated.ValueXY(),
         };
         this.panResponder = PanResponder.create({
-            // Ask to be the responder:
             onMoveShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
             onStartShouldSetPanResponder: () => true,
@@ -93,14 +91,8 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                     }
                 }
             },
-            onPanResponderTerminate: () => {
-                // Another component has become the responder, so this gesture
-                // should be cancelled
-            },
             onPanResponderTerminationRequest: () => false,
             onShouldBlockNativeResponder: () => {
-                // Returns whether this component should block native components from becoming the JS
-                // responder. Returns true by default. Is currently only supported on android.
                 return true;
             },
         });
@@ -150,8 +142,6 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                         </Text>
                     </Button>
                 </Segment>
-
-                {/* <View style={style(this.props.darkMode).modalForm}> */}
                 <KeyboardAvoidingView style={{ flexDirection: "row" }} >
                     <TextInput
                         keyboardType="numeric"
@@ -177,7 +167,6 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
     }
     public render() {
         const { pan } = this.state;
-        // Calculate the x and y transform from the pan value
         const [, translateY] = [pan.x, pan.y];
 
         return (
@@ -293,10 +282,9 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
     }
     private closeModal = () => {
         Animated.timing(
-            // Animate value over time
-            this.state.pan.y, // The value to drive
+            this.state.pan.y,
             {
-                toValue: 0, // Animate to final value of 1
+                toValue: 0,
             },
         ).start(() => {
             this.setState({
@@ -304,7 +292,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                 alertAmountFiat: this.props.coinPrice.price_fiat.price.toString(),
                 modalOpen: false,
             });
-        }); // Start the animation
+        });
     }
     private handleAdd = () => {
         let alert: IAlerts;
@@ -354,21 +342,19 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
     }
     private openModal = () => {
         Animated.timing(
-            // Animate value over time
-            this.state.pan.y, // The value to drive
-            {
-                toValue: -320, // Animate to final value of 1
+            this.state.pan.y, {
+                toValue: -320,
             },
         ).start(() => {
             this.setState({
                 modalOpen: true,
             });
-        }); // Start the animation
+        });
     }
     private onFocus = () => {
         if (Platform.OS === "ios") {
             Animated.timing(
-                this.state.pan.y, // The value to drive
+                this.state.pan.y,
                 {
                     toValue: (isIphoneX()) ?
                         (
@@ -386,22 +372,20 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                 this.setState({
                     modalOpen: true,
                 });
-            }); // Start the animation
+            });
         }
     }
     private onBlur = () => {
         if (Platform.OS === "ios") {
             Animated.timing(
-                // Animate value over time
-                this.state.pan.y, // The value to drive
-                {
-                    toValue: -320, // Animate to final value of 1
+                this.state.pan.y, {
+                    toValue: -320,
                 },
             ).start(() => {
                 this.setState({
                     modalOpen: true,
                 });
-            }); // Start the animation
+            });
         }
     }
 }
@@ -422,85 +406,3 @@ const mapStateToProps = (state: IRootState) => {
 
 const CoinAlertsModal = connect(mapStateToProps, mapDispatchToProps)(PureCoinAlertsModal);
 export default CoinAlertsModal;
-
-const style = (darkMode: boolean) => StyleSheet.create({
-    activeButtonTextAndroid: {
-        color: "#F8F8F8",
-    },
-    alertArrow: {
-        backgroundColor: "transparent",
-        flexDirection: "row",
-        height: 40,
-        justifyContent: "center",
-    },
-    buttons: {
-        alignItems: "center",
-        backgroundColor: ((Platform.OS === "android") ? "#3f78ba" : "#007aff"),
-        borderColor: (darkMode) ? "#F8F8F8" : "#454951",
-        borderRadius: 5,
-        flexDirection: "row",
-        justifyContent: "center",
-        marginBottom: 10,
-        marginTop: 10,
-        width: 200,
-    },
-    buttonsView: {
-        alignItems: "center",
-    },
-    modalForm: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
-        borderRadius: 10,
-        borderWidth: 1,
-        bottom: -Dimensions.get("window").height - 50,
-        elevation: 20,
-        height: Dimensions.get("window").height + 150,
-        marginLeft: 5,
-        marginRight: 5,
-        paddingBottom: Dimensions.get("window").height - 250,
-        shadowColor: "#000",
-        shadowOffset: { width: 15, height: 15 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-    },
-    modalFormComponentsWrapper: {
-        alignItems: "center",
-        flex: 0.8,
-        justifyContent: "space-between",
-        paddingLeft: 20,
-        paddingRight: 20,
-    },
-    modalHeading: {
-        backgroundColor: "transparent",
-        flex: 0.2,
-        flexDirection: "row",
-        justifyContent: "center",
-    },
-    segment: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-    },
-    segmentButton: {
-        borderColor: (darkMode) ? darkItemsBorder : lightItemsBorder,
-    },
-    text: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
-    },
-    textButton: {
-        color: (darkMode) ? "#F8F8F8" : "#fff",
-    },
-    textInput: {
-        backgroundColor: "#F8F8F8",
-        borderColor: "gray",
-        borderRadius: 5,
-        borderWidth: 1,
-        flex: 1,
-        height: 40,
-        paddingLeft: 4,
-    },
-    textSegmentButton: {
-        color: (darkMode) ? "#007aff" : "#000",
-    },
-    textSegmentButtonActive: {
-        color: "#F8F8F8",
-    },
-});

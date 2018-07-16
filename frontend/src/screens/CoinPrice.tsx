@@ -9,6 +9,7 @@ import commonColour from '../../native-base-theme/variables/commonColor';
 
 import { ICoin, ICoinPrice, ISettings } from "../models";
 import { IRootState } from "../redux/store";
+import styles from "../styles/CoinPriceStyles";
 
 interface ICoinPriceProps {
     appSettings: ISettings;
@@ -31,8 +32,6 @@ class PureCoinPrice extends React.Component<ICoinPriceProps> {
         GBP: "£",
         HKD: "$",
         USD: "$",
-        // BTC: "&#xf15a",
-        // ETH: "&#xf42e",
     };
     public stats: ICoinStats[] = [
         {
@@ -148,53 +147,3 @@ const mapStateToProps = (state: IRootState) => {
 
 const CoinPrice = connect(mapStateToProps)(PureCoinPrice);
 export default CoinPrice;
-
-const styles = (darkMode: boolean) => StyleSheet.create({
-    bold: {
-        fontWeight: 'bold',
-    },
-    card: {
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
-        flex: 0.4
-    },
-    cardMarketData: {
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
-        marginBottom: 20,
-    },
-    cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
-    },
-    // cardText: {
-    //     color: (darkMode) ? "#F8F8F8" : "#000",
-    // },
-    coinInfoStats: {
-        flex: 1,
-    },
-    coinInfoStatsLine: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    coinInfoStatsText: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
-    },
-    coinInfoStatsTextRight: {
-        marginLeft: 40,
-    },
-    price: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
-        flex: 1,
-    },
-    priceWidgetCard: {
-        flex: 0.4,
-        backgroundColor: (darkMode) ? "#454951" : "#FFF",
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
-    },
-    webView: {
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
-        backgroundColor: (darkMode) ? "#2f343f" : "#FFF",
-        height: (Dimensions.get("window").height - 140) / 2,
-    },
-})

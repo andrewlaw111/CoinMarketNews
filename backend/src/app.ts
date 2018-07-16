@@ -17,7 +17,7 @@ import PriceService from "./services/PriceService";
 import UserService from "./services/UserService";
 
 const coinService = new CoinService(knex);
-const newsService = new NewsService();
+const newsService = new NewsService(knex);
 const priceService = new PriceService();
 const userService = new UserService();
 

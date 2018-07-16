@@ -26,7 +26,6 @@ export const getUser = async () => {
     try {
         const token = await AsyncStorage.getItem("@CoinMarketNews:userToken");
         if (token !== null) {
-            // console.error(token);
             return axios
                 .get<IUser>(
                     `${Config.API_SERVER}/user`,
@@ -36,28 +35,21 @@ export const getUser = async () => {
                         },
                     },
             ).then((result) => {
-                // OneSignal.sendTags({user_id: result.data.id })
                 store.dispatch(loginSuccess(result.data));
                 return result.data;
             }).catch((err) => {
                 // tslint:disable-next-line:no-console
                 console.log(err);
-                // tslint:disable-next-line:no-console
-                console.error(err);
             });
         } else {
             return axios
                 .post<IUser>(
-                    // `http://10.0.0.22:8000/user`,
                     `${Config.API_SERVER}/user`,
             ).then((result) => {
                 store.dispatch(loginSuccess(result.data));
-                // OneSignal.sendTag("user_id", result.data.id)
             }).catch((err) => {
                 // tslint:disable-next-line:no-console
                 console.log(err);
-                // tslint:disable-next-line:no-console
-                console.error(err);
             });
         }
     } catch (error) {

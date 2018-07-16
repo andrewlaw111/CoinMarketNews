@@ -45,14 +45,22 @@ describe("CoinService ", () => {
 
         return knex("coin").del()
             .then(() => {
-                return knex.insert(bitCoin).into("coin")
+                return knex
+                    .insert(bitCoin)
+                    .into("coin")
                     .then(() => {
-                        return done()
+                        return done();
                     })
             });
     });
+    // afterEach((done) => {
+    //     return knex("coin").del()
+    //         .then(() => {
+    //             return done()
+    //         });
+    // });
 
-    xit("should support get method", (done) => {
+    it("should support get method", (done) => {
         coinService.getCoins()
             .then((data) => {
                 expect(data.length).toEqual(1);
@@ -90,7 +98,7 @@ describe("CoinService ", () => {
             });;
     });
 
-    xit("should support get specific coin method", (done) => {
+    it("should support get specific coin method", (done) => {
         coinService.getSpecificCoin(null, "1")
             .then((data) => {
                 expect(data.id).toEqual(1);
@@ -126,12 +134,27 @@ describe("CoinService ", () => {
                 console.log(err)
             });
     });
+    it("should not return a coin that does not exit", (done) => {
+        coinService.getSpecificCoin(null, "2")
+            .then((data) => {
+                expect(typeof data).toEqual("undefined")
+                done();
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+    });
     it("call update the coin list only after 20 seconds", (done) => {
         spyOn(coinService, "updateCoinList").and.callThrough();
         coinService.lastUpdated = Date.now() - 50000;
-
-        coinService.getSpecificCoin(null, "1");
+        coinService.getCoins();
         expect(coinService.updateCoinList).toHaveBeenCalled();
+        done();
+    })
+    it("should not update the coin list before 20 seconds", (done) => {
+        spyOn(coinService, "updateCoinList").and.callThrough();
+        coinService.getCoins();
+        expect(coinService.updateCoinList).not.toHaveBeenCalled();
         done();
     })
 });

@@ -18,14 +18,14 @@ export const settingsReducer = (state: ISettingsState = defaultSettingsState, ac
     switch (action.type) {
         case CHANGE_SETTINGS:
             return {
-                settings: action.settings, // Use concat to add a new link
+                settings: action.settings, 
             };
 
         case LOAD_SETTINGS:
             return {
-                settings: action.settings, // Use concat to add a new link
+                settings: action.settings,
             };
         default:
-            return state; // Do not change the state in case of any other actions
+            return state; 
     }
 };

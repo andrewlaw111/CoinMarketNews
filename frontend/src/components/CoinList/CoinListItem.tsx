@@ -42,8 +42,6 @@ class PureCoinListItem extends React.PureComponent<ICoinListProps, ICoinListStat
         GBP: "£",
         HKD: "$",
         USD: "$",
-        // BTC: "&#xf15a",
-        // ETH: "&#xf42e",
     };
     public cryptoCurrency = (
         this.props.appSettings.cryptoCurrency === "BTC") ?

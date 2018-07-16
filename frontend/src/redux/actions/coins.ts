@@ -111,16 +111,6 @@ export const getCoins = async (settings: ISettings, rangeStart?: number, nb?: nu
                         typeof coin.price_fiat === "undefined") {
                         return false;
                     } else {
-                        // for (let i in coin.price_fiat) {
-                        //     if (typeof coin.price_fiat[i] === "undefined") {
-                        //         return false
-                        //     }
-                        // }
-                        // for (let i in coin.price_fiat) {
-                        //     if (typeof coin.price_crypto[i] === "undefined") {
-                        //         return false
-                        //     }
-                        // }
                         return true;
                     }
                 });

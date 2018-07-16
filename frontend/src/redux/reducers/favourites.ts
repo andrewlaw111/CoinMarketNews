@@ -15,7 +15,6 @@ const defaultFavouriteState: IFavouritesState = {
 };
 
 export const favouritesReducer = (state: IFavouritesState = defaultFavouriteState, action: FavouriteActions) => {
-    // Use switch to handle different actions
     switch (action.type) {
         case ADD_COIN_FAVOURITE:
             const addFavourites = state.favourites.slice();
@@ -23,11 +22,11 @@ export const favouritesReducer = (state: IFavouritesState = defaultFavouriteStat
             AsyncStorage.setItem("@CoinMarketNews:favouriteStore", JSON.stringify(addFavourites));
 
             return {
-                favourites: addFavourites, // Use concat to add a new link
+                favourites: addFavourites,
             };
         case LOAD_COIN_FAVOURITE:
             return {
-                favourites: action.favourites, // Use concat to add a new link
+                favourites: action.favourites,
             };
         case REMOVE_COIN_FAVOURITE:
             const removeFavourites = state.favourites.slice();
@@ -35,9 +34,9 @@ export const favouritesReducer = (state: IFavouritesState = defaultFavouriteStat
             AsyncStorage.setItem("@CoinMarketNews:favouriteStore", JSON.stringify(removeFavourites));
 
             return {
-                favourites: removeFavourites, // Use concat to add a new link
+                favourites: removeFavourites,
             };
         default:
-            return state; // Do not change the state in case of any other actions
+            return state;
     }
 };

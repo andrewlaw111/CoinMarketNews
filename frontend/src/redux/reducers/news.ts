@@ -6,16 +6,15 @@ export interface INewsState {
 }
 
 export const newsReducer = (state: INewsState = { news: [] }, action: NewsActions) => {
-    // Use switch to handle different actions
     switch (action.type) {
         case LOAD_NEWS_SUCCESS:
             return {
-                news: action.news, // Use concat to add a new link
+                news: action.news, 
             };
         case LOAD_NEWS_FAILURE:
             return {
             };
         default:
-            return state; // Do not change the state in case of any other actions
+            return state; 
     }
 };

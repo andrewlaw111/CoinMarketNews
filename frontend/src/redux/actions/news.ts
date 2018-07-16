@@ -6,7 +6,6 @@ import { Action } from "redux";
 import { INews } from "../../models";
 import { store } from "../store";
 
-// Define Actions const and type
 export const LOAD_NEWS_SUCCESS = "LOAD_NEWS_SUCCESS";
 export type LOAD_NEWS_SUCCESS = typeof LOAD_NEWS_SUCCESS;
 
@@ -22,7 +21,6 @@ export interface ILoadNewsFailureAction extends Action {
     type: LOAD_NEWS_FAILURE;
 }
 
-// Collection of both for easier integration
 export type NewsActions = ILoadNewsSuccessAction | ILoadNewsFailureAction;
 
 export let loadNewsSuccess = (news: INews[]) => {
@@ -44,7 +42,6 @@ export const getNews = async () => {
         axios
             .get<INews[]>(
                 `${Config.API_SERVER}/news`,
-                // `http://10.0.0.22:8000/news`,
                 {
                     headers: {
                         token,

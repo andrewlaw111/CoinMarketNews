@@ -15,6 +15,7 @@ import commonColour from "../../native-base-theme/variables/commonColor";
 import { ICoinPrice, INews, ISettings, IUser } from "../models";
 import { getNews } from "../redux/actions/news";
 import { IRootState } from "../redux/store";
+import styles from "../styles/NewsStyles";
 
 interface INewsListProps {
     appSettings: ISettings;
@@ -34,7 +35,6 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
         navBarTitleTextCentered: true,
         statusBarBlur: true,
     };
-    public styles: typeof styles;
     public newsRef: RefObject<FlatList<INews>>;
 
     constructor(props: INewsListProps) {
@@ -47,32 +47,32 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
     }
     public renderNewsList = (info: { item: INews, index: number }) => (
         <View>
-            <Card style={this.styles.card}>
+            <Card style={styles(this.props.appSettings.darkMode).card}>
                 <TouchableOpacity
                     onPress={this.handleLinkPress.bind(this, info.item.link)}
                 >
-                    <CardItem header={true} bordered={true} style={this.styles.cardItem}>
+                    <CardItem header={true} bordered={true} style={styles(this.props.appSettings.darkMode).cardItem}>
                         <FastImage
-                            style={this.styles.newsSourceIcon}
+                            style={styles(this.props.appSettings.darkMode).newsSourceIcon}
                             source={{ uri: `${Config.API_SERVER}/source-icons/${info.item.source_id}.png` }}
                             resizeMode={FastImage.resizeMode.contain}
                         />
                         <Text
-                            style={this.styles.headingText}
+                            style={styles(this.props.appSettings.darkMode).headingText}
                         >
                             {info.item.title}
                         </Text>
                     </CardItem>
-                    <CardItem bordered={true} style={this.styles.cardItem}>
+                    <CardItem bordered={true} style={styles(this.props.appSettings.darkMode).cardItem}>
                         <Body>
-                            <Text style={this.styles.newsText} numberOfLines={3}>
+                            <Text style={styles(this.props.appSettings.darkMode).newsText} numberOfLines={3}>
                                 {info.item.content}
                             </Text>
                         </Body>
                     </CardItem>
                     <CardItem
                         footer={true}
-                        style={[this.styles.cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
+                        style={[styles(this.props.appSettings.darkMode).cardItem, { justifyContent: "space-between", alignItems: "flex-start" }]}
                     >
                         <View style={{ flexDirection: "row", justifyContent: "flex-start", marginTop: 5 }}>
                             <View>
@@ -81,10 +81,10 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                                     (
                                         <View style={{ flexDirection: "row", marginRight: 3, alignItems: "center" }}>
                                             <Text
-                                                style={this.styles.newsCounter}>{info.item.counter}
+                                                style={styles(this.props.appSettings.darkMode).newsCounter}>{info.item.counter}
                                             </Text>
                                             <Icon
-                                                style={this.styles.newsCounterIcon}
+                                                style={styles(this.props.appSettings.darkMode).newsCounterIcon}
                                                 type="Ionicons"
                                                 name="ios-flame"
                                             />
@@ -96,7 +96,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                             <View>
                                 <Moment
                                     style={[
-                                        this.styles.newsText,
+                                        styles(this.props.appSettings.darkMode).newsText,
                                         { color: (this.props.appSettings.darkMode) ? "#fff" : "#313131" },
                                     ]} element={Text} fromNow={true}>{info.item.created_at}</Moment>
                             </View>
@@ -111,7 +111,7 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
                                                 onPress={this.handlePressIcon.bind(this, info.item.coins_id[key])}
                                             >
                                                 <FastImage
-                                                    style={this.styles.newsIcons}
+                                                    style={styles(this.props.appSettings.darkMode).newsIcons}
                                                     // tslint:disable-next-line:max-line-length
                                                     source={{ uri: `${Config.API_SERVER}/icon/${coin.toLocaleLowerCase()}.png` }}
                                                     resizeMode={FastImage.resizeMode.contain}
@@ -128,7 +128,6 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
         </View>
     )
     public render() {
-        this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
         const listEmptyComponent = () => {
             return (
                 <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -141,12 +140,12 @@ class PureNewsList extends React.Component<INewsListProps, INewsListState> {
         };
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <View style={this.styles.news}>
+                <View style={styles(this.props.appSettings.darkMode).news}>
                     <FlatList
                         data={this.props.news}
                         renderItem={this.renderNewsList}
                         keyExtractor={this.keyExtractor}
-                        style={this.styles.newsList}
+                        style={styles(this.props.appSettings.darkMode).newsList}
                         refreshControl={
                             <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
                         }
@@ -240,58 +239,3 @@ const mapStateToProps = (state: IRootState) => {
 
 const NewsList = connect(mapStateToProps)(PureNewsList);
 export default NewsList;
-
-const styleTemplate = (darkMode: boolean) => StyleSheet.create({
-    card: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        borderColor: (darkMode) ? "#41444c" : "#E1E1E1",
-    },
-    cardItem: {
-        backgroundColor: (darkMode) ? "#454951" : "#F8F8F8",
-        paddingBottom: 10,
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingTop: 10,
-    },
-    headingText: {
-        color: (darkMode) ? "#F8F8F8" : "#000",
-        fontSize: 14,
-        fontWeight: "bold",
-        paddingRight: 25,
-        // textDecorationLine: "underline",
-    },
-    news: {
-        backgroundColor: (darkMode) ? "#2f343f" : "#F8F8F8",
-    },
-    newsCounter: {
-        color: "#ffa236",
-        fontSize: 14,
-    },
-    newsCounterIcon: {
-        color: "#ffa236",
-        fontSize: 15,
-        width: 13,
-    },
-    newsIcons: {
-        backgroundColor: "grey",
-        borderRadius: 50,
-        height: 25,
-        marginRight: 6,
-        width: 25,
-    },
-    newsList: {
-        // paddingBottom: 20,
-    },
-    newsSourceIcon: {
-        height: 30,
-        marginRight: 8,
-        width: 30,
-    },
-    newsText: {
-        color: (darkMode) ? "#F8F8F8" : "#a3a3a2",
-        fontSize: 14,
-    },
-});
-
-const styles = styleTemplate(false);
-const darkStyles = styleTemplate(true);

@@ -123,8 +123,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         );
     }
     public render() {
-        // console.log(this.props.coins)
-
         return (
             <StyleProvider style={getTheme(commonColour)}>
                 <SafeAreaView style={styles(this.props.appSettings.darkMode).safeAreaView}>
@@ -158,9 +156,6 @@ class PureCoins extends React.Component<ICoinsListProps, ICoinsListState> {
         });
     }
     private onNavigatorEvent = (event: any) => {
-        // if (event.id === 'bottomTabSelected') {
-
-        // }
         if (event.id === "bottomTabReselected") {
 
             if (typeof this.favouriteRef !== "undefined" && this.state.coins.length > 0 && this.state.favouriteTab) {

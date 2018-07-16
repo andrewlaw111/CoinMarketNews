@@ -36,18 +36,6 @@ class PureSettings extends React.Component<ISettingsProps> {
         statusBarBlur: true,
     };
 
-    // componentDidMount() {
-    //     OneSignal.addEventListener("received", this.onOpened);
-    // }
-
-    // onOpened = (notification: any) => {
-    //     console.log(notification.notification.isAppInFocus)
-    //     if (notification.notification.isAppInFocus === true && !notification.action.ActionID)
-    // {    // user clicked cancel
-    //         alert('cancel');    // to not show URL
-    //     }
-    // }
-
     public renderCryptoPicker() {
         const options = ["BTC", "ETH", "Cancel"];
         const IOSPicker = () => ActionSheetIOS.showActionSheetWithOptions({
@@ -175,22 +163,20 @@ class PureSettings extends React.Component<ISettingsProps> {
                         <View style={styles(this.props.appSettings.darkMode).settingsRight}>
                             <Text style={styles(this.props.appSettings.darkMode).settingsText}>Push notifications</Text>
                             <View >
-                                {/* tslint:disable-next-line:jsx-no-multiline-js*/}
-                                {(Platform.OS === "ios") ?
-                                    (
-                                        <Switch
-                                            value={this.props.appSettings.pushNotifications}
-                                            // tslint:disable-next-line:max-line-length
-                                            onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)}
-                                        />
-                                    ) : (
-                                        <Switch
-                                            onTintColor="#3f78ba"
-                                            thumbTintColor="#2d5a8e" value={this.props.appSettings.pushNotifications}
-                                            // tslint:disable-next-line:max-line-length
-                                            onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)}
-                                        />
-                                    )}
+                                {/* tslint:disable-next-line:jsx-no-multiline-js*/
+                                    (Platform.OS === "ios") ?
+                                        (
+                                            <Switch
+                                                value={this.props.appSettings.pushNotifications}
+                                                onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)}
+                                            />
+                                        ) : (
+                                            <Switch
+                                                onTintColor="#3f78ba"
+                                                thumbTintColor="#2d5a8e" value={this.props.appSettings.pushNotifications}
+                                                onValueChange={this.handleNotificationChange.bind(this, this.props.user.token)}
+                                            />
+                                        )}
                             </View>
                         </View>
                     </View>
@@ -206,21 +192,22 @@ class PureSettings extends React.Component<ISettingsProps> {
                         <View style={styles(this.props.appSettings.darkMode).settingsRight}>
                             <Text style={styles(this.props.appSettings.darkMode).settingsText}>Dark Mode</Text>
                             <View >
-                                {/* tslint:disable-next-line:jsx-no-multiline-js*/}
-                                {(Platform.OS === "ios") ?
-                                    (
-                                        <Switch
-                                            value={this.props.appSettings.darkMode}
-                                            onValueChange={this.handleDarkModeValueChange}
-                                        />
-                                    ) : (
-                                        <Switch
-                                            onTintColor="#3f78ba"
-                                            thumbTintColor="#2d5a8e"
-                                            value={this.props.appSettings.darkMode}
-                                            onValueChange={this.handleDarkModeValueChange}
-                                        />
-                                    )}
+                                {/* tslint:disable-next-line:jsx-no-multiline-js*/
+                                    (Platform.OS === "ios") ?
+                                        (
+                                            <Switch
+                                                value={this.props.appSettings.darkMode}
+                                                onValueChange={this.handleDarkModeValueChange}
+                                            />
+                                        ) : (
+                                            <Switch
+                                                onTintColor="#3f78ba"
+                                                thumbTintColor="#2d5a8e"
+                                                value={this.props.appSettings.darkMode}
+                                                onValueChange={this.handleDarkModeValueChange}
+                                            />
+                                        )
+                                }
                             </View>
                         </View>
                     </View>

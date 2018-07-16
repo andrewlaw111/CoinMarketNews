@@ -192,51 +192,51 @@ export default class CoinInfo extends React.Component<ICoinsPageProps, ICoinsPag
                 <ScrollView style={this.styles(this.props.darkMode).infoBackground} >
                     <View style={{ paddingBottom: 20 }}>
                         {(this.props.coin.about) ? this.renderAboutCoin() : null}
-                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                        {(this.props.coin.rank ||
-                            this.props.coin.type ||
-                            this.props.coin.algorithm ||
-                            this.props.coin.proof ||
-                            this.props.coin.mineable ||
-                            this.props.coin.premined) ? (
-                                <Card style={this.styles(this.props.darkMode).Card}>
-                                    <CardItem
-                                        header={true}
-                                        bordered={true}
-                                        style={this.styles(this.props.darkMode).cardItem}
-                                    >
-                                        <Text style={this.styles(this.props.darkMode).cardHeader}>Information</Text>
-                                    </CardItem>
-                                    <CardItem style={this.styles(this.props.darkMode).cardItem}>
-                                        <Body style={this.styles(this.props.darkMode).coinInfoStats}>
-                                            {this.renderCoinStats()}
-                                        </Body>
-                                    </CardItem>
-                                </Card>
-                            ) : (
-                                null
-                            )}
-                        {/* tslint:disable-next-line:jsx-no-multiline-js */}
-                        {(this.props.coin.website_link ||
-                            this.props.coin.medium_link ||
-                            this.props.coin.telegram_link ||
-                            this.props.coin.twitter_link ||
-                            this.props.coin.reddit_link) ? (
-                                <Card style={this.styles(this.props.darkMode).Card}>
-                                    <CardItem
-                                        header={true}
-                                        bordered={true}
-                                        style={this.styles(this.props.darkMode).cardItem}
-                                    >
-                                        <Text style={this.styles(this.props.darkMode).cardHeader}>
-                                            Links
+                        {/* tslint:disable-next-line:jsx-no-multiline-js */
+                            (this.props.coin.rank ||
+                                this.props.coin.type ||
+                                this.props.coin.algorithm ||
+                                this.props.coin.proof ||
+                                this.props.coin.mineable ||
+                                this.props.coin.premined) ? (
+                                    <Card style={this.styles(this.props.darkMode).Card}>
+                                        <CardItem
+                                            header={true}
+                                            bordered={true}
+                                            style={this.styles(this.props.darkMode).cardItem}
+                                        >
+                                            <Text style={this.styles(this.props.darkMode).cardHeader}>Information</Text>
+                                        </CardItem>
+                                        <CardItem style={this.styles(this.props.darkMode).cardItem}>
+                                            <Body style={this.styles(this.props.darkMode).coinInfoStats}>
+                                                {this.renderCoinStats()}
+                                            </Body>
+                                        </CardItem>
+                                    </Card>
+                                ) : (
+                                    null
+                                )}
+                        {/* tslint:disable-next-line:jsx-no-multiline-js */
+                            (this.props.coin.website_link ||
+                                this.props.coin.medium_link ||
+                                this.props.coin.telegram_link ||
+                                this.props.coin.twitter_link ||
+                                this.props.coin.reddit_link) ? (
+                                    <Card style={this.styles(this.props.darkMode).Card}>
+                                        <CardItem
+                                            header={true}
+                                            bordered={true}
+                                            style={this.styles(this.props.darkMode).cardItem}
+                                        >
+                                            <Text style={this.styles(this.props.darkMode).cardHeader}>
+                                                Links
                                         </Text>
-                                    </CardItem>
-                                    {this.renderCoinLinks()}
-                                </Card>
-                            ) : (
-                                null
-                            )}
+                                        </CardItem>
+                                        {this.renderCoinLinks()}
+                                    </Card>
+                                ) : (
+                                    null
+                                )}
                     </View>
                 </ScrollView>
             </StyleProvider>

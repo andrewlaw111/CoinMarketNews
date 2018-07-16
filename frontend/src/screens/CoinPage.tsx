@@ -52,13 +52,6 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
-    public componentWillMount() {
-        this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
-    }
-    public componentWillReceiveProps() {
-        this.styles = (this.props.appSettings.darkMode) ? darkStyles : styles;
-    }
-
     public onNavigatorEvent(event: NavigatorEvent) {
         if (event.type === "NavBarButtonPress") {
             if (event.id === "like") {
@@ -99,7 +92,7 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
 
     public renderNoConnection() {
         return (
-            <View style={this.styles.pageBackground}>
+            <View style={styles(this.props.appSettings.darkMode).pageBackground}>
                 <Spinner />
             </View>
         );
@@ -117,7 +110,7 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
 
         return (
             <StyleProvider style={getTheme(commonColour)}>
-                <Container style={this.styles.pageBackground}>
+                <Container style={styles(this.props.appSettings.darkMode).pageBackground}>
                     <Tabs springTension={2} initialPage={0} >
                         <Tab
                             heading="Info"
@@ -228,8 +221,8 @@ class PureCoinsList extends React.Component<ICoinsPageProps, ICoinsPageState> {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        addCoinFavourite: (coinID: number, token: string) => dispatch(addCoinFavourite(coinID, token)),
-        removeCoinFavourite: (coinID: number, token: string) => dispatch(removeCoinFavourite(coinID, token)),
+        addCoinFavourite: (coinID: number, token: string) => dispatch(addCoinFavourite(coinID)),
+        removeCoinFavourite: (coinID: number, token: string) => dispatch(removeCoinFavourite(coinID)),
     };
 };
 
@@ -244,15 +237,9 @@ const mapStateToProps = (state: IRootState) => {
 const CoinsList = connect(mapStateToProps, mapDispatchToProps)(PureCoinsList);
 export default CoinsList;
 
-const styles = StyleSheet.create({
+const styles = (darkMode: boolean) => StyleSheet.create({
     pageBackground: {
-        flex: 1,
-    },
-});
-
-const darkStyles = StyleSheet.create({
-    pageBackground: {
-        backgroundColor: "#2f343f",
+        backgroundColor: (darkMode) ? "#2f343f" : null,
         flex: 1,
     },
 });

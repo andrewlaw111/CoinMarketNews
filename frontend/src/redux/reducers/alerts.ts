@@ -86,6 +86,6 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
                 priceAlerts: state.priceAlerts,
             };
         default:
-            return state; // Do not change the state in case of any other actions
-    }
+            return state; 
+        }
 };

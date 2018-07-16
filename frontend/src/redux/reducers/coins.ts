@@ -10,11 +10,10 @@ const defaultCoinState: ICoinState = {
 };
 
 export const coinReducer = (state: ICoinState = defaultCoinState, action: CoinActions) => {
-  // Use switch to handle different actions
   switch (action.type) {
     case LOAD_COIN_SUCCESS:
       return {
-        coins: action.coins, // Use concat to add a new link
+        coins: action.coins, 
       };
     case LOAD_COIN_FAILURE:
       return {

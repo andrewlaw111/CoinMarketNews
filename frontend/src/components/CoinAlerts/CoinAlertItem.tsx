@@ -46,7 +46,6 @@ class PureAlertItem extends React.PureComponent<IRenderAlertsProps, IRenderAlert
     }
     public render() {
         const alertAnimationStyle = {
-            // opacity: this.state.animatedValue,
             transform: [{ translateX: this.state.animatedValue }],
         };
 
