@@ -84,6 +84,7 @@ describe("NewsService ", () => {
     afterEach((done) => {
         return knex("coin_news").del()
             .then(() => {
+                // [CODE REVIEW] Dun have to be like a pyramid
                 return knex("coin_news").select("*")
                     .then(() => {
                         return knex("coin").del()

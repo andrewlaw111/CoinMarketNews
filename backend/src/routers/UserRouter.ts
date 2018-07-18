@@ -72,6 +72,7 @@ export default class UserRouter {
     private deletePriceAlert = (req: express.Request, res: express.Response) => {
         return this.userService.deletePriceAlert(req.headers.token, req.body.priceID)
             .then((data: any) => res.json(data))
+            // [CODE REVIEW] vvvvv this type could be any
             .catch((err: express.Errback) => res.status(500).json(err));
     }
     private updatePriceAlert = (req: express.Request, res: express.Response) => {

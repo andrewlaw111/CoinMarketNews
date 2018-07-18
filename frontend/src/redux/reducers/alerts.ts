@@ -82,6 +82,7 @@ export const alertsReducer = (state: IAlertsState = defaultAlertsState, action: 
 
             removeNewsAlerts = removeNewsAlerts.filter((alert) => alert.coin_id !== action.removeNewsAlert);
             return {
+                // [CODE REVIEW] Use spread operator
                 newsAlerts: removeNewsAlerts,
                 priceAlerts: state.priceAlerts,
             };

@@ -339,6 +339,7 @@ class PureCoinAlertsModal extends React.Component<ICoinAlertsModalProps, ICoinAl
                     },
                 },
         );
+        // [CODE REVIEW] Should add a callback here
     }
     private openModal = () => {
         Animated.timing(

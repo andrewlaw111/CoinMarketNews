@@ -66,6 +66,7 @@ Promise.all([
             } else {
                 setColour(false);
             }
+            // [CORE REVIEW] The promise below is not waited
             getCoins(settings, 0, 2000);
         }),
 ])
@@ -118,5 +119,6 @@ Promise.all([
         });
     }).catch((err) => {
         // tslint:disable-next-line:no-console
+        // [CODE REVIEW] should show some error screen maybe
         console.log("error", err);
     });

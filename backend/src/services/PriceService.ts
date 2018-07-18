@@ -25,6 +25,7 @@ export default class CoinService {
     public priceList: ICoin[];
     public prices: IPrice[][] = [];
 
+    // [CODE REVIEW] Should accpet knex as a dependency injection
     public constructor() {
         this.lastUpdated = Date.now();
         this.updatePriceList();
@@ -80,14 +81,14 @@ export default class CoinService {
             // Make a query to the database if the list has not been updated for 5 minutes
             if (Date.now() - this.lastUpdated < 300000) {
                 const findcoin = this.selectCurrency(fiat, crypto, "0", this.priceList.length.toString())
-                    .find((price) => price.id === parseInt(coinID, undefined));
+                    .find((price) => price.id === parseInt(coinID, 10));
 
                 resolve(findcoin);
             } else {
                 this.updatePriceList()
                     .then(() => {
                         resolve(this.selectCurrency(fiat, crypto)
-                            .find((coin) => coin.id === parseInt(coinID, undefined)));
+                            .find((coin) => coin.id === parseInt(coinID, 10)));
                     })
                     .catch((err: any) => {
                         reject(err);

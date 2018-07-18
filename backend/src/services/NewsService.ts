@@ -36,7 +36,7 @@ export default class NewsService {
                     .join("coin", "coin_news.coin_id", "=", "coin.id")
                     .select("*")
                     .whereIn("news_id", ids)
-                    .then((coinNews: any) => {
+                    .then((coinNews: any /* [CODE REVIEW] You may use "&" to combine two or more interfaces */ ) => {
                         // console.log(coinNews);
                         coinNews.map((coin: any) => {
                             if (!(coin.news_id in newsSource)) {

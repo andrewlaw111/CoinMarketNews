@@ -203,7 +203,7 @@ export default class UserService {
                         // console.log("price alert removed");
                         return data;
                     })
-                    .catch((err: any) => {
+                    .catch((err) => {
                         return err;
                     });
             })

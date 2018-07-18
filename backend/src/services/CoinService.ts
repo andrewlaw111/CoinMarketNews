@@ -26,6 +26,8 @@ interface ICoin {
 export default class CoinService {
     public lastUpdated: number;
     private coinList: ICoin[];
+    // [CODE REVIEW] add a promise here
+    // private coinUpdatePromise: Promise<ICoin[]>;
     private knex: knexType;
 
     public constructor(knex: knexType) {
@@ -37,7 +39,8 @@ export default class CoinService {
         return Date.now() - this.lastUpdated;
     }
     public getCoins(token: string) {
-        return new Promise((resolve, reject) => {
+    // [CODE REVIEW] instead of creating a promise, assign a new promise to the property, update the promise if necessary, and return it always
+    return new Promise((resolve, reject) => {
             // Make a query to the database if the list has not been updated for 20 seconds
             if (Date.now() - this.lastUpdated < 20000) {
                 resolve(this.coinList);
